@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'facebook_benchmark.apps.FacebookBenchmarkConfig'
+    'facebook_benchmark.apps.FacebookBenchmarkConfig', #register facebook_benchmark app
 ]
 
 MIDDLEWARE = [
