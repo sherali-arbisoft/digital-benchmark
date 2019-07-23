@@ -14,7 +14,10 @@ def feed(request, access_token):
     for post in feed['data']:
         response += '<li>'
         for key in post.keys():
-            response += post.get(key, '') + ' '
+            if key == 'id':
+                response += "<a href='/facebook_benchmark/post/" + post.get(key, '') + "/" + access_token + "'>" + post.get(key, '') + "</a> "
+            else:
+                response += post.get(key, '') + ' '
         response += '</li>'
     response += '</ul>'
     return HttpResponse(response)
