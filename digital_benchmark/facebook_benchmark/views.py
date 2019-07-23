@@ -11,7 +11,11 @@ def feed(request, access_token):
     graph = fb.GraphAPI(access_token=access_token, version=version)
     feed = graph.get_connections(id='me', connection_name='feed')
     response = '<ul>'
+    response = []
     for post in feed['data']:
-        response += '<li>' + post.get('created_time', '') + ' ' + post.get('id', '') + ': ' + post.get('message', '') + '</li>'
+        response += '<li>'
+        for key in post.keys():
+            response += post.get(key, '') + ' '
+        response += '</li>'
     response += '</ul>'
     return HttpResponse(response)
