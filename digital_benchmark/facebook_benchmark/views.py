@@ -3,7 +3,6 @@ from django.http import HttpResponse
 
 import facebook as fb
 
-# access_token = 'EAAMNh9MnOUoBAGSRxDPSDa6vKgTryopWZC9zg0TaCNCM2J7mxRajEfLn9TmAkHyIs0LxlEyZBXxpJZBqFhNcZA6wdeybXehd4MdgpDjiiIAgG9zjHT5ST83PlSr42CIoWlKH9iiOpsQbilJgk0czURxBxNncPzZBujC7OINkHgqhZBZANrpSPnWHYbP44fZAV994iagWZCmWpoAZDZD'
 version = '3.1'
 
 # Create your views here.
@@ -18,4 +17,13 @@ def feed(request, access_token):
             response += post.get(key, '') + ' '
         response += '</li>'
     response += '</ul>'
+    return HttpResponse(response)
+
+def post(request, id, access_token):
+    graph = fb.GraphAPI(access_token=access_token, version=version)
+    post = graph.get_object(id=id)
+    response = '<ul><li>'
+    for key in post.keys():
+        response += post.get(key, '') + ' '
+    response += '</li></ul>'
     return HttpResponse(response)
