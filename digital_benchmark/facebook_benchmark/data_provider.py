@@ -1,7 +1,7 @@
 import facebook as fb
 import requests
 
-from digital_benchmark.settings import facebook_graph_api_version, facebook_default_fields_for_page
+from digital_benchmark.settings import facebook_graph_api_version, facebook_default_fields_for_page, facebook_default_fields_for_feed
 
 class FacebookDataProvider:
     def __init__(self, page_access_token, *args, **kwargs):
@@ -13,3 +13,14 @@ class FacebookDataProvider:
             fields = facebook_default_fields_for_page
         page = self.graph.get_object(id='me', fields=fields)
         return page
+    
+    def get_all_posts(self, fields=''):
+        if not fields:
+            fields = facebook_default_fields_for_feed
+        feed = self.graph.get_connections(id='me', connection_name='feed', fields=fields)
+        all_posts = feed['data']
+        while 'paging' in feed and 'next' in feed['paging']:
+            feed = requests.get(feed['paging']['next']).json()
+            if feed['data']:
+                all_posts += feed['data']
+        return all_posts
