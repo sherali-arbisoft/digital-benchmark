@@ -1,7 +1,7 @@
 import facebook as fb
 import requests
 
-from digital_benchmark.settings import facebook_graph_api_version, facebook_default_fields_for_page, facebook_default_fields_for_feed, facebook_default_fields_for_post
+from digital_benchmark.settings import facebook_graph_api_version, facebook_default_fields_for_page, facebook_default_fields_for_feed, facebook_default_fields_for_post, facebook_default_metrices_for_page_insights
 
 class FacebookDataProvider:
     def __init__(self, page_access_token, *args, **kwargs):
@@ -30,3 +30,9 @@ class FacebookDataProvider:
             fields = facebook_default_fields_for_post
         post = self.graph.get_object(id=post_id, fields=fields)
         return post
+    
+    def get_page_insights(self, metrices=''):
+        if not metrices:
+            metrices = facebook_default_metrices_for_page_insights
+        page_insights = self.graph.get_connections(id='me', connection_name='insights', metric=metrices)
+        return page_insights
