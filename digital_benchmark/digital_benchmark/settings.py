@@ -122,3 +122,4 @@ STATIC_URL = '/static/'
 
 # facebook_benchmark settings
 facebook_graph_api_version = '3.1'
+facebook_default_fields_for_page = 'id,displayed_message_response_time,engagement{count},fan_count,name,overall_star_rating,rating_count,talking_about_count,unread_message_count,unread_notif_count,unseen_message_count,verification_status'
