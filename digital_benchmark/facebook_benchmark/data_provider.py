@@ -1,22 +1,22 @@
 import facebook as fb
 import requests
 
-from digital_benchmark.settings import facebook_graph_api_version, facebook_default_fields_for_page, facebook_default_fields_for_feed, facebook_default_fields_for_post, facebook_default_metrices_for_page_insights, facebook_default_metrices_for_post_insights
+from django.conf import settings
 
 class FacebookDataProvider:
     def __init__(self, page_access_token, *args, **kwargs):
         self.page_access_token = page_access_token
-        self.graph = fb.GraphAPI(access_token=page_access_token, version=facebook_graph_api_version)
+        self.graph = fb.GraphAPI(access_token=page_access_token, version=settings.FACEBOOK_GRAPH_API_VERSION)
     
     def get_page_details(self, fields=''):
         if not fields:
-            fields = facebook_default_fields_for_page
+            fields = settings.FACEBOOK_DEFAULT_FIELDS_FOR_PAGE
         page = self.graph.get_object(id='me', fields=fields)
         return page
     
     def get_all_posts(self, fields=''):
         if not fields:
-            fields = facebook_default_fields_for_feed
+            fields = settings.FACEBOOK_DEFAULT_FIELDS_FOR_FEED
         feed = self.graph.get_connections(id='me', connection_name='feed', fields=fields)
         all_posts = feed['data']
         while 'paging' in feed and 'next' in feed['paging']:
@@ -27,18 +27,18 @@ class FacebookDataProvider:
     
     def get_post_details(self, post_id, fields=''):
         if not fields:
-            fields = facebook_default_fields_for_post
+            fields = settings.FACEBOOK_DEFAULT_FIELDS_FOR_POST
         post = self.graph.get_object(id=post_id, fields=fields)
         return post
     
     def get_page_insights(self, metrices=''):
         if not metrices:
-            metrices = facebook_default_metrices_for_page_insights
+            metrices = settings.FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS
         page_insights = self.graph.get_connections(id='me', connection_name='insights', metric=metrices)
         return page_insights
     
     def get_post_insights(self, post_id, metrices=''):
         if not metrices:
-            metrices = facebook_default_metrices_for_post_insights
+            metrices = settings.FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS
         post_insights = self.graph.get_connections(id=post_id, connection_name='insights', metric=metrices)
         return post_insights
