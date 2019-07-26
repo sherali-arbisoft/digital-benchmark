@@ -1,0 +1,30 @@
+
+body{
+    background: #fff
+}
+
+#loginDiv{
+    position: absolute;
+    top: 10%;
+    left: 40%;
+    height: 300px;
+    width: 400px;
+    background-color: #444857
+}
+
+#instaBtn{
+    background-color: dodgerblue;
+    font-size:22px;
+    border-color: dodgerblue;
+    -webkit-text-fill-color: #fff;
+    padding:5px;
+    margin-top: 80px;
+    margin-left: 70px;
+}
+
+#successText{
+    font-size:20px;
+    -webkit-text-fill-color: #fff;
+    margin-top: 80px;
+    margin-left: 70px;
+}
