@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'facebook_benchmark.apps.FacebookBenchmarkConfig', #register facebook_benchmark app
+    'twitter_benchmark', #register twitter_benchmark app
 ]
 
 MIDDLEWARE = [
