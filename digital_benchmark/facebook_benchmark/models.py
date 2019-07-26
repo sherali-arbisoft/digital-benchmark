@@ -9,10 +9,17 @@ class SoftDeleteMixin(models.Model):
     class Meta:
         abstract = True
 
-class Brand(SoftDeleteMixin):
+class CreateUpdateMixin(models.Model):
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        abstract = True
+
+class Brand(SoftDeleteMixin, CreateUpdateMixin):
     name = models.CharField(max_length=255)
 
-class Page(SoftDeleteMixin):
+class Page(SoftDeleteMixin, CreateUpdateMixin):
     displayed_message_response_time = models.CharField(max_length=255)
     engagement = models.IntegerField()
     fan_count = models.IntegerField()
@@ -48,11 +55,11 @@ class ReactionChoice(Enum):
     SAD = 'Sad'
     WOW = 'Wow'
 
-class CommentReaction(SoftDeleteMixin):
+class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=[(reaction, reaction.value) for reaction in ReactionChoice])
 
-class Comment(SoftDeleteMixin):
+class Comment(SoftDeleteMixin, CreateUpdateMixin):
     comment_id = models.CharField(max_length=255)
     created_time = models.DateTimeField()
     from_id = models.CharField(max_length=255)
@@ -60,11 +67,11 @@ class Comment(SoftDeleteMixin):
 
     reactions = models.ManyToManyField('CommentReaction', blank=True)
 
-class PostReaction(SoftDeleteMixin):
+class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=[(reaction, reaction.value) for reaction in ReactionChoice])
 
-class Post(SoftDeleteMixin):
+class Post(SoftDeleteMixin, CreateUpdateMixin):
     backdated_time = models.DateTimeField()
     created_time = models.DateTimeField()
     is_eligible_for_promotion = models.BooleanField()
