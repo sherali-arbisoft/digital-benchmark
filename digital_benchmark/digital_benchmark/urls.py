@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('facebook_benchmark/', include('facebook_benchmark.urls')),
+    path('twitter_benchmark/', include('twitter_benchmark.urls')),
 ]
