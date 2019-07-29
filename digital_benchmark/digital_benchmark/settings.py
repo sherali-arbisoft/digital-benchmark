@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'instagramBenchmark',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'facebook_benchmark.apps.FacebookBenchmarkConfig', #register facebook_benchmark app
+    'instagram_benchmark.apps.InstagrambenchmarkConfig', #register instagram_benchmark app
 ]
 
 MIDDLEWARE = [
