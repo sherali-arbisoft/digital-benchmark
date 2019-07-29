@@ -19,5 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('facebook_benchmark/', include('facebook_benchmark.urls')),
-    path('instagramBenchmark/', include('instagramBenchmark.urls'))
+    path('instagram_benchmark/', include('instagramBenchmark.urls'))
 ]

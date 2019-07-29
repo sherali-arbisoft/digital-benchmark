@@ -8,5 +8,5 @@ def index(request):
 def auth(request):
     return render(request,'auth.html',{})
 
-def instaLogin(request):
+def insta_login(request):
     return render(request,'firstpage.html',{})
