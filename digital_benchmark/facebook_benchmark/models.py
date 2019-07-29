@@ -47,17 +47,21 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
 
 class ReactionChoice(Enum):
-    ANGRY = 'Angry'
-    HAHA = 'Haha'
-    LIKE = 'Like'
-    LOVE = 'Love'
-    NONE = 'None'
-    SAD = 'Sad'
-    WOW = 'Wow'
+    angry = 'ANGRY'
+    haha = 'HAHA'
+    like = 'LIKE'
+    love = 'LOVE'
+    none = 'NONE'
+    sad = 'SAD'
+    wow = 'WOW'
+
+    @classmethod
+    def get_reaction_choices(self):
+        return [(reaction.value, reaction) for reaction in ReactionChoice]
 
 class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
-    reaction_type = models.CharField(max_length=5, choices=[(reaction, reaction.value) for reaction in ReactionChoice])
+    reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
 
 class Comment(SoftDeleteMixin, CreateUpdateMixin):
     comment_id = models.CharField(max_length=255)
@@ -69,7 +73,7 @@ class Comment(SoftDeleteMixin, CreateUpdateMixin):
 
 class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
-    reaction_type = models.CharField(max_length=5, choices=[(reaction, reaction.value) for reaction in ReactionChoice])
+    reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
 
 class Post(SoftDeleteMixin, CreateUpdateMixin):
     backdated_time = models.DateTimeField()
