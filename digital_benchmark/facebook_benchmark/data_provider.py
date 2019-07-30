@@ -13,14 +13,41 @@ class FacebookDataProvider:
         page = self.graph_api_client.get_object(id='me', fields=page_fields)
         return page
     
+    def get_posts(self, next_url):
+        return requests.get(next_url).json()
+    
+    def get_reactions(self, next_url):
+        return requests.get(next_url).json()
+    
+    def get_comments(self, next_url):
+        return requests.get(next_url).json()
+    
+    def append_reactions(self, post):
+        reactions = post['reactions']
+        while 'paging' in reactions and 'next' in reactions['paging']:
+            reactions = self.get_reactions(reactions['paging']['next'])
+            post['reactions']['data'] += reactions['data']
+    
+    def append_comments(self, post):
+        comments = post['comments']
+        while 'paging' in comments and 'next' in comments['paging']:
+            comments = self.get_comments(comments['paging']['next'])
+            post['comments']['data'] += comments['data']
+
     def get_all_posts(self, fields=''):
         posts_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_FEED)
         feed = self.graph_api_client.get_connections(id='me', connection_name='feed', fields=posts_fields)
-        all_posts = feed['data']
-        while 'paging' in feed and 'next' in feed['paging']:
-            feed = requests.get(feed['paging']['next']).json()
-            if feed['data']:
-                all_posts += feed['data']
+        all_posts = []
+        while 'paging' in feed:
+            for post in feed['data']:
+                if 'reactions' in post:
+                    self.append_reactions(post)
+                if 'comments' in post:
+                    self.append_comments(post)
+                all_posts.append(post)
+            if not ('next' in feed['paging']):
+                break
+            feed = self.get_posts(feed['paging']['next'])
         return all_posts
     
     def get_post_details(self, post_id, fields=''):
