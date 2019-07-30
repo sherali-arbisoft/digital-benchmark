@@ -11,6 +11,8 @@ class FacebookDataParser:
         page.updated_at = timezone.now()
         for key in settings.FACEBOOK_DEFAULT_FIELDS_FOR_PAGE:
             setattr(page, key, page_response.get(key, ''))
+        page.id = ''
+        page.page_id = page_response['id']
         page.engagement = page_response['engagement']['count']
         for key in settings.FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS:
             items = [item for item in page_insights_response if item.get('name', '') == key]
