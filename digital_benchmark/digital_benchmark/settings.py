@@ -73,21 +73,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'digital_benchmark.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'digital_benchmark',
-        'USER': 'digital_benchmark',
-        'PASSWORD': 'digital_benchmark',
-        'HOST': '127.0.0.1',
-        'PORT': '',
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -138,3 +123,8 @@ FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_impressions', 'post_impress
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+try:
+  from .local_settings import *
+except ImportError:
+  pass
