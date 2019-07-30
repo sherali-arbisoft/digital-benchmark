@@ -53,6 +53,10 @@ class FacebookDataProvider:
     def get_post_details(self, post_id, fields=''):
         post_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_POST)
         post = self.graph_api_client.get_object(id=post_id, fields=post_fields)
+        if 'reactions' in post:
+            self.append_reactions(post)
+        if 'comments' in post:
+            self.append_comments(post)
         return post
     
     def get_page_insights(self, metrices=''):
