@@ -30,7 +30,7 @@ class FacebookDataProvider:
     
     def get_page_insights(self, metrices=''):
         page_metrices = metrices or ','.join(settings.FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS)
-        page_insights = self.graph_api_client.get_connections(id='me', connection_name='insights', fields=settings.FACEBOOK_DEFAULT_FIELDS_FOR_PAGE_INSIGHTS, metric=page_metrices, date_preset=settings.FACEBOOK_DEFAULT_DATE_PRESET_FOR_PAGE_INSIGHTS, period=settings.FACEBOOK_DEFAULT_PERIOD_FOR_PAGE_INSIGHTS)
+        page_insights = self.graph_api_client.get_connections(id='me', connection_name='insights', metric=page_metrices, date_preset=settings.FACEBOOK_DEFAULT_DATE_PRESET_FOR_PAGE_INSIGHTS, period=settings.FACEBOOK_DEFAULT_PERIOD_FOR_PAGE_INSIGHTS)
         return page_insights
     
     def get_post_insights(self, post_id, metrices=''):
