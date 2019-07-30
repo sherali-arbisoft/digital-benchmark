@@ -13,25 +13,19 @@ class FacebookDataProvider:
         page = self.graph_api_client.get_object(id='me', fields=page_fields)
         return page
     
-    def get_posts(self, next_url):
-        return requests.get(next_url).json()
-    
-    def get_reactions(self, next_url):
-        return requests.get(next_url).json()
-    
-    def get_comments(self, next_url):
+    def get_next(self, next_url):
         return requests.get(next_url).json()
     
     def append_reactions(self, post):
         reactions = post['reactions']
         while 'paging' in reactions and 'next' in reactions['paging']:
-            reactions = self.get_reactions(reactions['paging']['next'])
+            reactions = self.get_next(reactions['paging']['next'])
             post['reactions']['data'] += reactions['data']
     
     def append_comments(self, post):
         comments = post['comments']
         while 'paging' in comments and 'next' in comments['paging']:
-            comments = self.get_comments(comments['paging']['next'])
+            comments = self.get_next(comments['paging']['next'])
             post['comments']['data'] += comments['data']
 
     def get_all_posts(self, fields=''):
@@ -47,7 +41,7 @@ class FacebookDataProvider:
                 all_posts.append(post)
             if not ('next' in feed['paging']):
                 break
-            feed = self.get_posts(feed['paging']['next'])
+            feed = self.get_next(feed['paging']['next'])
         return all_posts
     
     def get_post_details(self, post_id, fields=''):
