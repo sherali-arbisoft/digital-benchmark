@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'instagram_benchmark',
     'facebook_benchmark', #register facebook_benchmark app
     'debug_toolbar', # register django-debug-toolbar
 ]
@@ -71,6 +72,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'digital_benchmark.wsgi.application'
+
+
+
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+try:
+    from .local_settings import *
+
+except ImportError:
+    pass
+
+
+
 
 
 # Password validation
