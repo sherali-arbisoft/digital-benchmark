@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'facebook_benchmark.apps.FacebookBenchmarkConfig', #register facebook_benchmark app
-    'instagram_benchmark.apps.InstagrambenchmarkConfig', #register instagram_benchmark app
+    'instagram_benchmark',
+    'facebook_benchmark', #register facebook_benchmark app
+    'debug_toolbar', # register django-debug-toolbar
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', # for django-debug-toolbar
 ]
 
 ROOT_URLCONF = 'digital_benchmark.urls'
@@ -122,9 +124,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # facebook_benchmark settings
-facebook_graph_api_version = '3.1'
-facebook_default_fields_for_page = 'id,displayed_message_response_time,engagement{count},fan_count,name,overall_star_rating,rating_count,talking_about_count,unread_message_count,unread_notif_count,unseen_message_count,verification_status'
-facebook_default_fields_for_feed = 'id,backdated_time,created_time,is_eligible_for_promotion,is_hidden,is_popular,is_published,message,message_tags,promotion_status,scheduled_publish_time,shares,story,story_tags,timeline_visibility,updated_time,comments,likes,reactions,to'
-fields = facebook_default_fields_for_post = 'id,backdated_time,created_time,is_eligible_for_promotion,is_hidden,is_popular,is_published,message,message_tags,promotion_status,scheduled_publish_time,shares,story,story_tags,timeline_visibility,updated_time,comments,likes,reactions,to'
-facebook_default_metrices_for_page_insights = 'page_impressions,page_engaged_users,page_consumptions,page_negative_feedback,page_fans_online,page_actions_post_reactions_total,page_fans,page_fan_removes,page_views_total,page_video_views,page_posts_impressions'
-facebook_default_metrices_for_post_insights = 'post_impressions,post_impressions_unique,post_impressions_fan,post_impressions_fan_unique,post_impressions_organic,post_impressions_organic_unique,post_impressions_viral,post_impressions_viral_unique,post_engaged_users,post_negative_feedback,post_negative_feedback_unique,post_engaged_fan,post_clicks,post_clicks_unique,post_reactions_by_type_total'
+FACEBOOK_GRAPH_API_VERSION = '3.1'
+FACEBOOK_DEFAULT_FIELDS_FOR_PAGE = ['id', 'displayed_message_response_time', 'engagement', 'fan_count', 'name', 'overall_star_rating', 'rating_count', 'talking_about_count', 'unread_message_count', 'unread_notif_count', 'unseen_message_count', 'verification_status']
+FACEBOOK_DEFAULT_FIELDS_FOR_FEED = ['id', 'backdated_time', 'created_time', 'is_eligible_for_promotion', 'is_hidden', 'is_popular', 'is_published', 'message', 'message_tags', 'promotion_status', 'scheduled_publish_time', 'shares', 'story', 'story_tags', 'timeline_visibility', 'updated_time', 'comments', 'likes', 'reactions', 'to']
+FACEBOOK_DEFAULT_FIELDS_FOR_POST = ['id', 'backdated_time', 'created_time', 'is_eligible_for_promotion', 'is_hidden', 'is_popular', 'is_published', 'message', 'message_tags', 'promotion_status', 'scheduled_publish_time', 'shares', 'story', 'story_tags', 'timeline_visibility', 'updated_time', 'comments', 'likes', 'reactions', 'to']
+FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS = ['page_impressions', 'page_engaged_users', 'page_consumptions', 'page_negative_feedback', 'page_fans_online', 'page_actions_post_reactions_total', 'page_fans', 'page_fan_removes', 'page_views_total', 'page_video_views', 'page_posts_impressions']
+FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_impressions', 'post_impressions_unique', 'post_impressions_fan', 'post_impressions_fan_unique', 'post_impressions_organic', 'post_impressions_organic_unique', 'post_impressions_viral', 'post_impressions_viral_unique', 'post_engaged_users', 'post_negative_feedback', 'post_negative_feedback_unique', 'post_engaged_fan', 'post_clicks', 'post_clicks_unique', 'post_reactions_by_type_total']
+
+# for django-debug-toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
