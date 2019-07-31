@@ -16,17 +16,24 @@ class FacebookDataProvider:
     def _get_next(self, next_url):
         return requests.get(next_url).json()
     
-    def _append_reactions(self, post):
-        reactions = post['reactions']
+    def _append_reactions(self, append_reactions_to):
+        reactions = append_reactions_to['reactions']
         while 'paging' in reactions and 'next' in reactions['paging']:
             reactions = self._get_next(reactions['paging']['next'])
-            post['reactions']['data'] += reactions['data']
+            append_reactions_to['reactions']['data'] += reactions['data']
     
     def _append_comments(self, post):
+        all_comments = []
         comments = post['comments']
-        while 'paging' in comments and 'next' in comments['paging']:
+        while 'paging' in comments:
+            for comment in comments['data']:
+                if 'reactions' in comment:
+                    self._append_reactions(comment)
+                all_comments.append(comment)
+            if not ('next' in comments['paging']):
+                break
             comments = self._get_next(comments['paging']['next'])
-            post['comments']['data'] += comments['data']
+        post['comments']['data'] = all_comments
 
     def get_all_posts(self, fields=''):
         posts_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_FEED)
