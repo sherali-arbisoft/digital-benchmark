@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'instagram_benchmark',
     'facebook_benchmark', #register facebook_benchmark app
     'debug_toolbar', # register django-debug-toolbar
 ]

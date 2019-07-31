@@ -20,6 +20,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('facebook_benchmark/', include('facebook_benchmark.urls')),
+    path('instagram_benchmark/', include('instagram_benchmark.urls'))
 ]
 
 if settings.DEBUG:
