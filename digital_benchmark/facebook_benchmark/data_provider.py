@@ -13,19 +13,19 @@ class FacebookDataProvider:
         page = self.graph_api_client.get_object(id='me', fields=page_fields)
         return page
     
-    def get_next(self, next_url):
+    def _get_next(self, next_url):
         return requests.get(next_url).json()
     
-    def append_reactions(self, post):
+    def _append_reactions(self, post):
         reactions = post['reactions']
         while 'paging' in reactions and 'next' in reactions['paging']:
-            reactions = self.get_next(reactions['paging']['next'])
+            reactions = self._get_next(reactions['paging']['next'])
             post['reactions']['data'] += reactions['data']
     
-    def append_comments(self, post):
+    def _append_comments(self, post):
         comments = post['comments']
         while 'paging' in comments and 'next' in comments['paging']:
-            comments = self.get_next(comments['paging']['next'])
+            comments = self._get_next(comments['paging']['next'])
             post['comments']['data'] += comments['data']
 
     def get_all_posts(self, fields=''):
@@ -35,22 +35,22 @@ class FacebookDataProvider:
         while 'paging' in feed:
             for post in feed['data']:
                 if 'reactions' in post:
-                    self.append_reactions(post)
+                    self._append_reactions(post)
                 if 'comments' in post:
-                    self.append_comments(post)
+                    self._append_comments(post)
                 all_posts.append(post)
             if not ('next' in feed['paging']):
                 break
-            feed = self.get_next(feed['paging']['next'])
+            feed = self._get_next(feed['paging']['next'])
         return all_posts
     
     def get_post_details(self, post_id, fields=''):
         post_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_POST)
         post = self.graph_api_client.get_object(id=post_id, fields=post_fields)
         if 'reactions' in post:
-            self.append_reactions(post)
+            self._append_reactions(post)
         if 'comments' in post:
-            self.append_comments(post)
+            self._append_comments(post)
         return post
     
     def get_page_insights(self, metrices=''):
