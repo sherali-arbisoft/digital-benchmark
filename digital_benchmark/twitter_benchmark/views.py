@@ -1,18 +1,25 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from .data_provider import DataProvider
+from django.conf import settings
+from django.views import View
+from requests_oauthlib import OAuth1Session
 
 
-def login(request):
-    context = {'auth_url':DataProvider.get_authorization('LCE85J76ONueBmKn1SpVAjZ0F','eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ')}
-    return render(request,'Login/index.html',context)
+class LoginView(View):
+    def get(self,request):
+        oauth = OAuth1Session(settings.CONSUMER_KEY, client_secret=settings.CONSUMER_SECRET)
+        fetch_response = oauth.fetch_request_token(settings.REQUEST_TOKEN_URL)
+        resource_owner_key = fetch_response.get('oauth_token')
+        resource_owner_secret = fetch_response.get('oauth_token_secret')
+        print("Got OAuth token: %s" % resource_owner_key)
+        print("Got OAuth token: %s" % resource_owner_secret)
+        authorization_url = oauth.authorization_url(settings.BASE_AUTHORIZATION_URL)
+        print(authorization_url)
+        context = {'auth_url': authorization_url}
+        return render(request, 'Login/index.html', context)
 
 
-def success(request):
-    #user_profile_data = DataProvider.get_user_profile_data(request.GET['oauth_verifier'],'LCE85J76ONueBmKn1SpVAjZ0F','eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ')
-    #context = {'data':user_profile_data}
-    return render(request,'success/index.html')
+class SuccessView(View):
+    def get(self,request):
+        return render(request, 'success/index.html')
 
 
-def user(request,user_id):
-    return HttpResponse(user_id)
