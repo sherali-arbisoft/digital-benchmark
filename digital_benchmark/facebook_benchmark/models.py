@@ -48,7 +48,7 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     unread_message_count = models.IntegerField()
     unread_notif_count = models.IntegerField()
     unseen_message_count = models.IntegerField()
-    verification_status = models.BooleanField()
+    verification_status = models.CharField(max_length=255)
 
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
 
@@ -70,7 +70,7 @@ class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
 
 class Post(SoftDeleteMixin, CreateUpdateMixin):
-    backdated_time = models.DateTimeField(blank=True)
+    backdated_time = models.DateTimeField(null=True)
     created_time = models.DateTimeField()
     is_eligible_for_promotion = models.BooleanField()
     is_expired = models.BooleanField()
@@ -101,11 +101,11 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     post_negative_feedback = models.IntegerField()
     post_negative_feedback_unique = models.IntegerField()
     promotion_status = models.CharField(max_length=255)
-    scheduled_publish_time = models.DateTimeField(blank=True)
+    scheduled_publish_time = models.DateTimeField(null=True)
     shares = models.IntegerField()
     story = models.TextField(null=True)
-    timeline_visibility = models.BooleanField()
-    updated_time = models.DateTimeField(blank=True)
+    timeline_visibility = models.CharField(max_length=255)
+    updated_time = models.DateTimeField()
 
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
     reactions = models.ManyToManyField('PostReaction', blank=True)
