@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'facebook_benchmark.apps.FacebookBenchmarkConfig', #register facebook_benchmark app
-    'instagram_benchmark.apps.InstagrambenchmarkConfig', #register instagram_benchmark app
+    'facebook_benchmark',
+    'instagram_benchmark',
 ]
 
 MIDDLEWARE = [
@@ -75,12 +75,12 @@ WSGI_APPLICATION = 'digital_benchmark.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+try:
+    from .local_settings import *
+
+except ImportError:
+    pass
+
 
 
 # Password validation
