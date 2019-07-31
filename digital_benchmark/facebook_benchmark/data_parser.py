@@ -8,14 +8,19 @@ class FacebookDataParser:
     def parse_page_details_and_insights(self, page_response, page_insights_response):
         page = models.Page()
         page.created_at = timezone.now()
+        page.displayed_message_response_time = page_response.get('displayed_message_response_time', '')
+        page.engagement = page_response.get('engagement', {}).get('count', 0)
+        page.fan_count = page_response.get('fan_count', 0)
+        page.name = page_response.get('name', '')
+        page.overall_start_rating = page_response.get('overall_start_rating', 0)
+        page.page_id = page_response.get('id', '')
+        page.rating_count = page_response.get('rating_count', 0)
+        page.talking_about_count = page_response.get('talking_about_count', 0)
+        page.unread_message_count = page_response.get('unread_message_count', 0)
+        page.unread_notif_count = page_response.get('unread_notif_count', 0)
+        page.unseen_message_count = page_response.get('unseen_message_count', 0)
         page.updated_at = timezone.now()
-        for key in settings.FACEBOOK_DEFAULT_FIELDS_FOR_PAGE:
-            setattr(page, key, page_response.get(key, ''))
-        page.id = ''
-        page.page_id = page_response['id']
-        page.engagement = page_response['engagement']['count']
-        for key in settings.FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS:
-            items = [item for item in page_insights_response if item.get('name', '') == key]
-            if len(items) > 0:
-                setattr(page, key, items[0]['values'][0]['value'])
+        page.verification_status = page_response.get('verification_status', 'not_verified')
+        for item in page_insights_response['data']:
+            setattr(page, item['name'], item['values'][0]['value'])
         return page
