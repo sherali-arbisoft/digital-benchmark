@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.utils import timezone
 
-from . import models
+from .models import Page
 
 class FacebookDataParser:
 
     def parse_page_details_and_insights(self, page_response, page_insights_response):
-        page = models.Page()
+        page = Page()
         page.created_at = timezone.now()
         page.updated_at = timezone.now()
         for key in settings.FACEBOOK_DEFAULT_FIELDS_FOR_PAGE:
