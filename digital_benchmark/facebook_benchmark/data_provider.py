@@ -13,24 +13,49 @@ class FacebookDataProvider:
         page = self.graph_api_client.get_object(id='me', fields=page_fields)
         return page
     
+    def _get_next(self, next_url):
+        return requests.get(next_url).json()
+    
+    def _append_reactions(self, post):
+        reactions = post['reactions']
+        while 'paging' in reactions and 'next' in reactions['paging']:
+            reactions = self._get_next(reactions['paging']['next'])
+            post['reactions']['data'] += reactions['data']
+    
+    def _append_comments(self, post):
+        comments = post['comments']
+        while 'paging' in comments and 'next' in comments['paging']:
+            comments = self._get_next(comments['paging']['next'])
+            post['comments']['data'] += comments['data']
+
     def get_all_posts(self, fields=''):
         posts_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_FEED)
         feed = self.graph_api_client.get_connections(id='me', connection_name='feed', fields=posts_fields)
-        all_posts = feed['data']
-        while 'paging' in feed and 'next' in feed['paging']:
-            feed = requests.get(feed['paging']['next']).json()
-            if feed['data']:
-                all_posts += feed['data']
+        all_posts = []
+        while 'paging' in feed:
+            for post in feed['data']:
+                if 'reactions' in post:
+                    self._append_reactions(post)
+                if 'comments' in post:
+                    self._append_comments(post)
+                all_posts.append(post)
+            if not ('next' in feed['paging']):
+                break
+            feed = self._get_next(feed['paging']['next'])
         return all_posts
     
     def get_post_details(self, post_id, fields=''):
         post_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_POST)
         post = self.graph_api_client.get_object(id=post_id, fields=post_fields)
+        if 'reactions' in post:
+            self._append_reactions(post)
+        if 'comments' in post:
+            self._append_comments(post)
         return post
     
     def get_page_insights(self, metrices=''):
         page_metrices = metrices or ','.join(settings.FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS)
-        page_insights = self.graph_api_client.get_connections(id='me', connection_name='insights', metric=page_metrices)
+        page_insights = self.graph_api_client.get_connections(id='me', connection_name='insights', metric=page_metrices, date_preset=settings.FACEBOOK_DEFAULT_DATE_PRESET_FOR_PAGE_INSIGHTS, period=settings.FACEBOOK_DEFAULT_PERIOD_FOR_PAGE_INSIGHTS)
         return page_insights
     
     def get_post_insights(self, post_id, metrices=''):
