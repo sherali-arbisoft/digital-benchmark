@@ -73,17 +73,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'digital_benchmark.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -136,3 +125,8 @@ FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_clicks','post_clicks_unique
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+try:
+  from .local_settings import *
+except ImportError:
+  pass
