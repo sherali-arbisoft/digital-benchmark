@@ -128,3 +128,10 @@ facebook_default_fields_for_feed = 'id,backdated_time,created_time,is_eligible_f
 fields = facebook_default_fields_for_post = 'id,backdated_time,created_time,is_eligible_for_promotion,is_hidden,is_popular,is_published,message,message_tags,promotion_status,scheduled_publish_time,shares,story,story_tags,timeline_visibility,updated_time,comments,likes,reactions,to'
 facebook_default_metrices_for_page_insights = 'page_impressions,page_engaged_users,page_consumptions,page_negative_feedback,page_fans_online,page_actions_post_reactions_total,page_fans,page_fan_removes,page_views_total,page_video_views,page_posts_impressions'
 facebook_default_metrices_for_post_insights = 'post_impressions,post_impressions_unique,post_impressions_fan,post_impressions_fan_unique,post_impressions_organic,post_impressions_organic_unique,post_impressions_viral,post_impressions_viral_unique,post_engaged_users,post_negative_feedback,post_negative_feedback_unique,post_engaged_fan,post_clicks,post_clicks_unique,post_reactions_by_type_total'
+
+# twitter_benchmark setting
+REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
+BASE_AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
+ACCESS_TOKEN_URL= 'https://api.twitter.com/oauth/access_token'
+CONSUMER_KEY = 'LCE85J76ONueBmKn1SpVAjZ0F'
+CONSUMER_SECRET = 'eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ'
