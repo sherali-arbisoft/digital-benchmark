@@ -16,6 +16,12 @@ class CreateUpdateMixin(models.Model):
     class Meta:
         abstract = True
 
+class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
+    facebook_id = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    access_token = models.TextField()
+
 class Brand(SoftDeleteMixin, CreateUpdateMixin):
     name = models.CharField(max_length=255)
 
