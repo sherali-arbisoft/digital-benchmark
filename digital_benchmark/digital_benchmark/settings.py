@@ -113,6 +113,12 @@ STATIC_URL = '/static/'
 
 # facebook_benchmark settings
 FACEBOOK_GRAPH_API_VERSION = '3.1'
+FACEBOOK_APP_ID = '349831992602224'
+FACEBOOK_APP_SECRET = 'e3bfa0ed905199eecca00e74631280b7'
+FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI = 'http://localhost:8000/facebook_benchmark/login_successful'
+FACEBOOK_PERMISSIONS = [ 'pages_show_list', 'manage_pages', 'read_insights']
+FACEBOOK_RESPONSE_TYPE = 'code'
+FACEBOOK_STATE = '{"{st=state123abc,ds=123456789}"}'
 FACEBOOK_DEFAULT_FIELDS_FOR_PAGE = ['displayed_message_response_time','engagement','fan_count','id','name','overall_star_rating','rating_count','talking_about_count','unread_message_count','unread_notif_count','unseen_message_count','verification_status']
 FACEBOOK_DEFAULT_FIELDS_FOR_FEED = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
 FACEBOOK_DEFAULT_FIELDS_FOR_POST = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
