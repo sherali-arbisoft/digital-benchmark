@@ -52,6 +52,9 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
 
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 class ReactionChoice(Enum):
     angry = 'ANGRY'
     haha = 'HAHA'
