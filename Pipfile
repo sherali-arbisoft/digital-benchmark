@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 facebook-sdk = "*"
 django-debug-toolbar = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.6"
