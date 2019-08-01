@@ -21,7 +21,7 @@ class Brand(SoftDeleteMixin, CreateUpdateMixin):
 
 class Page(SoftDeleteMixin, CreateUpdateMixin):
     displayed_message_response_time = models.CharField(max_length=255)
-    num_engagements = models.IntegerField()
+    num_engagements = models.IntegerField('total engagements')
     fan_count = models.IntegerField()
     name = models.CharField(max_length=255)
     overall_start_rating = models.SmallIntegerField(null=True)
@@ -46,7 +46,7 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     rating_count = models.IntegerField()
     talking_about_count = models.IntegerField()
     unread_message_count = models.IntegerField()
-    unread_notif_count = models.IntegerField()
+    unread_notif_count = models.IntegerField('unread notification count')
     unseen_message_count = models.IntegerField()
     verification_status = models.CharField(max_length=255)
 
