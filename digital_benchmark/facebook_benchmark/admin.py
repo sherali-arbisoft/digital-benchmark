@@ -5,7 +5,9 @@ from .models import Page, Post
 # Register your models here.
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'num_engagements', 'fan_count', 'unread_message_count', 'unread_notif_count', 'verification_status')
+
+    list_filter = [ 'verification_status' ]
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
