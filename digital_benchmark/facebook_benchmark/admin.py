@@ -7,7 +7,9 @@ from .models import Page, Post
 class PageAdmin(admin.ModelAdmin):
     list_display = ('name', 'num_engagements', 'fan_count', 'unread_message_count', 'unread_notif_count', 'verification_status')
 
-    list_filter = [ 'verification_status' ]
+    list_filter = ['verification_status']
+
+    search_fields = ['name']
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
