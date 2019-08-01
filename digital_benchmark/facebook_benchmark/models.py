@@ -113,6 +113,9 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
     reactions = models.ManyToManyField('PostReaction', blank=True)
 
+    def __str__(self):
+        return self.message or self.story or self.post_id
+
 class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
