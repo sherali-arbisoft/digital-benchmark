@@ -25,4 +25,10 @@ class PageAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('message', 'story')
+
+    search_fields = ['message', 'story']
+
+    date_hierarchy = 'created_time'
+
+    empty_value_display = '--empty--'
