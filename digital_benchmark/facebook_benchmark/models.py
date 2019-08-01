@@ -21,6 +21,7 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     access_token = models.TextField()
+    expires_in = models.IntegerField()
 
 class Brand(SoftDeleteMixin, CreateUpdateMixin):
     name = models.CharField(max_length=255)
