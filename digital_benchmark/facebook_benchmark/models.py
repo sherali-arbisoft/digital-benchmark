@@ -75,6 +75,9 @@ class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
 
+    def __str__(self):
+        return self.reaction_type
+
 class Post(SoftDeleteMixin, CreateUpdateMixin):
     backdated_time = models.DateTimeField(null=True)
     created_time = models.DateTimeField()
@@ -123,6 +126,9 @@ class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
 
+    def __str__(self):
+        return self.reaction_type
+
 class Comment(SoftDeleteMixin, CreateUpdateMixin):
     comment_id = models.CharField(max_length=255)
     created_time = models.DateTimeField()
@@ -131,3 +137,6 @@ class Comment(SoftDeleteMixin, CreateUpdateMixin):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     reactions = models.ManyToManyField('CommentReaction', blank=True)
+
+    def __str__(self):
+        return self.message
