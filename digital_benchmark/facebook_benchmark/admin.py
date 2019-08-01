@@ -11,6 +11,8 @@ class PageAdmin(admin.ModelAdmin):
 
     search_fields = ['name']
 
+    date_hierarchy = 'created_at'
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     pass
