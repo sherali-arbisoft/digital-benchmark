@@ -19,6 +19,9 @@ class CreateUpdateMixin(models.Model):
 class Brand(SoftDeleteMixin, CreateUpdateMixin):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 class Page(SoftDeleteMixin, CreateUpdateMixin):
     displayed_message_response_time = models.CharField(max_length=255)
     num_engagements = models.IntegerField('total engagements')
