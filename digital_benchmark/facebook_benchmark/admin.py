@@ -13,6 +13,8 @@ class PageAdmin(admin.ModelAdmin):
 
     date_hierarchy = 'created_at'
 
+    empty_value_display = '--empty--'
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     pass
