@@ -69,3 +69,10 @@ class FacebookDataProvider:
         post_metrices = metrices or ','.join(settings.FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS)
         post_insights = self.graph_api_client.get_connections(id=post_id, connection_name='insights', metric=post_metrices)
         return post_insights
+    
+    def get_all_posts_details_and_insights(self, fields='', metrices=''):
+        all_posts = self.get_all_posts(fields)
+        for post in all_posts:
+            post_insights = self.get_post_insights(post['id'], metrices)
+            post['insights'] = post_insights
+        return all_posts

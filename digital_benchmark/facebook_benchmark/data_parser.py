@@ -62,7 +62,6 @@ class FacebookDataParser:
                 comment_reactions = self._get_all_comment_reactions(comment)
                 post_comment.reactions.add(*comment_reactions)
 
-
     def parse_post_details_and_insights(self, page_id, post_response, post_insights_response):
         post = Post()
         post.backdated_time = post_response.get('backdated_time', None)
@@ -87,11 +86,18 @@ class FacebookDataParser:
         post.page_id = page_id
         post.save()
 
-        if post_response['reactions']:
+        if 'reactions' in post_response:
             post_reactions = self._get_all_post_reactions(post_response)
             post.reactions.add(*post_reactions)
         
-        if post_response['comments']:
+        if 'comments' in post_response:
             self._set_all_comments(post, post_response)
 
         return post
+    
+    def parse_all_posts_details_and_insights(self, page_id, all_posts_response):
+        all_posts = []
+        for post_response in all_posts_response:
+            post = self.parse_post_details_and_insights(page_id, post_response, post_response['insights'])
+            all_posts.append(post)
+        return all_posts
