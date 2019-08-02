@@ -17,16 +17,17 @@ class CreateUpdateMixin(models.Model):
         abstract = True
 
 class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
+    access_token = models.TextField()
+    expires_in = models.IntegerField()
     facebook_id = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    access_token = models.TextField()
-    expires_in = models.IntegerField()
 
 class Brand(SoftDeleteMixin, CreateUpdateMixin):
     name = models.CharField(max_length=255)
 
 class Page(SoftDeleteMixin, CreateUpdateMixin):
+    access_token = models.TextField()
     displayed_message_response_time = models.CharField(max_length=255)
     num_engagements = models.IntegerField()
     fan_count = models.IntegerField()
@@ -57,7 +58,7 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     unseen_message_count = models.IntegerField()
     verification_status = models.CharField(max_length=255)
 
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    facebook_profile = models.ForeignKey(FacebookProfile, on_delete=models.CASCADE)
 
 class ReactionChoice(Enum):
     angry = 'ANGRY'
