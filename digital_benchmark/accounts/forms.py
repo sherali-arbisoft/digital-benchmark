@@ -46,7 +46,7 @@ class UserRegisterForm(forms.ModelForm):
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('confirmPassword')
         if password != password2:
-            raise forms.ValidationError("password must match")
+            raise forms.ValidationError("Passwords must match")
         email_qs = User.objects.filter(email=email)
         if email_qs.exists():
             raise forms.ValidationError(
