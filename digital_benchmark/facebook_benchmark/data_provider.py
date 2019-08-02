@@ -8,10 +8,10 @@ class FacebookUserDataProvider:
         self.user_access_token = user_access_token
         self.graph_api_client = fb.GraphAPI(access_token=user_access_token, version=settings.FACEBOOK_GRAPH_API_VERSION)
     
-    def get_all_pages(self, fields='', *args, **kwargs):
-        fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS)
-        pages = self.graph_api_client.get_connections(id='me', connection_name='accounts', fields=fields)
-        return pages
+    def get_profile(self, fields='', *args, **kwargs):
+        fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_PROFILE)
+        profile = self.graph_api_client.get_object(id='me', fields=fields)
+        return profile
 
 class FacebookPageDataProvider:
     def __init__(self, page_access_token, *args, **kwargs):
