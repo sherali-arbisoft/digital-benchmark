@@ -4,8 +4,9 @@ from django.conf import settings
 
 import requests
 
-from .data_provider import FacebookDataProvider
 from .forms import LoginForm
+from .data_provider import FacebookUserDataProvider
+from .data_parser import FacebookUserDataParser
 
 # Create your views here.
 class LoginView(View):
@@ -31,6 +32,14 @@ class LoginSuccessfulView(View):
             'code': code,
         }
         response = requests.post(url, data=data).json()
+
+        facebook_user_data_provider = FacebookUserDataProvider(user_access_token=response.get('access_token', ''))
+        facebook_profile_response = facebook_user_data_provider.get_profile()
+        facebook_user_data_parser = FacebookUserDataParser()
+        facebook_profile = facebook_user_data_parser.parse_profile(facebook_profile_response)
+        facebook_profile.access_token = response.get('access_token', '')
+        facebook_profile.expires_in = response.get('expires_in', '')
+        facebook_profile.save()
         return redirect('/facebook_benchmark/home')
 
 class HomeView(View):
