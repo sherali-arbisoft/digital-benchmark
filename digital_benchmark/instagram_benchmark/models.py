@@ -16,7 +16,7 @@ class CreateUpdateMixin(models.Model):
     class Meta:
         abstract = True
 
-class InstagramUser(SoftDeleteMixin, CreateUpdateMixin):
+class InstagramProfile(SoftDeleteMixin, CreateUpdateMixin):
     insta_uid=models.CharField(max_length=255, primary_key=True)
     app_user=models.ForeignKey(User, on_delete=models.CASCADE)
     access_token=models.CharField(max_length=255)
@@ -27,7 +27,7 @@ class InstagramUser(SoftDeleteMixin, CreateUpdateMixin):
 
 class InstagramMediaInsight(SoftDeleteMixin, CreateUpdateMixin):
     media_insight_id=models.CharField(max_length=255, primary_key=True)
-    insta_user_id=models.ForeignKey(InstagramUser, on_delete=models.CASCADE)
+    insta_user_id=models.ForeignKey(InstagramProfile, on_delete=models.CASCADE)
     likes_count=models.IntegerField(default=0)
     comments_count=models.IntegerField(default=0)
     media_tags=models.CharField(max_length=255, blank=True)
@@ -40,6 +40,6 @@ class InstagramMediaInsight(SoftDeleteMixin, CreateUpdateMixin):
 
 class InstagramUserMedia(SoftDeleteMixin, CreateUpdateMixin):
     media_id=models.CharField(max_length=255, primary_key=True)
-    insta_user_id=models.ForeignKey(InstagramUser, on_delete=models.CASCADE)
+    insta_user_id=models.ForeignKey(InstagramProfile, on_delete=models.CASCADE)
     media_insight_id=models.ForeignKey(InstagramMediaInsight, on_delete=models.CASCADE)
     media_url=models.CharField(max_length=255)
