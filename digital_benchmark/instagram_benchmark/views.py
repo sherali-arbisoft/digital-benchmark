@@ -36,7 +36,7 @@ class LoginSuccessView(View):
 
         userdata=response.json()
         #print(userdata)
-        newIgUser=InstagramUser(insta_uid=userdata['user']['id'],access_token=userdata['access_token'],full_name=userdata['user']['full_name'],username=userdata['user']['username'],is_business=userdata['user']['is_business'])
+        newIgUser=InstagramUser(insta_uid=userdata['user']['id'],app_user_id=request.user.id,access_token=userdata['access_token'],full_name=userdata['user']['full_name'],username=userdata['user']['username'],is_business=userdata['user']['is_business'])
         newIgUser.save()
         return render(request,'firstpage.html',{'data':userdata})
 
