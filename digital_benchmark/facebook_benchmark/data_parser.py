@@ -12,6 +12,16 @@ class FacebookUserDataParser:
         facebook_profile.last_name = profile_response.get('last_name', '')
         return facebook_profile
 
+    def parse_all_pages(self, facebook_profile_id, all_pages_response, *args, **kwargs):
+        all_pages = []
+        for page_response in all_pages_response['data']:
+            page = Page()
+            page.page_id = page_response.get('id', '')
+            page.access_token = page_response.get('access_token', '')
+            page.facebook_profile_id = facebook_profile_id
+            all_pages.append(page)
+        return all_pages
+
 class FacebookPageDataParser:
 
     def parse_page_details_and_insights(self, brand_id, page_response, page_insights_response):

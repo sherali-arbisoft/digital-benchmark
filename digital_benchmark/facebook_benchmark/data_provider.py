@@ -12,6 +12,11 @@ class FacebookUserDataProvider:
         fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_PROFILE)
         profile = self.graph_api_client.get_object(id='me', fields=fields)
         return profile
+    
+    def get_all_pages(self, fields='', *args, **kwargs):
+        fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS)
+        all_pages = self.graph_api_client.get_connections(id='me', connection_name='accounts', fields=fields)
+        return all_pages
 
 class FacebookPageDataProvider:
     def __init__(self, page_access_token, *args, **kwargs):
