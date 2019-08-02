@@ -69,7 +69,7 @@ class ReactionChoice(Enum):
     wow = 'WOW'
 
     @classmethod
-    def get_reaction_choices(self):
+    def get_reaction_choices(cls):
         return [(reaction.value, reaction) for reaction in ReactionChoice]
 
 class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
