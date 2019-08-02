@@ -23,23 +23,39 @@ class LoginView(View):
 
 class LoginSuccessfulView(View):
     def get(self, request):
-        code = request.GET['code']
         url = 'https://graph.facebook.com/v{version}/oauth/access_token'.format(version=settings.FACEBOOK_GRAPH_API_VERSION)
         data = {
             'client_id': settings.FACEBOOK_APP_ID,
             'redirect_uri': settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI,
             'client_secret': settings.FACEBOOK_APP_SECRET,
-            'code': code,
+            'code': request.GET['code'],
         }
         response = requests.post(url, data=data).json()
 
         facebook_user_data_provider = FacebookUserDataProvider(user_access_token=response.get('access_token', ''))
         facebook_profile_response = facebook_user_data_provider.get_profile()
+
         facebook_user_data_parser = FacebookUserDataParser()
         facebook_profile = facebook_user_data_parser.parse_profile(facebook_profile_response)
+        
         facebook_profile.access_token = response.get('access_token', '')
         facebook_profile.expires_in = response.get('expires_in', '')
         facebook_profile.save()
+        
+        all_pages_response = facebook_user_data_provider.get_all_pages()
+        all_pages = facebook_user_data_parser.parse_all_pages(facebook_profile.id, all_pages_response)
+
+        for page in all_pages:
+            url = 'https://graph.facebook.com/v{version}/oauth/access_token'.format(version=settings.FACEBOOK_GRAPH_API_VERSION)
+            data = {
+                'grant_type': settings.FACEBOOK_GRANT_TYPE,
+                'client_id': settings.FACEBOOK_APP_ID,
+                'client_secret': settings.FACEBOOK_APP_SECRET,
+                'fb_exchange_token': page.access_token
+            }
+            response = requests.post(url, data=data).json()
+            page.access_token = response.get('access_token', '')
+        
         return redirect('/facebook_benchmark/home')
 
 class HomeView(View):
