@@ -2,9 +2,17 @@ from django.conf import settings
 
 from datetime import datetime
 
-from .models import Page, Post, PostReaction, Comment, CommentReaction
+from .models import FacebookProfile, Page, Post, PostReaction, Comment, CommentReaction
 
-class FacebookDataParser:
+class FacebookUserDataParser:
+    def parse_profile(self, profile_response, *args, **kwargs):
+        facebook_profile = FacebookProfile()
+        facebook_profile.facebook_id = profile_response.get('id', '')
+        facebook_profile.first_name = profile_response.get('first_name', '')
+        facebook_profile.last_name = profile_response.get('last_name', '')
+        return facebook_profile
+
+class FacebookPageDataParser:
 
     def parse_page_details_and_insights(self, brand_id, page_response, page_insights_response):
         page = Page()
