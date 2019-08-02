@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class InstagramUser(models.Model):
-    insta_uid=models.CharField(max_length=200)
+    insta_uid=models.CharField(max_length=200, primary_key=True)
     access_token=models.CharField(max_length=200)
     full_name=models.CharField(max_length=200)
     username=models.CharField(max_length=200)
