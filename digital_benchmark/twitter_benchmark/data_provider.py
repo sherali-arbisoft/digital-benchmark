@@ -4,7 +4,7 @@ from django.conf import settings
 
 class DataProvider:
 
-    def get_user_profile_data(verifier_token,consumer_key, consumer_secret,resource_owner_key,resource_owner_secret):
+    def get_user_profile_data(self,verifier_token,consumer_key, consumer_secret,resource_owner_key,resource_owner_secret):
         oauth = OAuth1Session(consumer_key,
                               client_secret=consumer_secret,
                               resource_owner_key=resource_owner_key,
