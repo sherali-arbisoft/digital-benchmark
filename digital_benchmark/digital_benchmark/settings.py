@@ -135,3 +135,8 @@ BASE_AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
 ACCESS_TOKEN_URL= 'https://api.twitter.com/oauth/access_token'
 CONSUMER_KEY = 'LCE85J76ONueBmKn1SpVAjZ0F'
 CONSUMER_SECRET = 'eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ'
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
