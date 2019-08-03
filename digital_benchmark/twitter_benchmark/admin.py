@@ -1,4 +1,6 @@
 from django.contrib import admin
-from . import  models
+from .models import UserData
 
-admin.site.register(models.UserData)
+@admin.register(UserData)
+class UserDataAdmin(admin.ModelAdmin):
+    pass
