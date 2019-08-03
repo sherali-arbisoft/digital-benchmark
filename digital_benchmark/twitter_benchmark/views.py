@@ -1,10 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
-from django.views import View
+from django.views import View, generic
 from requests_oauthlib import OAuth1Session
 
 
-class LoginView(View):
+
+class LoginView(generic.ListView):
+    template_name = 'Login/index.html'
+
+    def get_queryset(self):
+        return
+
+
+class AuthView(View):
     def get(self,request):
         oauth = OAuth1Session(settings.CONSUMER_KEY, client_secret=settings.CONSUMER_SECRET)
         fetch_response = oauth.fetch_request_token(settings.REQUEST_TOKEN_URL)
@@ -14,8 +22,8 @@ class LoginView(View):
         print("Got OAuth token: %s" % resource_owner_secret)
         authorization_url = oauth.authorization_url(settings.BASE_AUTHORIZATION_URL)
         print(authorization_url)
-        context = {'auth_url': authorization_url}
-        return render(request, 'Login/index.html', context)
+        return redirect(authorization_url)
+
 
 
 class SuccessView(View):
