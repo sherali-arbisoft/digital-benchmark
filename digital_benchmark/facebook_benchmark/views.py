@@ -55,6 +55,7 @@ class LoginSuccessfulView(View):
             }
             response = requests.post(url, data=data).json()
             page.access_token = response.get('access_token', '')
+            page.save()
         
         return redirect('/facebook_benchmark/home')
 
