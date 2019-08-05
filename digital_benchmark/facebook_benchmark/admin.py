@@ -37,6 +37,8 @@ class PostAdmin(admin.ModelAdmin):
 class PostReactionAdmin(admin.ModelAdmin):
     list_display = ('from_id', 'get_reaction_type_display')
 
+    list_filter = ['reaction_type']
+
     search_fields = ['from_id', 'reaction_type']
 
     empty_value_display = '--empty--'
@@ -54,6 +56,8 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(CommentReaction)
 class CommentReactionAdmin(admin.ModelAdmin):
     list_display = ('from_id', 'get_reaction_type_display')
+
+    list_filter = ['reaction_type']
 
     search_fields = ['from_id', 'reaction_type']
 
