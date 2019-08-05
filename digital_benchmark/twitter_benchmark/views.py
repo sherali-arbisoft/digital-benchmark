@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views import View, generic
 from requests_oauthlib import OAuth1Session
-
+from .models import AuthToken
+from .data_provider import DataProvider
 
 
 class LoginView(generic.ListView):
@@ -13,21 +14,24 @@ class LoginView(generic.ListView):
 
 
 class AuthView(View):
-    def get(self,request):
+    def get(self, request):
         oauth = OAuth1Session(settings.CONSUMER_KEY, client_secret=settings.CONSUMER_SECRET)
         fetch_response = oauth.fetch_request_token(settings.REQUEST_TOKEN_URL)
         resource_owner_key = fetch_response.get('oauth_token')
         resource_owner_secret = fetch_response.get('oauth_token_secret')
-        print("Got OAuth token: %s" % resource_owner_key)
-        print("Got OAuth token: %s" % resource_owner_secret)
         authorization_url = oauth.authorization_url(settings.BASE_AUTHORIZATION_URL)
-        print(authorization_url)
+        obj_auth_token = AuthToken()
+        obj_auth_token.resource_owner_key = resource_owner_key
+        obj_auth_token.resource_owner_secret = resource_owner_secret
+        obj_auth_token.save()
         return redirect(authorization_url)
 
 
-
 class SuccessView(View):
-    def get(self,request):
+    def get(self, request):
+        obj = DataProvider(request.GET['oauth_verifier'], request.GET['oauth_token'])
+        data = obj.get_user_profile_data()
+        print(data)
         return render(request, 'success/index.html')
 
 
