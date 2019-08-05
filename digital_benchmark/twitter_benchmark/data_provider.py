@@ -24,7 +24,7 @@ class DataProvider:
                               resource_owner_key=self.access_token,
                               resource_owner_secret=self.access_token_secret)
         response = oauth.get(settings.PROFILE_DATA_URL)
-        return response.json
+        return response.json()
 
     def get_tweets(self):
         oauth = OAuth1Session(settings.CONSUMER_KEY,
@@ -32,4 +32,4 @@ class DataProvider:
                               resource_owner_key=self.access_token,
                               resource_owner_secret=self.access_token_secret)
         response = oauth.get(settings.TWEETS_URL)
-        return response.json
+        return response.json()
