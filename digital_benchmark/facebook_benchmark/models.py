@@ -78,7 +78,7 @@ class ReactionChoice(Enum):
 
     @classmethod
     def get_reaction_choices(self):
-        return [(reaction.value, reaction) for reaction in ReactionChoice]
+        return [(reaction.value, reaction.value.title()) for reaction in ReactionChoice]
 
 class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
