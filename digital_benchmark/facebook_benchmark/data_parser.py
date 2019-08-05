@@ -24,7 +24,7 @@ class FacebookUserDataParser:
 
 class FacebookPageDataParser:
 
-    def parse_page_details_and_insights(self, brand_id, page_response, page_insights_response):
+    def parse_page_details_and_insights(self, facebook_profile_id, page_response, page_insights_response):
         page = Page()
         page.displayed_message_response_time = page_response.get('displayed_message_response_time', '')
         page.num_engagements = page_response.get('engagement', {}).get('count', 0)
@@ -41,7 +41,7 @@ class FacebookPageDataParser:
         for item in page_insights_response['data']:
             setattr(page, item['name'], item['values'][0]['value'])
 
-        page.brand_id = brand_id
+        page.facebook_profile_id = facebook_profile_id
 
         page.save()
 
@@ -94,7 +94,10 @@ class FacebookPageDataParser:
         post.post_id = post_response.get('id', '')
         post.promotion_status = post_response.get('promotion_status', '')
         post.scheduled_publish_time = post_response.get('scheduled_publish_time', None)
-        post.shares = post_response.get('shares', 0)
+        post.shares = 0
+        if 'shares' in post_response:
+            if 'count' in post_response['shares']:
+                post.shares = post_response['shares']['count']
         post.story = post_response.get('story', None)
         post.timeline_visibility = post_response.get('timeline_visibility', '')
         post.updated_time = post_response.get('updated_time', None)
