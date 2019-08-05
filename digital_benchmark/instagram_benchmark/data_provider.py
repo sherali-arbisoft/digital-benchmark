@@ -11,13 +11,9 @@ class InstagramDataProvider:
 
 
     def get_user_profile(self):
-        #print('----------- get profile final url ---------')
         url=profileURL+self.access_token
-        #print(url)
         response = requests.get(url=url)
         profile_data=response.json()
-        # print('----------- get profile responce ---------')
-        # print(profile_data)
         return profile_data
 
     def get_user_media(self):
@@ -43,4 +39,4 @@ class InstagramDataProvider:
         url=commentsURL.format(media_id)+self.access_token
         response = requests.get(url=url)
         recent_comments=response.json()
-        return recent_comments
+        return recent_comments['data']
