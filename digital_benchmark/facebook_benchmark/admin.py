@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import FacebookProfile, Page, Post, PostReaction, Comment, CommentReaction
+from .models import FacebookProfile, Page, Rating, Post, PostReaction, Comment, CommentReaction
 
 # Register your models here.
 @admin.register(FacebookProfile)
@@ -20,6 +20,18 @@ class PageAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     date_hierarchy = 'created_at'
+
+    empty_value_display = '--empty--'
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ('review_text', 'rating', 'recommendation_type')
+
+    list_filter = ['recommendation_type']
+
+    search_fields = ['recommendation_type', 'review_text']
+
+    date_hierarchy = 'created_time'
 
     empty_value_display = '--empty--'
 
