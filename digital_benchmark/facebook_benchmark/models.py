@@ -17,21 +17,26 @@ class CreateUpdateMixin(models.Model):
         abstract = True
 
 class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
+    access_token = models.TextField()
+    expires_in = models.IntegerField()
     facebook_id = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    access_token = models.TextField()
-    expires_in = models.IntegerField()
 
-class Brand(SoftDeleteMixin, CreateUpdateMixin):
-    name = models.CharField(max_length=255)
+    class Meta:
+        verbose_name = 'Facebook Profile'
+        verbose_name_plural = 'Facebook Profiles'
+
+    def __str__(self):
+        return self.first_name + " " + self.last_name
 
 class Page(SoftDeleteMixin, CreateUpdateMixin):
+    access_token = models.TextField(null=True, blank=False)
     displayed_message_response_time = models.CharField(max_length=255)
-    num_engagements = models.IntegerField()
+    num_engagements = models.IntegerField('total engagements')
     fan_count = models.IntegerField()
     name = models.CharField(max_length=255)
-    overall_start_rating = models.SmallIntegerField(null=True)
+    overall_start_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=False)
     page_consumptions = models.IntegerField()
     page_engaged_users = models.IntegerField()
     page_id = models.CharField(max_length=255)
@@ -53,11 +58,34 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     rating_count = models.IntegerField()
     talking_about_count = models.IntegerField()
     unread_message_count = models.IntegerField()
-    unread_notif_count = models.IntegerField()
+    unread_notif_count = models.IntegerField('unread notification count')
     unseen_message_count = models.IntegerField()
     verification_status = models.CharField(max_length=255)
 
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    facebook_profile = models.ForeignKey(FacebookProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+class RecommendationChoice(Enum):
+    negative = 'negative'
+    none = 'none'
+    positive = 'positive'
+
+    @classmethod
+    def get_recommendation_choices(cls):
+        return [(recommendation.value, recommendation.value.title()) for recommendation in RecommendationChoice]
+
+class Rating(SoftDeleteMixin, CreateUpdateMixin):
+    created_time = models.DateTimeField()
+    rating = models.SmallIntegerField(null=True, blank=True)
+    recommendation_type = models.CharField(max_length=8, choices=RecommendationChoice.get_recommendation_choices())
+    review_text = models.TextField(null=True, blank=True)
+
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.review_text
 
 class ReactionChoice(Enum):
     angry = 'ANGRY'
@@ -69,12 +97,19 @@ class ReactionChoice(Enum):
     wow = 'WOW'
 
     @classmethod
-    def get_reaction_choices(cls):
-        return [(reaction.value, reaction) for reaction in ReactionChoice]
+    def get_reaction_choices(self):
+        return [(reaction.value, reaction.value.title()) for reaction in ReactionChoice]
 
 class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
+
+    class Meta:
+        verbose_name = 'Post Reaction'
+        verbose_name_plural = 'Post Reactions'
+
+    def __str__(self):
+        return self.reaction_type
 
 class Post(SoftDeleteMixin, CreateUpdateMixin):
     backdated_time = models.DateTimeField(null=True)
@@ -117,9 +152,19 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
     reactions = models.ManyToManyField('PostReaction', blank=True)
 
+    def __str__(self):
+        return self.message or self.story or self.post_id
+
 class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
+
+    class Meta:
+        verbose_name = 'Comment Reaction'
+        verbose_name_plural = 'Comment Reactions'
+
+    def __str__(self):
+        return self.reaction_type
 
 class Comment(SoftDeleteMixin, CreateUpdateMixin):
     comment_id = models.CharField(max_length=255)
@@ -129,3 +174,6 @@ class Comment(SoftDeleteMixin, CreateUpdateMixin):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     reactions = models.ManyToManyField('CommentReaction', blank=True)
+
+    def __str__(self):
+        return self.message
