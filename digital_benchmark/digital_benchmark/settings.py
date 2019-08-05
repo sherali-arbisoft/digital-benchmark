@@ -132,7 +132,8 @@ facebook_default_metrices_for_post_insights = 'post_impressions,post_impressions
 # twitter_benchmark setting
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
 BASE_AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
-ACCESS_TOKEN_URL= 'https://api.twitter.com/oauth/access_token'
+PROFILE_DATA_URL = 'https://api.twitter.com/1.1/account/verify_credentials.json'
+TWEETS_URL = 'https://api.twitter.com/1.1/statuses/home_timeline.json'
 CONSUMER_KEY = 'LCE85J76ONueBmKn1SpVAjZ0F'
 CONSUMER_SECRET = 'eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ'
 
