@@ -30,12 +30,6 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
     def __str__(self):
         return self.first_name + " " + self.last_name
 
-class Brand(SoftDeleteMixin, CreateUpdateMixin):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
 class Page(SoftDeleteMixin, CreateUpdateMixin):
     access_token = models.TextField()
     displayed_message_response_time = models.CharField(max_length=255)

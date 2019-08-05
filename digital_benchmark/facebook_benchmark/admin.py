@@ -1,16 +1,8 @@
 from django.contrib import admin
 
-from .models import FacebookProfile, Brand, Page, Post, PostReaction, Comment, CommentReaction
+from .models import FacebookProfile, Page, Post, PostReaction, Comment, CommentReaction
 
 # Register your models here.
-@admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-
-    date_hierarchy = 'created_at'
-
-    empty_value_display = '--empty--'
-
 @admin.register(FacebookProfile)
 class FacebookProfileAdmin(admin.ModelAdmin):
     search_fields = ['first_name', 'last_name']
