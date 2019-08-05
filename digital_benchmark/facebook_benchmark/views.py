@@ -39,7 +39,7 @@ class LoginSuccessfulView(View):
         facebook_profile = facebook_user_data_parser.parse_profile(facebook_profile_response)
         
         facebook_profile.access_token = response.get('access_token', '')
-        facebook_profile.expires_in = response.get('expires_in', '')
+        facebook_profile.expires_in = response.get('expires_in', 0)
         facebook_profile.save()
         
         all_pages_response = facebook_user_data_provider.get_all_pages()
