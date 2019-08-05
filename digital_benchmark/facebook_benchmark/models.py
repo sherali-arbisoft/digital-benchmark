@@ -31,12 +31,12 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
         return self.first_name + " " + self.last_name
 
 class Page(SoftDeleteMixin, CreateUpdateMixin):
-    access_token = models.TextField()
+    access_token = models.TextField(null=True, blank=False)
     displayed_message_response_time = models.CharField(max_length=255)
     num_engagements = models.IntegerField('total engagements')
     fan_count = models.IntegerField()
     name = models.CharField(max_length=255)
-    overall_start_rating = models.SmallIntegerField(null=True)
+    overall_start_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=False)
     page_consumptions = models.IntegerField()
     page_engaged_users = models.IntegerField()
     page_id = models.CharField(max_length=255)
