@@ -67,6 +67,26 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     def __str__(self):
         return self.name
 
+class RecommendationChoice(Enum):
+    negative = 'negative'
+    none = 'none'
+    positive = 'positive'
+
+    @classmethod
+    def get_recommendation_choices(cls):
+        return [(recommendation.value, recommendation.value.title()) for recommendation in RecommendationChoice]
+
+class Rating(SoftDeleteMixin, CreateUpdateMixin):
+    created_time = models.DateTimeField()
+    rating = models.SmallIntegerField(null=True, blank=True)
+    recommendation_type = models.CharField(max_length=8, choices=RecommendationChoice.get_recommendation_choices())
+    review_text = models.TextField(null=True, blank=True)
+
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.review_text
+
 class ReactionChoice(Enum):
     angry = 'ANGRY'
     haha = 'HAHA'
