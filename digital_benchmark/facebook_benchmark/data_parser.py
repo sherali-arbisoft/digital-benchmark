@@ -6,8 +6,11 @@ from .models import FacebookProfile, Page, Post, PostReaction, Comment, CommentR
 
 class FacebookUserDataParser:
     def parse_profile(self, profile_response, *args, **kwargs):
-        facebook_profile = FacebookProfile()
-        facebook_profile.facebook_id = profile_response.get('id', '')
+        try:
+            facebook_profile = FacebookProfile.objects.get(facebook_id=profile_response.get('id', ''))
+        except:
+            facebook_profile = FacebookProfile()
+            facebook_profile.facebook_id = profile_response.get('id', '')
         facebook_profile.first_name = profile_response.get('first_name', '')
         facebook_profile.last_name = profile_response.get('last_name', '')
         return facebook_profile
