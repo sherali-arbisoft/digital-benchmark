@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class UserData(models.Model):
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_id = models.CharField(max_length=255)
     user_name = models.TextField()
     screen_name = models.CharField(max_length=255)
