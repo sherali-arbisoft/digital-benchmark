@@ -23,6 +23,10 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name = 'Facebook Profile'
+        verbose_name_plural = 'Facebook Profiles'
+
     def __str__(self):
         return self.first_name + " " + self.last_name
 
@@ -86,6 +90,10 @@ class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
 
+    class Meta:
+        verbose_name = 'Post Reaction'
+        verbose_name_plural = 'Post Reactions'
+
     def __str__(self):
         return self.reaction_type
 
@@ -136,6 +144,10 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
 class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
+
+    class Meta:
+        verbose_name = 'Comment Reaction'
+        verbose_name_plural = 'Comment Reactions'
 
     def __str__(self):
         return self.reaction_type
