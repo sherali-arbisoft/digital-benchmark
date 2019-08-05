@@ -2,7 +2,7 @@ from django.conf import settings
 
 from datetime import datetime
 
-from .models import FacebookProfile, Page, Post, PostReaction, Comment, CommentReaction
+from .models import FacebookProfile, Page, Rating, Post, PostReaction, Comment, CommentReaction
 
 class FacebookUserDataParser:
     def parse_profile(self, profile_response, *args, **kwargs):
@@ -24,13 +24,23 @@ class FacebookUserDataParser:
 
 class FacebookPageDataParser:
 
+    def _set_all_ratings(self, page, page_response):
+        for rating_response in page_response['ratings']['data']:
+            rating = Rating()
+            rating.created_time = rating_response.get('created_time', None)
+            rating.rating = rating_response.get('rating', 0)
+            rating.recommendation_type = rating_response.get('recommendation_type', 'none')
+            rating.review_text = rating_response.get('review_text', '')
+            rating.page = page
+            rating.save()
+
     def parse_page_details_and_insights(self, facebook_profile_id, page_response, page_insights_response):
         page = Page()
         page.displayed_message_response_time = page_response.get('displayed_message_response_time', '')
         page.num_engagements = page_response.get('engagement', {}).get('count', 0)
         page.fan_count = page_response.get('fan_count', 0)
         page.name = page_response.get('name', '')
-        page.overall_start_rating = page_response.get('overall_start_rating', 0)
+        page.overall_start_rating = page_response.get('overall_start_rating', 0.0)
         page.page_id = page_response.get('id', '')
         page.rating_count = page_response.get('rating_count', 0)
         page.talking_about_count = page_response.get('talking_about_count', 0)
@@ -38,12 +48,16 @@ class FacebookPageDataParser:
         page.unread_notif_count = page_response.get('unread_notif_count', 0)
         page.unseen_message_count = page_response.get('unseen_message_count', 0)
         page.verification_status = page_response.get('verification_status', 'not_verified')
+
         for item in page_insights_response['data']:
             setattr(page, item['name'], item['values'][0]['value'])
 
         page.facebook_profile_id = facebook_profile_id
 
         page.save()
+
+        if 'ratings' in page_response:
+            self._set_all_ratings(page, page_response)
 
         return page
     
@@ -94,10 +108,7 @@ class FacebookPageDataParser:
         post.post_id = post_response.get('id', '')
         post.promotion_status = post_response.get('promotion_status', '')
         post.scheduled_publish_time = post_response.get('scheduled_publish_time', None)
-        post.shares = 0
-        if 'shares' in post_response:
-            if 'count' in post_response['shares']:
-                post.shares = post_response['shares']['count']
+        post.shares = post_response.get('shares', {}).get('count', 0)
         post.story = post_response.get('story', None)
         post.timeline_visibility = post_response.get('timeline_visibility', '')
         post.updated_time = post_response.get('updated_time', None)
@@ -105,6 +116,7 @@ class FacebookPageDataParser:
             setattr(post, item['name'], item['values'][0]['value'])
 
         post.page_id = page_id
+
         post.save()
 
         if 'reactions' in post_response:
