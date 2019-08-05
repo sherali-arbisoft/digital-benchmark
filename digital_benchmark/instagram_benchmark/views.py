@@ -6,6 +6,7 @@ import requests
 import json
 from urllib.request import urlopen
 from .models import InstagramProfile
+from .data_parser import InstagramDataParser
 
 
 # index view is temporary, leaving it as function based view that's why
@@ -18,8 +19,6 @@ class AuthView(generic.ListView):
 
     def get_queryset(self):
         return
-# def auth(request):
-#     return render(request,'auth.html',{})
 
 class LoginSuccessView(View):
     def get(self, request):
@@ -35,9 +34,18 @@ class LoginSuccessView(View):
         response = requests.post(url='https://api.instagram.com/oauth/access_token', data=data,headers={'Content-Type': 'application/x-www-form-urlencoded'})
 
         userdata=response.json()
-        #print(userdata)
-        newIgUser=InstagramProfile(insta_uid=userdata['user']['id'],app_user_id=request.user.id,access_token=userdata['access_token'],full_name=userdata['user']['full_name'],username=userdata['user']['username'],is_business=userdata['user']['is_business'])
-        newIgUser.save()
+        try:
+            this_user=InstagramProfile.objects.get(insta_uid=userdata['user']['id'])
+            if this_user:
+                this_user.access_token=userdata['access_token']
+                this_user.save()
+        except:
+            print('user does not exist!')
+            app_user_id=request.user.id
+            instagram_parser=InstagramDataParser()
+            this_user=instagram_parser.parse_profile_data(userdata,app_user_id)
+            # newIgUser=InstagramProfile(insta_uid=userdata['user']['id'],app_user_id=request.user.id,access_token=userdata['access_token'],full_name=userdata['user']['full_name'],username=userdata['user']['username'],is_business=userdata['user']['is_business'])
+            # newIgUser.save()
         return render(request,'firstpage.html',{'data':userdata})
 
 def login(request):

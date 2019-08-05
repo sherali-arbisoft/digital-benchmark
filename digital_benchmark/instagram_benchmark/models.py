@@ -26,7 +26,6 @@ class InstagramProfile(SoftDeleteMixin, CreateUpdateMixin):
 
 
 class InstagramMediaInsight(SoftDeleteMixin, CreateUpdateMixin):
-    media_insight_id=models.CharField(max_length=255, primary_key=True)
     insta_user_id=models.ForeignKey(InstagramProfile, on_delete=models.CASCADE)
     likes_count=models.IntegerField(default=0)
     comments_count=models.IntegerField(default=0)
