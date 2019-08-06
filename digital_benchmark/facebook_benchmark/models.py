@@ -17,11 +17,11 @@ class CreateUpdateMixin(models.Model):
         abstract = True
 
 class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
-    access_token = models.TextField()
-    expires_in = models.IntegerField()
+    access_token = models.TextField(null=True, blank=False)
+    expires_in = models.IntegerField(null=True, blank=False)
     facebook_id = models.CharField(max_length=255)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, null=True, blank=False)
+    last_name = models.CharField(max_length=255, null=True, blank=False)
 
     class Meta:
         verbose_name = 'Facebook Profile'
