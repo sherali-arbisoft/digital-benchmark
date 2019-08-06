@@ -31,7 +31,6 @@ class FacebookUserDataParser:
         return all_pages
 
 class FacebookPageDataParser:
-
     def _set_all_ratings(self, page, page_response):
         for rating_response in page_response['ratings']['data']:
             rating = Rating()
@@ -42,13 +41,14 @@ class FacebookPageDataParser:
             rating.page = page
             rating.save()
 
-    def parse_page_details_and_insights(self, facebook_profile_id, page_response, page_insights_response):
-        page = Page()
+    def parse_page_details_and_insights(self, facebook_profile_id, page, page_response, page_insights_response):
+        if not page:
+            page = Page()
         page.displayed_message_response_time = page_response.get('displayed_message_response_time', '')
         page.num_engagements = page_response.get('engagement', {}).get('count', 0)
         page.fan_count = page_response.get('fan_count', 0)
         page.name = page_response.get('name', '')
-        page.overall_start_rating = page_response.get('overall_start_rating', 0.0)
+        page.overall_star_rating = page_response.get('overall_star_rating', 0.0)
         page.page_id = page_response.get('id', '')
         page.rating_count = page_response.get('rating_count', 0)
         page.talking_about_count = page_response.get('talking_about_count', 0)
