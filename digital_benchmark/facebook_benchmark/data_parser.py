@@ -14,18 +14,14 @@ class FacebookUserDataParser:
         facebook_profile.last_name = profile_response.get('last_name', '')
         return facebook_profile
 
-    def parse_all_pages(self, facebook_profile_id, all_pages_response, *args, **kwargs):
+    def parse_all_pages(self, all_pages_response, *args, **kwargs):
         all_pages = []
         for page_response in all_pages_response['data']:
-            try:
-                page = Page.objects.get(page_id=page_response.get('id', ''))
-            except:
-                page = Page()
-                page.page_id = page_response.get('id', '')
+            page, created = Page.objects.get_or_create(page_id=page_response.get('id', ''), defaults={
+                'facebook_profile_id': self.facebook_profile_id
+            })
             page.access_token = page_response.get('access_token', '')
-            page.page_id = page_response.get('id', '')
             page.name = page_response.get('name', '')
-            page.facebook_profile_id = facebook_profile_id
             all_pages.append(page)
         return all_pages
 
