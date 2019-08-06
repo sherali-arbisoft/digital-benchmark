@@ -28,7 +28,7 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
         verbose_name_plural = 'Facebook Profiles'
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return f'{self.first_name} {self.last_name}' 
 
 class Page(SoftDeleteMixin, CreateUpdateMixin):
     access_token = models.TextField(null=True, blank=False)
