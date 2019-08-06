@@ -121,7 +121,7 @@ class TimelineVisibilityChoice(Enum):
         return [(timeline_visibility.value, timeline_visibility.value.replace('_', ' ').title()) for timeline_visibility in TimelineVisibilityChoice]
 
 class Post(SoftDeleteMixin, CreateUpdateMixin):
-    backdated_time = models.DateTimeField(null=True)
+    backdated_time = models.DateTimeField(null=True, blank=True)
     created_time = models.DateTimeField()
     is_eligible_for_promotion = models.BooleanField()
     is_expired = models.BooleanField()
@@ -129,7 +129,7 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     is_instagram_eligible = models.BooleanField()
     is_popular = models.BooleanField()
     is_published = models.BooleanField()
-    message = models.TextField(null=True)
+    message = models.TextField(null=True, blank=True)
     post_clicks = models.IntegerField()
     post_clicks_unique = models.IntegerField()
     post_engaged_fan = models.IntegerField()
@@ -152,9 +152,9 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     post_negative_feedback = models.IntegerField()
     post_negative_feedback_unique = models.IntegerField()
     promotion_status = models.CharField(max_length=255)
-    scheduled_publish_time = models.DateTimeField(null=True)
+    scheduled_publish_time = models.DateTimeField(null=True, blank=True)
     shares = models.IntegerField()
-    story = models.TextField(null=True)
+    story = models.TextField(null=True, blank=True)
     timeline_visibility = models.CharField(max_length=12, choices=TimelineVisibilityChoice.get_timeline_visibility_choices())
     updated_time = models.DateTimeField()
 
