@@ -27,9 +27,32 @@ class DataProvider:
         return response.json()
 
     def get_tweets(self):
+        tweets = []
+        total_tweets = self.get_user_profile_data().get('statuses_count')
+        first_params = {"trim_user": True,
+                        "count":  5
+                       }
         oauth = OAuth1Session(settings.CONSUMER_KEY,
                               client_secret=settings.CONSUMER_SECRET,
                               resource_owner_key=self.access_token,
                               resource_owner_secret=self.access_token_secret)
-        response = oauth.get(settings.TWEETS_URL)
-        return response.json()
+        first_response = oauth.get(settings.TWEETS_URL, params=first_params)
+        tweets.append(first_response.json())
+        lowest_tweet_id = self.get_min_id(first_response.json())
+        n = total_tweets
+        while n > 0:
+            params = {"trim_user": True,
+                      "count": 5,
+                      "max_id": lowest_tweet_id,
+                      "exclude_replies": True
+                      }
+            response = oauth.get(settings.TWEETS_URL, params=params)
+            next_tweets = response.json()
+            n = n-5
+            lowest_tweet_id = self.get_min_id(next_tweets)
+            tweets.append(next_tweets[1:])
+        return tweets
+
+    def get_min_id(self,data):
+        last_tweet = data[-1]
+        return last_tweet.get('id')
