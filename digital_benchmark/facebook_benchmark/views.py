@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 import requests
 
@@ -9,6 +11,7 @@ from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
 from .models import FacebookProfile, Page
 
+@method_decorator(login_required, name='dispatch')
 class LoginView(View):
     def get(self, request, *args, **kwargs):
         login_form = LoginForm()
@@ -16,11 +19,12 @@ class LoginView(View):
             'login_form': login_form
         }
         return render(request, 'facebook_benchmark/login.html', context)
-    
+
     def post(self, request, *args, **kwargs):
         url = settings.FACEBOOK_LOGIN_URL
         return redirect(url)
 
+@method_decorator(login_required, name='dispatch')
 class LoginSuccessfulView(View):
     def get(self, request):
         url = settings.FACEBOOK_ACCESS_TOKEN_URL
@@ -35,7 +39,7 @@ class LoginSuccessfulView(View):
         facebook_user_data_provider = FacebookUserDataProvider(user_access_token=response.get('access_token', ''))
         profile_response = facebook_user_data_provider.get_profile()
 
-        facebook_user_data_parser = FacebookUserDataParser()
+        facebook_user_data_parser = FacebookUserDataParser(user_id=request.user.id)
         facebook_profile = facebook_user_data_parser.parse_profile(profile_response)
         
         facebook_profile.access_token = response.get('access_token', '')
@@ -61,6 +65,7 @@ class LoginSuccessfulView(View):
 
         return redirect('/facebook_benchmark/home')
 
+@method_decorator(login_required, name='dispatch')
 class HomeView(View):
     def get(self, request, *args, **kwargs):
         facebook_profile_id = request.session.get('facebook_profile_id', '')
@@ -93,6 +98,7 @@ class HomeView(View):
         }
         return render(request, 'facebook_benchmark/home.html', context)
 
+@method_decorator(login_required, name='dispatch')
 class LoadPageDataView(View):
     def get(self, request, page_id, *args, **kwargs):
         facebook_profile_id = request.session.get('facebook_profile_id', '')
