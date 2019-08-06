@@ -50,7 +50,7 @@ class FacebookPageDataProvider:
             comments = self._get_next(comments['paging']['next'])
         post['comments']['data'] = all_comments
 
-    def get_all_posts(self, fields=''):
+    def get_all_posts_details(self, fields=''):
         posts_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_FEED)
         feed = self.graph_api_client.get_connections(id='me', connection_name='feed', fields=posts_fields)
         all_posts = []
@@ -84,3 +84,10 @@ class FacebookPageDataProvider:
         post_metrices = metrices or ','.join(settings.FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS)
         post_insights = self.graph_api_client.get_connections(id=post_id, connection_name='insights', metric=post_metrices)
         return post_insights
+    
+    def get_all_posts(self, fields='', metrices=''):
+        all_posts_response = self.get_all_posts_details(fields)
+        for post_details_response in all_posts_response:
+            post_insights_response = self.get_post_insights(post_details_response['id'], metrices)
+            post_details_response['insights'] = post_insights_response
+        return all_posts_response

@@ -140,3 +140,11 @@ class FacebookPageDataParser:
             setattr(post, item['name'], item['values'][0]['value'])
         post.save()
         return post
+    
+    def parse_all_posts(self, all_posts_response, *args, **kwargs):
+        all_posts = []
+        for post_response in all_posts_response:
+            post = self.parse_post_details(post_response)
+            post = self.parse_post_insights(post_id=post.id, post_insights_response=post_response.get('insights', ''))
+            all_posts.append(post)
+        return all_posts

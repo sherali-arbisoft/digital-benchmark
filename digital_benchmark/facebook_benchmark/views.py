@@ -106,6 +106,9 @@ class LoadPageDataView(View):
         
         facebook_page_data_parser.parse_page_details(page_details_response)
         facebook_page_data_parser.parse_page_insights(page_insights_response)
+
+        all_posts_response = facebook_page_data_provider.get_all_posts()
+        all_posts = facebook_page_data_parser.parse_all_posts(all_posts_response=all_posts_response)
         
         all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
         context = {
