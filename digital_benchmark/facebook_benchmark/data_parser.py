@@ -131,6 +131,33 @@ class FacebookPageDataParser:
             if 'reactions' in comment:
                 comment_reactions = self._get_all_comment_reactions(comment)
                 post_comment.reactions.add(*comment_reactions)
+    
+    def parse_post_details(self, post_details_response, *args, **kwargs):
+        post = Post()
+        post.backdated_time = post_details_response.get('backdated_time', None)
+        post.created_time = post_details_response.get('created_time', None)
+        post.is_eligible_for_promotion = post_details_response.get('is_eligible_for_promotion', False)
+        post.is_expired = post_details_response.get('is_expired', False)
+        post.is_hidden = post_details_response.get('is_hidden', False)
+        post.is_instagram_eligible = post_details_response.get('is_instagram_eligible', False)
+        post.is_popular = post_details_response.get('is_popular', False)
+        post.is_published = post_details_response.get('is_published', False)
+        post.message = post_details_response.get('message', None)
+        post.post_id = post_details_response.get('id', '')
+        post.promotion_status = post_details_response.get('promotion_status', '')
+        post.scheduled_publish_time = post_details_response.get('scheduled_publish_time', None)
+        post.shares = post_details_response.get('shares', {}).get('count', 0)
+        post.story = post_details_response.get('story', None)
+        post.timeline_visibility = post_details_response.get('timeline_visibility', 'NORMAL').upper()
+        post.updated_time = post_details_response.get('updated_time', None)
+        post.page_id = self.page_id
+        post.save()
+        if 'reactions' in post_details_response:
+            post_reactions = self._get_all_post_reactions(post_details_response['reactions'])
+            post.reactions.add(*post_reactions)
+        if 'comments' in post_details_response:
+            self._set_all_comments(post, post_details_response)
+        return post
 
     def parse_post_details_and_insights(self, page_id, post_response, post_insights_response):
         post = Post()
