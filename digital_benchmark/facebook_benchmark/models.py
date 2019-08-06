@@ -36,7 +36,7 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     num_engagements = models.IntegerField('total engagements', null=True, blank=False)
     fan_count = models.IntegerField(null=True, blank=False)
     name = models.CharField(max_length=255)
-    overall_start_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=False)
+    overall_star_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=False)
     page_consumptions = models.IntegerField(null=True, blank=False)
     page_engaged_users = models.IntegerField(null=True, blank=False)
     page_id = models.CharField(max_length=255)
