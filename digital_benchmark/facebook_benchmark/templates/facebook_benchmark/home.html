@@ -1,1 +1,13 @@
-Hello, World!
+{% extends 'facebook_benchmark/base.html' %}
+{% block content %}
+{% if success_message %}
+    <div class="alert alert-success" role="alert">{{ success_message }}</div>
+{% elif error_message %}
+    <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+{% endif %}
+<form action="/facebook_benchmark/home/" method="post">
+    {% csrf_token %}
+    {{ load_data_form }}
+    <input type="submit" class="btn btn-primary" value="Load Data">
+</form>
+{% endblock %}
