@@ -31,12 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'instagram_benchmark',
     'facebook_benchmark', #register facebook_benchmark app
     'debug_toolbar', # register django-debug-toolbar
 ]
@@ -57,7 +59,7 @@ ROOT_URLCONF = 'digital_benchmark.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +73,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'digital_benchmark.wsgi.application'
+
+
+
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+try:
+    from .local_settings import *
+
+except ImportError:
+    pass
+
+
+
 
 
 # Password validation

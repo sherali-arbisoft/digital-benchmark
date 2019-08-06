@@ -1,0 +1,11 @@
+{% load static%}
+<link rel='stylesheet' type='text/css' href="{% static '/style.css' %}"/>
+
+<div id="loginDiv">
+    <p id="successText">Successfully logged in!</p>
+    <form action="{% url 'instagram_benchmark:fetch_data' %}" method="get" id="instaBtn">
+            {% csrf_token %}
+            <label id="loginInstaLable" for="abc">Fetch Instagram Data</label>
+            <input id= "submit" type="submit" value="Fetch">
+    </form>
+</div>

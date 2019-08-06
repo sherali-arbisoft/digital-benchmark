@@ -9,7 +9,6 @@ from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
 from .models import FacebookProfile, Page
 
-# Create your views here.
 class LoginView(View):
     def get(self, request, *args, **kwargs):
         login_form = LoginForm()
