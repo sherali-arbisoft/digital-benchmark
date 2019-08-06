@@ -19,7 +19,7 @@ class LoginView(View):
         return render(request, 'facebook_benchmark/login.html', context)
     
     def post(self, request, *args, **kwargs):
-        url = 'https://www.facebook.com/v{version}/dialog/oauth?client_id={app_id}&redirect_uri={redirect_uri}&scope={permissions}&response_type={response_type}&state={state}'.format(version=settings.FACEBOOK_GRAPH_API_VERSION, app_id=settings.FACEBOOK_APP_ID, redirect_uri=settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI, permissions=','.join(settings.FACEBOOK_PERMISSIONS), response_type=settings.FACEBOOK_RESPONSE_TYPE, state=settings.FACEBOOK_STATE)
+        url = settings.FACEBOOK_LOGIN_URL
         return redirect(url)
 
 class LoginSuccessfulView(View):
