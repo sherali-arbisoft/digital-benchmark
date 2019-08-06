@@ -70,6 +70,15 @@ class FacebookPageDataParser:
         if 'ratings' in page_details_response:
             self._parse_ratings(ratings_response=page_details_response.get('ratings', ''))
         return page
+    
+    def parse_page_insights(self, page_insights_response, *args, **kwargs):
+        page, created = Page.objects.get_or_create(id=self.page_id, defaults={
+            'facebook_profile_id': self.facebook_profile_id
+        })
+        for item in page_insights_response['data']:
+            setattr(page, item['name'], item['values'][0]['value'])
+        page.save()
+        return page
 
     def parse_page_details_and_insights(self, facebook_profile_id, page, page_response, page_insights_response):
         if not page:
