@@ -39,6 +39,25 @@ class FacebookPageDataParser:
             rating.review_text = rating_response.get('review_text', '')
             rating.page = page
             rating.save()
+    
+    def parse_page_details(self, page_details_response, *args, **kwargs):
+        page, created = Page.objects.get_or_create(page_id=page_details_response.get('id', ''), defaults={
+            'facebook_profile_id': self.facebook_profile_id
+        })
+        page.displayed_message_response_time = page_details_response.get('displayed_message_response_time', '')
+        page.num_engagements = page_details_response.get('engagement', {}).get('count', 0)
+        page.fan_count = page_details_response.get('fan_count', 0)
+        page.name = page_details_response.get('name', '')
+        page.overall_star_rating = page_details_response.get('overall_star_rating', 0.0)
+        page.page_id = page_details_response.get('id', '')
+        page.rating_count = page_details_response.get('rating_count', 0)
+        page.talking_about_count = page_details_response.get('talking_about_count', 0)
+        page.unread_message_count = page_details_response.get('unread_message_count', 0)
+        page.unread_notif_count = page_details_response.get('unread_notif_count', 0)
+        page.unseen_message_count = page_details_response.get('unseen_message_count', 0)
+        page.verification_status = page_details_response.get('verification_status', 'not_verified')
+        page.save()
+        return page
 
     def parse_page_details_and_insights(self, facebook_profile_id, page, page_response, page_insights_response):
         if not page:
