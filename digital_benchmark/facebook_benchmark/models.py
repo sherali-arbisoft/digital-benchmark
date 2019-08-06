@@ -111,6 +111,15 @@ class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
     def __str__(self):
         return self.reaction_type
 
+class TimelineVisibilityChoice(Enum):
+    HIDDEN = 'HIDDEN'
+    NORMAL = 'NORMAL'
+    FORCED_ALLOW = 'FORCED_ALLOW'
+
+    @classmethod
+    def get_timeline_visibility_choices(cls):
+        return [(timeline_visibility.value, timeline_visibility.value.replace('_', ' ').title()) for timeline_visibility in TimelineVisibilityChoice]
+
 class Post(SoftDeleteMixin, CreateUpdateMixin):
     backdated_time = models.DateTimeField(null=True)
     created_time = models.DateTimeField()
@@ -146,7 +155,7 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     scheduled_publish_time = models.DateTimeField(null=True)
     shares = models.IntegerField()
     story = models.TextField(null=True)
-    timeline_visibility = models.CharField(max_length=255)
+    timeline_visibility = models.CharField(max_length=12, choices=TimelineVisibilityChoice.get_timeline_visibility_choices())
     updated_time = models.DateTimeField()
 
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
