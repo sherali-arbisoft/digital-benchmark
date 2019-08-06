@@ -162,10 +162,19 @@ class FacebookPageDataParser:
         post.page_id = self.page_id
         post.save()
         if 'reactions' in post_details_response:
-            post_reactions = self._get_all_post_reactions(post_details_response['reactions'])
+            post_reactions = self._get_all_post_reactions(post_details_response)
             post.reactions.add(*post_reactions)
         if 'comments' in post_details_response:
             self._set_all_comments(post, post_details_response)
+        return post
+    
+    def parse_post_insights(self, post_id, post_insights_response, *args, **kwargs):
+        post, created = Post.objects.get_or_create(id=self.post_id, defaults={
+            'page_id': self.page_id
+        })
+        for item in post_insights_response['data']:
+            setattr(post, item['name'], item['values'][0]['value'])
+        post.save()
         return post
 
     def parse_post_details_and_insights(self, page_id, post_response, post_insights_response):
