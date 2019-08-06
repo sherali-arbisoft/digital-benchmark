@@ -1,12 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.conf import settings
 
 import requests
 
-from .forms import LoginForm
-from .data_provider import FacebookUserDataProvider
-from .data_parser import FacebookUserDataParser
+from .forms import LoginForm, LoadDataForm
+from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
+from .data_parser import FacebookUserDataParser, FacebookPageDataParser
+from .models import FacebookProfile, Page
 
 # Create your views here.
 class LoginView(View):
@@ -41,6 +42,8 @@ class LoginSuccessfulView(View):
         facebook_profile.access_token = response.get('access_token', '')
         facebook_profile.expires_in = response.get('expires_in', 0)
         facebook_profile.save()
+
+        request.session['facebook_profile_id'] = facebook_profile.id
         
         all_pages_response = facebook_user_data_provider.get_all_pages()
         all_pages = facebook_user_data_parser.parse_all_pages(facebook_profile.id, all_pages_response)
@@ -60,5 +63,32 @@ class LoginSuccessfulView(View):
         return redirect('/facebook_benchmark/home')
 
 class HomeView(View):
-    def get(self, request):
-        return render(request, 'facebook_benchmark/home.html')
+    def get(self, request, *args, **kwargs):
+        load_data_form = LoadDataForm()
+        context = {
+            'load_data_form': load_data_form,
+        }
+        return render(request, 'facebook_benchmark/home.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        facebook_profile_id = request.session.get('facebook_profile_id', '')
+
+        pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
+
+        for page in pages:
+            facebook_page_data_provider = FacebookPageDataProvider(page_access_token=page.access_token)
+            facebook_page_data_parser = FacebookPageDataParser()
+            
+            page_details_response = facebook_page_data_provider.get_page_details()
+            page_insights_response = facebook_page_data_provider.get_page_insights()
+            
+            facebook_page_data_parser.parse_page_details_and_insights(facebook_profile_id, page, page_details_response, page_insights_response)
+            
+            posts_details_and_insights_response = facebook_page_data_provider.get_all_posts_details_and_insights()
+
+            facebook_page_data_parser.parse_all_posts_details_and_insights(page.id, posts_details_and_insights_response)
+
+        context = {
+            'success_message': 'Data Loaded Successfully.'
+        }
+        return render(request, 'facebook_benchmark/home.html', context)
