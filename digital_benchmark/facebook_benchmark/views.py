@@ -24,7 +24,7 @@ class LoginView(View):
 
 class LoginSuccessfulView(View):
     def get(self, request):
-        url = 'https://graph.facebook.com/v{version}/oauth/access_token'.format(version=settings.FACEBOOK_GRAPH_API_VERSION)
+        url = settings.FACEBOOK_USER_ACCESS_TOKEN_URL
         data = {
             'client_id': settings.FACEBOOK_APP_ID,
             'redirect_uri': settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI,
