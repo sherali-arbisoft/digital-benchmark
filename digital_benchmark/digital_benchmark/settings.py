@@ -129,7 +129,18 @@ STATIC_URL = '/static/'
 
 # facebook_benchmark settings
 FACEBOOK_GRAPH_API_VERSION = '3.1'
-FACEBOOK_DEFAULT_FIELDS_FOR_PAGE = ['displayed_message_response_time','engagement','fan_count','id','name','overall_star_rating','rating_count','talking_about_count','unread_message_count','unread_notif_count','unseen_message_count','verification_status']
+FACEBOOK_APP_ID = '349831992602224'
+FACEBOOK_APP_SECRET = 'e3bfa0ed905199eecca00e74631280b7'
+FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI = 'http://localhost:8000/facebook_benchmark/login_successful'
+FACEBOOK_PERMISSIONS = [ 'manage_pages', 'pages_show_list', 'read_insights']
+FACEBOOK_RESPONSE_TYPE = 'code'
+FACEBOOK_STATE = '{"{st=state123abc,ds=123456789}"}'
+FACEBOOK_LOGIN_URL = f"https://www.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={FACEBOOK_APP_ID}&redirect_uri={FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}&scope={','.join(FACEBOOK_PERMISSIONS)}&response_type={FACEBOOK_RESPONSE_TYPE}&state={FACEBOOK_STATE}"
+FACEBOOK_ACCESS_TOKEN_URL = f"https://graph.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/oauth/access_token"
+FACEBOOK_DEFAULT_FIELDS_FOR_PROFILE = ['first_name', 'id', 'last_name']
+FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS = [ 'access_token', 'id', 'name' ]
+FACEBOOK_GRANT_TYPE = 'fb_exchange_token'
+FACEBOOK_DEFAULT_FIELDS_FOR_PAGE = ['displayed_message_response_time','engagement','fan_count','id','name','overall_star_rating', 'ratings{created_time,review_text,rating,recommendation_type}', 'rating_count','talking_about_count','unread_message_count','unread_notif_count','unseen_message_count','verification_status']
 FACEBOOK_DEFAULT_FIELDS_FOR_FEED = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
 FACEBOOK_DEFAULT_FIELDS_FOR_POST = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
 FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS = ['page_consumptions','page_consumptions_unique','page_engaged_users','page_impressions','page_impressions_nonviral','page_impressions_nonviral_unique','page_impressions_organic','page_impressions_organic_unique','page_impressions_paid','page_impressions_paid_unique','page_impressions_unique','page_impressions_viral','page_impressions_viral_unique','page_negative_feedback','page_negative_feedback_unique','page_post_engagements','page_video_views','page_views_total']

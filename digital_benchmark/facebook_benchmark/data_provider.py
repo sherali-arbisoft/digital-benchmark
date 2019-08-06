@@ -3,7 +3,22 @@ import requests
 
 from django.conf import settings
 
-class FacebookDataProvider:
+class FacebookUserDataProvider:
+    def __init__(self, user_access_token, *args, **kwargs):
+        self.user_access_token = user_access_token
+        self.graph_api_client = fb.GraphAPI(access_token=user_access_token, version=settings.FACEBOOK_GRAPH_API_VERSION)
+    
+    def get_profile(self, fields='', *args, **kwargs):
+        fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_PROFILE)
+        profile = self.graph_api_client.get_object(id='me', fields=fields)
+        return profile
+    
+    def get_all_pages(self, fields='', *args, **kwargs):
+        fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS)
+        all_pages = self.graph_api_client.get_connections(id='me', connection_name='accounts', fields=fields)
+        return all_pages
+
+class FacebookPageDataProvider:
     def __init__(self, page_access_token, *args, **kwargs):
         self.page_access_token = page_access_token
         self.graph_api_client = fb.GraphAPI(access_token=page_access_token, version=settings.FACEBOOK_GRAPH_API_VERSION)
@@ -35,7 +50,7 @@ class FacebookDataProvider:
             comments = self._get_next(comments['paging']['next'])
         post['comments']['data'] = all_comments
 
-    def get_all_posts(self, fields=''):
+    def get_all_posts_details(self, fields=''):
         posts_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_FEED)
         feed = self.graph_api_client.get_connections(id='me', connection_name='feed', fields=posts_fields)
         all_posts = []
@@ -69,3 +84,10 @@ class FacebookDataProvider:
         post_metrices = metrices or ','.join(settings.FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS)
         post_insights = self.graph_api_client.get_connections(id=post_id, connection_name='insights', metric=post_metrices)
         return post_insights
+    
+    def get_all_posts(self, fields='', metrices=''):
+        all_posts_response = self.get_all_posts_details(fields)
+        for post_details_response in all_posts_response:
+            post_insights_response = self.get_post_insights(post_details_response['id'], metrices)
+            post_details_response['insights'] = post_insights_response
+        return all_posts_response
