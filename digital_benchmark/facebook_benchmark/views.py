@@ -64,10 +64,6 @@ class LoginSuccessfulView(View):
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
-        # load_data_form = LoadDataForm()
-        # context = {
-        #     'load_data_form': load_data_form,
-        # }
         facebook_profile_id = request.session.get('facebook_profile_id', '')
         all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
         context = {
@@ -95,5 +91,25 @@ class HomeView(View):
 
         context = {
             'success_message': 'Data Loaded Successfully.'
+        }
+        return render(request, 'facebook_benchmark/home.html', context)
+
+class LoadPageDataView(View):
+    def get(self, request, page_id, *args, **kwargs):
+        facebook_profile_id = request.session.get('facebook_profile_id', '')
+        page = get_object_or_404(Page, pk=page_id)
+        facebook_page_data_provider = FacebookPageDataProvider(page_access_token=page.access_token)
+        facebook_page_data_parser = FacebookPageDataParser(facebook_profile_id=facebook_profile_id, page_id=page_id)
+        
+        page_details_response = facebook_page_data_provider.get_page_details()
+        page_insights_response = facebook_page_data_provider.get_page_insights()
+        
+        facebook_page_data_parser.parse_page_details(page_details_response)
+        facebook_page_data_parser.parse_page_insights(page_insights_response)
+        
+        all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
+        context = {
+            'success_message': 'Page Data Loaded Successfully.',
+            'all_pages': all_pages,
         }
         return render(request, 'facebook_benchmark/home.html', context)
