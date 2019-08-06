@@ -74,21 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'digital_benchmark.wsgi.application'
 
-
-
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-try:
-    from .local_settings import *
-
-except ImportError:
-    pass
-
-
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
