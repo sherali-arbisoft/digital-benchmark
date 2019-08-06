@@ -137,6 +137,10 @@ FACEBOOK_DEFAULT_DATE_PRESET_FOR_PAGE_INSIGHTS = 'today'
 FACEBOOK_DEFAULT_PERIOD_FOR_PAGE_INSIGHTS = 'days_28'
 FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_clicks','post_clicks_unique','post_engaged_fan','post_engaged_users','post_impressions','post_impressions_fan','post_impressions_fan_paid','post_impressions_fan_paid_unique','post_impressions_fan_unique','post_impressions_nonviral','post_impressions_nonviral_unique','post_impressions_organic','post_impressions_organic_unique','post_impressions_paid','post_impressions_paid_unique','post_impressions_unique','post_impressions_viral','post_impressions_viral_unique','post_negative_feedback','post_negative_feedback_unique']
 
+# instagram settings and urls
+PROFILE_URL="https://api.instagram.com/v1/users/self/?access_token={}"
+RECENT_MEDIA_URL="https://api.instagram.com/v1/users/self/media/recent/?count=10&access_token={}"
+COMMENTS_URL="https://api.instagram.com/v1/media/{}/comments?access_token={}"
 # for django-debug-toolbar
 INTERNAL_IPS = [
     '127.0.0.1',

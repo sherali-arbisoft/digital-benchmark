@@ -17,12 +17,15 @@ class CreateUpdateMixin(models.Model):
         abstract = True
 
 class InstagramProfile(SoftDeleteMixin, CreateUpdateMixin):
-    insta_uid=models.CharField(max_length=255, primary_key=True)
+    insta_uid=models.CharField(max_length=255)
     app_user=models.ForeignKey(User, on_delete=models.CASCADE)
     access_token=models.CharField(max_length=255)
     full_name=models.CharField(max_length=255)
     username=models.CharField(max_length=255)
     is_business = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.username
 
 
 class InstagramMediaInsight(SoftDeleteMixin, CreateUpdateMixin):
@@ -42,6 +45,9 @@ class InstagramUserMedia(SoftDeleteMixin, CreateUpdateMixin):
     insta_user=models.ForeignKey(InstagramProfile, on_delete=models.CASCADE)
     media_insight=models.ForeignKey(InstagramMediaInsight, on_delete=models.CASCADE)
     media_url=models.TextField(blank=True)
+
+    def __str__(self):
+        return self.media_url
 
 
 class InstagramMediaComments(SoftDeleteMixin, CreateUpdateMixin):
