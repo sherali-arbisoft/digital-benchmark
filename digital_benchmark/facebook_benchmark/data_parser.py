@@ -40,6 +40,16 @@ class FacebookPageDataParser:
             rating.page = page
             rating.save()
     
+    def _parse_ratings(self, ratings_response, *args, **kwargs):
+        for rating_response in ratings_response['data']:
+            rating = Rating()
+            rating.created_time = rating_response.get('created_time', None)
+            rating.rating = rating_response.get('rating', 0)
+            rating.recommendation_type = rating_response.get('recommendation_type', 'none')
+            rating.review_text = rating_response.get('review_text', '')
+            rating.page_id = self.page_id
+            rating.save()
+
     def parse_page_details(self, page_details_response, *args, **kwargs):
         page, created = Page.objects.get_or_create(page_id=page_details_response.get('id', ''), defaults={
             'facebook_profile_id': self.facebook_profile_id
@@ -57,6 +67,8 @@ class FacebookPageDataParser:
         page.unseen_message_count = page_details_response.get('unseen_message_count', 0)
         page.verification_status = page_details_response.get('verification_status', 'not_verified')
         page.save()
+        if 'ratings' in page_details_response:
+            self._parse_ratings(ratings_response=page_details_response.get('ratings', ''))
         return page
 
     def parse_page_details_and_insights(self, facebook_profile_id, page, page_response, page_insights_response):
