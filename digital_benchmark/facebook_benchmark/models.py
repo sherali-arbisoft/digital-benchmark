@@ -68,9 +68,9 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
         return self.name
 
 class RecommendationChoice(Enum):
-    negative = 'negative'
-    none = 'none'
-    positive = 'positive'
+    NEGATIVE = 'NEGATIVE'
+    NONE = 'NONE'
+    POSITIVE = 'POSITIVE'
 
     @classmethod
     def get_recommendation_choices(cls):
@@ -88,16 +88,16 @@ class Rating(SoftDeleteMixin, CreateUpdateMixin):
         return self.review_text
 
 class ReactionChoice(Enum):
-    angry = 'ANGRY'
-    haha = 'HAHA'
-    like = 'LIKE'
-    love = 'LOVE'
-    none = 'NONE'
-    sad = 'SAD'
-    wow = 'WOW'
+    ANGRY = 'ANGRY'
+    HAHA = 'HAHA'
+    LIKE = 'LIKE'
+    LOVE = 'LOVE'
+    NONE = 'NONE'
+    SAD = 'SAD'
+    WOW = 'WOW'
 
     @classmethod
-    def get_reaction_choices(self):
+    def get_reaction_choices(cls):
         return [(reaction.value, reaction.value.title()) for reaction in ReactionChoice]
 
 class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
