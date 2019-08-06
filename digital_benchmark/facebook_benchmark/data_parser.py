@@ -5,13 +5,15 @@ from datetime import datetime
 from .models import FacebookProfile, Page, Rating, Post, PostReaction, Comment, CommentReaction
 
 class FacebookUserDataParser:
-    def __init__(self, facebook_profile_id, *args, **kwargs):
+    def __init__(self, facebook_profile_id=0, *args, **kwargs):
         self.facebook_profile_id = facebook_profile_id
 
     def parse_profile(self, profile_response, *args, **kwargs):
         facebook_profile, created = FacebookProfile.objects.get_or_create(facebook_id=profile_response.get('id', ''))
         facebook_profile.first_name = profile_response.get('first_name', '')
         facebook_profile.last_name = profile_response.get('last_name', '')
+        facebook_profile.save()
+        self.facebook_profile_id = facebook_profile.id
         return facebook_profile
 
     def parse_all_pages(self, all_pages_response, *args, **kwargs):

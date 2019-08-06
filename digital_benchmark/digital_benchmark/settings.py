@@ -120,7 +120,7 @@ FACEBOOK_PERMISSIONS = [ 'manage_pages', 'pages_show_list', 'read_insights']
 FACEBOOK_RESPONSE_TYPE = 'code'
 FACEBOOK_STATE = '{"{st=state123abc,ds=123456789}"}'
 FACEBOOK_LOGIN_URL = f"https://www.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={FACEBOOK_APP_ID}&redirect_uri={FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}&scope={','.join(FACEBOOK_PERMISSIONS)}&response_type={FACEBOOK_RESPONSE_TYPE}&state={FACEBOOK_STATE}"
-FACEBOOK_USER_ACCESS_TOKEN_URL = f"https://graph.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/oauth/access_token"
+FACEBOOK_ACCESS_TOKEN_URL = f"https://graph.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/oauth/access_token"
 FACEBOOK_DEFAULT_FIELDS_FOR_PROFILE = ['first_name', 'id', 'last_name']
 FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS = [ 'access_token', 'id', 'name' ]
 FACEBOOK_GRANT_TYPE = 'fb_exchange_token'

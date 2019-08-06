@@ -24,7 +24,7 @@ class LoginView(View):
 
 class LoginSuccessfulView(View):
     def get(self, request):
-        url = settings.FACEBOOK_USER_ACCESS_TOKEN_URL
+        url = settings.FACEBOOK_ACCESS_TOKEN_URL
         data = {
             'client_id': settings.FACEBOOK_APP_ID,
             'redirect_uri': settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI,
@@ -34,10 +34,10 @@ class LoginSuccessfulView(View):
         response = requests.post(url, data=data).json()
 
         facebook_user_data_provider = FacebookUserDataProvider(user_access_token=response.get('access_token', ''))
-        facebook_profile_response = facebook_user_data_provider.get_profile()
+        profile_response = facebook_user_data_provider.get_profile()
 
         facebook_user_data_parser = FacebookUserDataParser()
-        facebook_profile = facebook_user_data_parser.parse_profile(facebook_profile_response)
+        facebook_profile = facebook_user_data_parser.parse_profile(profile_response)
         
         facebook_profile.access_token = response.get('access_token', '')
         facebook_profile.expires_in = response.get('expires_in', 0)
@@ -46,10 +46,10 @@ class LoginSuccessfulView(View):
         request.session['facebook_profile_id'] = facebook_profile.id
         
         all_pages_response = facebook_user_data_provider.get_all_pages()
-        all_pages = facebook_user_data_parser.parse_all_pages(facebook_profile.id, all_pages_response)
+        all_pages = facebook_user_data_parser.parse_all_pages(all_pages_response)
 
         for page in all_pages:
-            url = 'https://graph.facebook.com/v{version}/oauth/access_token'.format(version=settings.FACEBOOK_GRAPH_API_VERSION)
+            url = settings.FACEBOOK_ACCESS_TOKEN_URL
             data = {
                 'grant_type': settings.FACEBOOK_GRANT_TYPE,
                 'client_id': settings.FACEBOOK_APP_ID,
@@ -59,14 +59,19 @@ class LoginSuccessfulView(View):
             response = requests.post(url, data=data).json()
             page.access_token = response.get('access_token', '')
             page.save()
-        
+
         return redirect('/facebook_benchmark/home')
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
-        load_data_form = LoadDataForm()
+        # load_data_form = LoadDataForm()
+        # context = {
+        #     'load_data_form': load_data_form,
+        # }
+        facebook_profile_id = request.session.get('facebook_profile_id', '')
+        all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
         context = {
-            'load_data_form': load_data_form,
+            'all_pages': all_pages,
         }
         return render(request, 'facebook_benchmark/home.html', context)
     
