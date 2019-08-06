@@ -26,6 +26,10 @@ class FacebookUserDataParser:
         return all_pages
 
 class FacebookPageDataParser:
+    def __init__(self, facebook_profile_id, page_id, *args, **kwargs):
+        self.facebook_profile_id = facebook_profile_id
+        self.page_id = page_id
+
     def _set_all_ratings(self, page, page_response):
         for rating_response in page_response['ratings']['data']:
             rating = Rating()
