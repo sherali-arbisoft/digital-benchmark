@@ -7,7 +7,7 @@ from .data_provider import InstagramDataProvider
 class InstagramDataParser:
 
     def parse_profile_data(self, profile_response,app_user_id):
-        user=profile_response.get('user')
+        user=profile_response.get('user','Not fount')
         profile = InstagramProfile()
         profile.insta_uid = user.get('id','Id not found!')
         profile.app_user_id = app_user_id
@@ -20,6 +20,7 @@ class InstagramDataParser:
     
     #send single media insight entry at a time so that we can save insight id in media table by returning saved insignt back to caller one by one
     def parse_media_insight_data(self, all_user_media,insta_user,access_token):
+        comments_count=0
         for media in all_user_media:
             insight = InstagramMediaInsight()
             insight.insta_user = insta_user
@@ -36,9 +37,10 @@ class InstagramDataParser:
             media_just_saved=self.parse_media_data(media,insta_user,insight)
             dataProvider1=InstagramDataProvider(access_token)
             this_media_comments=dataProvider1.get_media_comments(media.get('id'))
+            comments_count+=len(this_media_comments)
             for comment in this_media_comments:
                 comments_just_saved=self.parse_media_comments(comment,media_just_saved)
-        return 'Profile, Media, Insights and Comments sucessfully saved for Instagram user {}'.format(insta_user.username)
+        return ['{} posts fetched and added for Instagram user {}'.format(len(all_user_media),insta_user.username),'{} comments saved for user {}'.format(comments_count,insta_user.username)]
 
     #send single media at a time with media insight id of media saved in previous step
     def parse_media_data(self, fetch_media_response, insta_user, media_insight):

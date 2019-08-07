@@ -22,6 +22,9 @@ class InstagramProfile(SoftDeleteMixin, CreateUpdateMixin):
     access_token=models.CharField(max_length=255)
     full_name=models.CharField(max_length=255)
     username=models.CharField(max_length=255)
+    follows_count=models.IntegerField(default=0)
+    folowed_by_count=models.IntegerField(default=0)
+    media_count=models.IntegerField(default=0)
     is_business = models.BooleanField(default=False)
 
     def __str__(self):

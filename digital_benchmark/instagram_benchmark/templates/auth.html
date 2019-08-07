@@ -4,7 +4,7 @@
 
 
 <div id="loginDiv">
-    <form action="{% url 'instagram_benchmark:login' %}" method="post" id="instaBtn">
+    <form action="{% url 'instagram_benchmark:connect' %}" method="post" id="instaBtn">
             {% csrf_token %}
             <label id="loginInstaLable" for="abc">Connect Instagram</label>
             <input id= "submit" type="submit" value="Connect">
@@ -15,15 +15,3 @@
         {% endfor %}
     {% endif %}
 </div>
-
-<!-- <script>
-    function instaLogin() {
-            url="https://api.instagram.com/oauth/authorize/?client_id=4d8f538893ba481f88c0614865dc9310&redirect_uri=http://127.0.0.1:8000/instagram_benchmark/insta_login&response_type=token"
-            //window.open(url);
-            window.location.replace(url);
-        }
-</script>
-
-<div id="loginDiv">
-    <button id="instaBtn" onclick="instaLogin()">Login with Instagram <i class="fa fa-instagram"></i></button>
-</div> -->
