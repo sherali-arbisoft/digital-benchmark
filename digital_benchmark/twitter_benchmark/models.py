@@ -7,7 +7,7 @@ class UserData(models.Model):
     user_id = models.CharField(max_length=255)
     user_name = models.TextField()
     screen_name = models.CharField(max_length=255)
-    user_location = models.CharField(max_length=255)
+    user_location = models.CharField(max_length=255,blank=True, null=True, default=None)
     description = models.TextField(default=None, blank=True, null=True )
     followers_count = models.IntegerField()  # The number of followers this account currently has
     friends_count = models.IntegerField()  # The number of users this account is following
@@ -22,3 +22,29 @@ class AuthToken(models.Model):
 
     def __str__(self):
         return self.resource_owner_secret
+
+
+class AccessToken(models.Model):
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    access_token = models.TextField()
+    access_token_secret = models.TextField()
+
+
+class Tweets(models.Model):
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.IntegerField()  # twitter user id
+    text = models.TextField()  # status text
+    favorite_count = models.IntegerField()  # Tweet likes
+    retweet_count = models.IntegerField()
+    created_at = models.DateTimeField()
+
+
+class OthersTweets(models.Model):
+    screen_name = models.TextField()
+    user_id = models.IntegerField()  # twitter user id
+    text = models.TextField()  # status text
+    favorite_count = models.IntegerField()  # Tweet likes
+    retweet_count = models.IntegerField()
+    created_at = models.DateTimeField()
+
+
