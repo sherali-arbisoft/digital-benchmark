@@ -98,4 +98,5 @@ class LoadPageDataView(View):
             'all_pages': all_pages,
         }
         messages.success(request, 'Page Data Loaded Successfully.')
+        messages.info(request, f"{len(all_posts)} Posts Added.")
         return render(request, 'facebook_benchmark/home.html', context)
