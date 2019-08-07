@@ -23,13 +23,21 @@ class FacebookPageDataProvider:
         self.page_access_token = page_access_token
         self.graph_api_client = fb.GraphAPI(access_token=page_access_token, version=settings.FACEBOOK_GRAPH_API_VERSION)
     
+    def _get_next(self, next_url):
+        return requests.get(next_url).json()
+
+    def _append_ratings(self, page):
+        ratings = page['ratings']
+        while 'paging' in ratings and 'next' in ratings['paging']:
+            ratings = self._get_next(ratings['paging']['next'])
+            page['ratings']['data'] += ratings['data']
+
     def get_page_details(self, fields=''):
         page_fields = fields or ','.join(settings.FACEBOOK_DEFAULT_FIELDS_FOR_PAGE)
         page = self.graph_api_client.get_object(id='me', fields=page_fields)
+        if 'ratings' in page:
+            self._append_ratings(page)
         return page
-    
-    def _get_next(self, next_url):
-        return requests.get(next_url).json()
     
     def _append_reactions(self, append_reactions_to):
         reactions = append_reactions_to['reactions']
