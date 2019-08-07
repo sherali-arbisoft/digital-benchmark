@@ -3,10 +3,11 @@ from django.views import View
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 import requests
 
-from .forms import LoginForm, LoadDataForm
+from .forms import LoginForm
 from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
 from .models import FacebookProfile, Page
@@ -94,7 +95,7 @@ class LoadPageDataView(View):
         
         all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
         context = {
-            'success_message': 'Page Data Loaded Successfully.',
             'all_pages': all_pages,
         }
+        messages.success(request, 'Page Data Loaded Successfully.')
         return render(request, 'facebook_benchmark/home.html', context)
