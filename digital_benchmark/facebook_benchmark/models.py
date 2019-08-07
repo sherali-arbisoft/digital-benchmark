@@ -152,7 +152,7 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     post_impressions_viral_unique = models.IntegerField(null=True, blank=False)
     post_negative_feedback = models.IntegerField(null=True, blank=False)
     post_negative_feedback_unique = models.IntegerField(null=True, blank=False)
-    promotion_status = models.CharField(max_length=255)
+    promotion_status = models.CharField(max_length=255, null=True, blank=False)
     scheduled_publish_time = models.DateTimeField(null=True, blank=True)
     shares = models.IntegerField(null=True, blank=False)
     story = models.TextField(null=True, blank=True)
