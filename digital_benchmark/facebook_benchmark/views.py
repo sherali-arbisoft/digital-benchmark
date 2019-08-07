@@ -93,12 +93,8 @@ class LoadPageDataView(View):
         all_posts_response = facebook_page_data_provider.get_all_posts()
         all_posts = facebook_page_data_parser.parse_all_posts(all_posts_response=all_posts_response)
         
-        all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
-        context = {
-            'all_pages': all_pages,
-        }
         messages.success(request, 'Page Data Loaded Successfully.')
         messages.info(request, f"{len(all_posts)} Posts Added.")
         messages.info(request, f"{sum([len(post.comment_set.all()) for post in all_posts ])} Comments Added.")
         messages.info(request, f"{sum([len(post.reactions.all()) for post in all_posts ])} Post Reactions Added.")
-        return render(request, 'facebook_benchmark/home.html', context)
+        return redirect('/facebook_benchmark/home')
