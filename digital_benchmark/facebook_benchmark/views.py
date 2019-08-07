@@ -74,29 +74,6 @@ class HomeView(View):
             'all_pages': all_pages,
         }
         return render(request, 'facebook_benchmark/home.html', context)
-    
-    def post(self, request, *args, **kwargs):
-        facebook_profile_id = request.session.get('facebook_profile_id', '')
-
-        pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
-
-        for page in pages:
-            facebook_page_data_provider = FacebookPageDataProvider(page_access_token=page.access_token)
-            facebook_page_data_parser = FacebookPageDataParser()
-            
-            page_details_response = facebook_page_data_provider.get_page_details()
-            page_insights_response = facebook_page_data_provider.get_page_insights()
-            
-            facebook_page_data_parser.parse_page_details_and_insights(facebook_profile_id, page, page_details_response, page_insights_response)
-            
-            posts_details_and_insights_response = facebook_page_data_provider.get_all_posts_details_and_insights()
-
-            facebook_page_data_parser.parse_all_posts_details_and_insights(page.id, posts_details_and_insights_response)
-
-        context = {
-            'success_message': 'Data Loaded Successfully.'
-        }
-        return render(request, 'facebook_benchmark/home.html', context)
 
 @method_decorator(login_required, name='dispatch')
 class LoadPageDataView(View):
