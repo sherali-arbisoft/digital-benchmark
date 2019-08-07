@@ -41,7 +41,7 @@ class FacebookPageDataParser:
             rating = Rating()
             rating.created_time = rating_response.get('created_time', None)
             rating.rating = rating_response.get('rating', 0)
-            rating.recommendation_type = rating_response.get('recommendation_type', 'none')
+            rating.recommendation_type = rating_response.get('recommendation_type', 'none').upper()
             rating.review_text = rating_response.get('review_text', '')
             rating.page_id = self.page_id
             rating.save()
