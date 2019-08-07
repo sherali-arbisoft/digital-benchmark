@@ -99,4 +99,6 @@ class LoadPageDataView(View):
         }
         messages.success(request, 'Page Data Loaded Successfully.')
         messages.info(request, f"{len(all_posts)} Posts Added.")
+        messages.info(request, f"{sum([len(post.comment_set.all()) for post in all_posts ])} Comments Added.")
+        messages.info(request, f"{sum([len(post.reactions.all()) for post in all_posts ])} Post Reactions Added.")
         return render(request, 'facebook_benchmark/home.html', context)
