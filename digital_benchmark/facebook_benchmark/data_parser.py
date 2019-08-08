@@ -101,12 +101,12 @@ class FacebookPageDataParser:
             post_comment = Comment()
             post_comment.comment_id = comment.get('id', '')
             post_comment.created_time = comment.get('created_time', None)
-            post_comment.from_id = comment.get('id', '')
+            post_comment.from_id = comment.get('from', {}).get('id', '')
             post_comment.message = comment.get('message', '')
             post_comment.post_id = post_id
             post_comment.save()
             if 'reactions' in comment:
-                comment_reactions = self._get_all_comment_reactions(comment)
+                comment_reactions = self._get_all_comment_reactions(comment.get('reactions', ''))
                 post_comment.reactions.add(*comment_reactions)
     
     def parse_post_details(self, post_details_response, *args, **kwargs):
