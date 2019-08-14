@@ -2,8 +2,23 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class UserData(models.Model):
-    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
+class SoftDeleteMixin(models.Model):
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        abstract = True
+
+
+class CreateUpdateMixin(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated_at = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class UserData(SoftDeleteMixin, CreateUpdateMixin):
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
     user_id = models.CharField(max_length=255)
     user_name = models.TextField()
     screen_name = models.CharField(max_length=255)
@@ -15,6 +30,9 @@ class UserData(models.Model):
     favourites_count = models.IntegerField()  # The number of Tweets this user has liked in the account’s lifetime
     statuses_count = models.IntegerField()  # The number of Tweets (including retweets) issued by the user
 
+    def __str__(self):
+        return self.user_name
+
 
 class AuthToken(models.Model):
     resource_owner_key = models.CharField(max_length=255)
@@ -24,27 +42,47 @@ class AuthToken(models.Model):
         return self.resource_owner_secret
 
 
-class AccessToken(models.Model):
-    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
+class AccessToken(SoftDeleteMixin, CreateUpdateMixin):
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
     access_token = models.TextField()
     access_token_secret = models.TextField()
 
+    def __str__(self):
+        return self.access_token
 
-class Tweets(models.Model):
-    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Tweet(SoftDeleteMixin, CreateUpdateMixin):
     user_id = models.IntegerField()  # twitter user id
+    tweet_id = models.IntegerField()  # for getting tweet comments
     text = models.TextField()  # status text
     favorite_count = models.IntegerField()  # Tweet likes
     retweet_count = models.IntegerField()
-    created_at = models.DateTimeField()
+    tweet_created = models.DateTimeField(blank=True, null=True, default=None)
+
+    class Meta:
+        abstract = True
 
 
-class OthersTweets(models.Model):
+class OtherTweet(Tweet):
     screen_name = models.TextField()
-    user_id = models.IntegerField()  # twitter user id
-    text = models.TextField()  # status text
-    favorite_count = models.IntegerField()  # Tweet likes
-    retweet_count = models.IntegerField()
-    created_at = models.DateTimeField()
+
+    def __str__(self):
+        return self.text
+
+
+class UserTweet(Tweet):
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True, default=None)
+
+    def __str__(self):
+        return self.text
+
+
+class UserComment(Tweet):
+    status_id = models.IntegerField()  # tweet id which has this comment
+
+    def __str__(self):
+        return self.text
+
+
 
 
