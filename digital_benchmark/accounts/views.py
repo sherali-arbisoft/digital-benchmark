@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 from . import json_web_token
 
@@ -69,10 +70,10 @@ class LogoutView(View):
 
 class Signup(APIView):
     def post(self, request, format=None):
-        user, created = User.objects.get_or_create(email=request.data.get('email', ''))
+        user, created = User.objects.get_or_create(username=request.data.get('username', ''), email=request.data.get('email', ''))
         if not created:
             response = {
-                'error_messages': ['Email Already Exists.',]
+                'error_messages': ['Username/Email Already Exists.',]
             }
         else:
             user.set_password(request.data.get('password', ''))
@@ -83,6 +84,28 @@ class Signup(APIView):
             jwt = json_web_token.get_jwt(payload)
             response = {
                 'success_messages': ['Account Successfully Created.',],
-                'access_token': jwt,
+                'jwt': jwt,
+            }
+        return Response(response)
+
+class Login(APIView):
+    def post(self, request, format=None):
+        user = authenticate(username=request.data.get('username', ''), password=request.data.get('password', ''))
+        if user is None:
+            response = {
+                'error_messages': [
+                    'Email/Password does not Match.',
+                ],
+            }
+        else:
+            payload = {
+                'email': request.data.get('email', ''),
+            }
+            jwt = json_web_token.get_jwt(payload)
+            response = {
+                'success_messages': [
+                    'Login Successful.',
+                ],
+                'jwt': jwt,
             }
         return Response(response)
