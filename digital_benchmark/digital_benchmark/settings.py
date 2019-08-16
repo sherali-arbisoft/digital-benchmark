@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'instagram_benchmark',
-    'facebook_benchmark', #register facebook_benchmark app
+    'facebook_benchmark', # register facebook_benchmark app
+    'accounts',
     'debug_toolbar', # register django-debug-toolbar
+    'rest_framework', #register django rest framework
 ]
 
 MIDDLEWARE = [
