@@ -99,7 +99,7 @@ class Login(APIView):
             }
         else:
             payload = {
-                'email': request.data.get('email', ''),
+                'email': user.email,
             }
             jwt = json_web_token.get_jwt(payload)
             response = {
@@ -107,5 +107,24 @@ class Login(APIView):
                     'Login Successful.',
                 ],
                 'jwt': jwt,
+            }
+        return Response(response)
+
+class Home(APIView):
+    def get(self, request, format=None):
+        jwt = request.data.get('jwt', '')
+        if not json_web_token.verify_signature(jwt):
+            response = {
+                'error_messages': [
+                    'Invalid Signature.',
+                ],
+            }
+        else:
+            payload = json_web_token.get_payload(jwt)
+            user = User.objects.get(email=payload.get('email', ''))
+            response = {
+                'success_messages': [
+                    f'Welcome, {user.username}',
+                ],
             }
         return Response(response)
