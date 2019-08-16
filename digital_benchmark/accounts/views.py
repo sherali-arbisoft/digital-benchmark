@@ -1,4 +1,9 @@
 from django.shortcuts import render, redirect
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.contrib.auth.models import User
+
+from . import json_web_token
 
 from django.contrib.auth import (
     authenticate,
@@ -61,3 +66,23 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/')
+
+class Signup(APIView):
+    def post(self, request, format=None):
+        user, created = User.objects.get_or_create(email=request.data.get('email', ''))
+        if not created:
+            response = {
+                'error_messages': ['Email Already Exists.',]
+            }
+        else:
+            user.set_password(request.data.get('password', ''))
+            user.save()
+            payload = {
+                'email': request.data.get('email', ''),
+            }
+            jwt = json_web_token.get_jwt(payload)
+            response = {
+                'success_messages': ['Account Successfully Created.',],
+                'access_token': jwt,
+            }
+        return Response(response)
