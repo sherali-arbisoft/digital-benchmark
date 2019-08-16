@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9108ad96e6ef2fd14ed5f521674387923db5724b8284dc610a04d8f2081da722"
+            "sha256": "95080a886fb6a765535aa3d1d818cf6896eadbd6ad66f20be063f5007e8032fe"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -45,6 +45,14 @@
             ],
             "index": "pypi",
             "version": "==2.0"
+        },
+        "djangorestframework": {
+            "hashes": [
+                "sha256:42979bd5441bb4d8fd69d0f385024a114c3cae7df0f110600b718751250f6929",
+                "sha256:aedb48010ebfab9651aaab1df5fd3b4848eb4182afc909852a2110c24f89a359"
+            ],
+            "index": "pypi",
+            "version": "==3.10.2"
         },
         "facebook-sdk": {
             "hashes": [
