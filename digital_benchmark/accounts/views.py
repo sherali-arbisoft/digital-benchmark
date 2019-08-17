@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
 
 from . import json_web_token
 
@@ -16,9 +15,7 @@ from django.views import View, generic
 
 from .forms import UserLoginForm, UserRegisterForm
 
-
 class LoginView(View):
-
     def get(self, request):
         form = UserLoginForm()
         return render(request,'login.html',{'form':form})
@@ -36,10 +33,8 @@ class LoginView(View):
             return redirect('/')
             
         return render(request,'login.html',{'form':form})
-    
 
 class RegisterView(View):
-
     def get(self, request):
         form = UserRegisterForm()
         return render(request,'signup.html',{'form':form})
@@ -60,9 +55,6 @@ class RegisterView(View):
 
         return render(request,'signup.html',{'form':form})
 
-    
-
-
 class LogoutView(View):
     def get(self, request):
         logout(request)
@@ -70,16 +62,16 @@ class LogoutView(View):
 
 class Signup(APIView):
     def post(self, request, format=None):
-        user, created = User.objects.get_or_create(username=request.data.get('username', ''), email=request.data.get('email', ''))
+        user, created = User.objects.get_or_create(username=request.data.get('username', ''))
         if not created:
             response = {
-                'error_messages': ['Username/Email Already Exists.',]
+                'error_messages': ['Username Already Exists.',]
             }
         else:
             user.set_password(request.data.get('password', ''))
             user.save()
             payload = {
-                'email': request.data.get('email', ''),
+                'username': request.data.get('username', ''),
             }
             jwt = json_web_token.get_jwt(payload)
             response = {
@@ -94,12 +86,12 @@ class Login(APIView):
         if user is None:
             response = {
                 'error_messages': [
-                    'Email/Password does not Match.',
+                    'Username/Password does not Match.',
                 ],
             }
         else:
             payload = {
-                'email': user.email,
+                'username': user.username,
             }
             jwt = json_web_token.get_jwt(payload)
             response = {
@@ -121,7 +113,7 @@ class Home(APIView):
             }
         else:
             payload = json_web_token.get_payload(jwt)
-            user = User.objects.get(email=payload.get('email', ''))
+            user = User.objects.get(username=payload.get('username', ''))
             response = {
                 'success_messages': [
                     f'Welcome, {user.username}',
