@@ -8,13 +8,10 @@ from urllib.request import urlopen
 from .models import InstagramProfile
 from .data_parser import InstagramDataParser
 from .data_provider import InstagramDataProvider
+from django.conf import settings
 
 from django.contrib import messages
 
-
-# index view is temporary, leaving it as function based view that's why
-def index(request):
-    return HttpResponse('instagram benchmark app is up!')
 
 class AuthView(generic.ListView):
     template_name = 'auth.html'
@@ -84,7 +81,7 @@ class FetchDataView(View):
 class InstaConnectView(View):
     def post(self,request):
         if request.user.id:
-            url="https://api.instagram.com/oauth/authorize/?client_id=4d8f538893ba481f88c0614865dc9310&redirect_uri=http://127.0.0.1:8000/instagram_benchmark/connection_success&response_type=code&scope=basic+public_content"
+            url=settings.INSTA_CONNECT_URL
             return redirect(url)
         else:
             return redirect('http://127.0.0.1:8000/accounts/login/')

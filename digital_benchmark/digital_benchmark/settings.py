@@ -137,6 +137,7 @@ FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_clicks','post_clicks_unique
 PROFILE_URL="https://api.instagram.com/v1/users/self/?access_token={}"
 RECENT_MEDIA_URL="https://api.instagram.com/v1/users/self/media/recent/?count=10&access_token={}"
 COMMENTS_URL="https://api.instagram.com/v1/media/{}/comments?access_token={}"
+INSTA_CONNECT_URL="https://api.instagram.com/oauth/authorize/?client_id=4d8f538893ba481f88c0614865dc9310&redirect_uri=http://127.0.0.1:8000/instagram_benchmark/connection_success&response_type=code&scope=basic"
 # for django-debug-toolbar
 INTERNAL_IPS = [
     '127.0.0.1',
