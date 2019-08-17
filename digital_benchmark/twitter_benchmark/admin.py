@@ -17,7 +17,7 @@ class UserDataAdmin(admin.ModelAdmin):
 
 @admin.register(UserTweet)
 class UserTweetAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'tweet_id', 'text', 'favorite_count', 'retweet_count','app_user')
+    list_display = ('user_id', 'tweet_id', 'text', 'favorite_count', 'retweet_count', 'app_user')
     list_filter = ['app_user']
     search_fields = ['text']
     date_hierarchy = 'created_at'
