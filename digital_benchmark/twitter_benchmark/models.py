@@ -18,19 +18,19 @@ class CreateUpdateMixin(models.Model):
 
 
 class UserData(SoftDeleteMixin, CreateUpdateMixin):
-    app_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
-    user_id = models.CharField(max_length=255)
-    user_name = models.TextField()
-    screen_name = models.CharField(max_length=255)
-    user_location = models.CharField(max_length=255,blank=True, null=True, default=None)
-    description = models.TextField(default=None, blank=True, null=True )
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField(default=None, blank=True, null=True)
     followers_count = models.IntegerField()  # The number of followers this account currently has
     friends_count = models.IntegerField()  # The number of users this account is following
-    listed_count = models.IntegerField()  # The number of public lists that this user is a member of
     favourites_count = models.IntegerField()  # The number of Tweets this user has liked in the account’s lifetime
+    listed_count = models.IntegerField()  # The number of public lists that this user is a member of
+    screen_name = models.CharField(max_length=255)
     statuses_count = models.IntegerField()  # The number of Tweets (including retweets) issued by the user
+    user_id = models.CharField(max_length=255)
+    user_name = models.TextField()
+    user_location = models.CharField(max_length=255, blank=True, null=True, default=None)
 
-    def __str__(self):
+    def str__(self):
         return self.user_name
 
 
@@ -43,7 +43,7 @@ class AuthToken(models.Model):
 
 
 class AccessToken(SoftDeleteMixin, CreateUpdateMixin):
-    app_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
     access_token = models.TextField()
     access_token_secret = models.TextField()
 
@@ -53,10 +53,10 @@ class AccessToken(SoftDeleteMixin, CreateUpdateMixin):
 
 class Tweet(SoftDeleteMixin, CreateUpdateMixin):
     user_id = models.IntegerField()  # twitter user id
-    tweet_id = models.IntegerField()  # for getting tweet comments
-    text = models.TextField()  # status text
     favorite_count = models.IntegerField()  # Tweet likes
     retweet_count = models.IntegerField()
+    tweet_id = models.IntegerField()  # for getting tweet comments
+    text = models.TextField()  # status text
     tweet_created = models.DateTimeField(blank=True, null=True, default=None)
 
     class Meta:
@@ -71,7 +71,7 @@ class OtherTweet(Tweet):
 
 
 class UserTweet(Tweet):
-    app_user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True, default=None)
+    app_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.text
