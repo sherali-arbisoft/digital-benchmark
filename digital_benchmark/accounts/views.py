@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from . import json_web_token
 
@@ -15,29 +17,10 @@ from django.views import View, generic
 
 from .forms import UserLoginForm, UserRegisterForm
 
-class LoginView(View):
-    def get(self, request):
-        form = UserLoginForm()
-        return render(request,'login.html',{'form':form})
-    
-    def post(self, request):
-        next = request.GET.get('next')
-        form = UserLoginForm(request.POST or None)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            if next:
-                return redirect(next)
-            return redirect('/')
-            
-        return render(request,'login.html',{'form':form})
-
-class RegisterView(View):
+class SignupView(View):
     def get(self, request):
         form = UserRegisterForm()
-        return render(request,'signup.html',{'form':form})
+        return render(request,'accounts/signup.html',{'form':form})
 
     def post(self, request):
         next = request.GET.get('next')
@@ -49,16 +32,51 @@ class RegisterView(View):
             user.save()
             new_user = authenticate(username=user.username, password=password)
             login(request, new_user)
+            payload = {
+                'username': user.username,
+            }
+            jwt = json_web_token.get_jwt(payload)
             if next:
-                return redirect(next)
-            return redirect('/')
+                return redirect(next, jwt=jwt)
+            return redirect('home', jwt=jwt)
 
-        return render(request,'signup.html',{'form':form})
+        return render(request,'accounts/signup.html',{'form':form})
+
+class LoginView(View):
+    def get(self, request):
+        form = UserLoginForm()
+        return render(request,'accounts/login.html',{'form':form})
+    
+    def post(self, request):
+        next = request.GET.get('next')
+        form = UserLoginForm(request.POST or None)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            payload = {
+                'username': user.username,
+            }
+            jwt = json_web_token.get_jwt(payload)
+            if next:
+                return redirect(next, jwt=jwt)
+            return redirect('accounts:home', jwt=jwt)
+            
+        return render(request,'accounts/login.html',{'form':form})
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('/')
+        return redirect('accounts:login')
+
+@method_decorator(login_required, name='dispatch')
+class HomeView(View):
+    def get(self,request, jwt):
+        context = {
+            'jwt': jwt,
+        }
+        return render(request, "accounts/home.html", context)
 
 class Signup(APIView):
     def post(self, request, format=None):
