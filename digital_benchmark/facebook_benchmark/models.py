@@ -23,7 +23,7 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
     first_name = models.CharField(max_length=255, null=True, blank=False)
     last_name = models.CharField(max_length=255, null=True, blank=False)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Facebook Profile'
