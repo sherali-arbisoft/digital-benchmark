@@ -1,0 +1,92 @@
+2019-08-17 14:48:36 [scrapy.utils.log] INFO: Scrapy 1.7.3 started (bot: crawler_instagram)
+2019-08-17 14:48:36 [scrapy.utils.log] INFO: Versions: lxml 4.4.1.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 19.7.0, Python 3.6.8 (default, Jan 14 2019, 11:02:34) - [GCC 8.0.1 20180414 (experimental) [trunk revision 259383]], pyOpenSSL 19.0.0 (OpenSSL 1.1.1c  28 May 2019), cryptography 2.7, Platform Linux-4.15.0-58-generic-x86_64-with-Ubuntu-18.04-bionic
+2019-08-17 14:48:36 [scrapy.crawler] INFO: Overridden settings: {'BOT_NAME': 'crawler_instagram', 'LOG_FILE': 'logs/default/insta_crawler/172f517cc0fe11e983eb00224db05bc9.log', 'NEWSPIDER_MODULE': 'crawler_instagram.spiders', 'SPIDER_MODULES': ['crawler_instagram.spiders'], 'USER_AGENT': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}
+2019-08-17 14:48:36 [scrapy.extensions.telnet] INFO: Telnet Password: 55af87863387df8e
+2019-08-17 14:48:36 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats']
+2019-08-17 14:48:36 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2019-08-17 14:48:36 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2019-08-17 14:48:36 [scrapy.middleware] INFO: Enabled item pipelines:
+[]
+2019-08-17 14:48:36 [scrapy.core.engine] INFO: Spider opened
+2019-08-17 14:48:36 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2019-08-17 14:48:36 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2019-08-17 14:48:36 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/az_snaps1/> from <GET https://www.instagram.com/az_snaps1>
+2019-08-17 14:48:37 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/az_snaps1/> (referer: None)
+2019-08-17 14:48:37 [urllib3.connectionpool] DEBUG: Starting new HTTPS connection (1): www.instagram.com:443
+2019-08-17 14:48:38 [urllib3.connectionpool] DEBUG: https://www.instagram.com:443 "GET /graphql/query/?query_id=17888483320059182&variables=%7B%22id%22:%229246763228%22,%22first%22:12,%22after%22:%22QVFBbWxPaE94bENfVVZkY0dIbnl5UlZoQ1dFS1EwTTktaVBwV1o3V2d6bnRjQ1ZHdEpmUEVlVUF3dmx3X0pCVFR3TkxKMlI5bzJQcHFSWElPdnNUUllDOA==%22%7D HTTP/1.1" 200 1757
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BvWkdSOAfzw/> from <GET https://www.instagram.com/p/BvWkdSOAfzw>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/Bqxl-3kgVtX/> from <GET https://www.instagram.com/p/Bqxl-3kgVtX>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqZ8U6EHI8E/> from <GET https://www.instagram.com/p/BqZ8U6EHI8E>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqxhL70gY8c/> from <GET https://www.instagram.com/p/BqxhL70gY8c>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqXAiWrHVdu/> from <GET https://www.instagram.com/p/BqXAiWrHVdu>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/Bqc6qxBnrGK/> from <GET https://www.instagram.com/p/Bqc6qxBnrGK>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqUN3PlnHIg/> from <GET https://www.instagram.com/p/BqUN3PlnHIg>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqkxCgJAqO0/> from <GET https://www.instagram.com/p/BqkxCgJAqO0>
+2019-08-17 14:48:38 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqcVpI8nL8d/> from <GET https://www.instagram.com/p/BqcVpI8nL8d>
+2019-08-17 14:48:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/Bqzh1CdAbLf/> from <GET https://www.instagram.com/p/Bqzh1CdAbLf>
+2019-08-17 14:48:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrUl7wag1vp/> from <GET https://www.instagram.com/p/BrUl7wag1vp>
+2019-08-17 14:48:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrUmQdZg0wD/> from <GET https://www.instagram.com/p/BrUmQdZg0wD>
+2019-08-17 14:48:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrbFl0DACQD/> from <GET https://www.instagram.com/p/BrbFl0DACQD>
+2019-08-17 14:48:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrVFpwtAyd7/> from <GET https://www.instagram.com/p/BrVFpwtAyd7>
+2019-08-17 14:48:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BslkxPxAY1D/> from <GET https://www.instagram.com/p/BslkxPxAY1D>
+2019-08-17 14:48:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BvWjakQA8s0/> from <GET https://www.instagram.com/p/BvWjakQA8s0>
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BvWkdSOAfzw/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/Bqxl-3kgVtX/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqZ8U6EHI8E/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqkxCgJAqO0/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqxhL70gY8c/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqUN3PlnHIg/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/Bqc6qxBnrGK/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqXAiWrHVdu/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqcVpI8nL8d/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/Bqzh1CdAbLf/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrUl7wag1vp/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrVFpwtAyd7/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrUmQdZg0wD/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrbFl0DACQD/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BvWjakQA8s0/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BslkxPxAY1D/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-17 14:48:40 [scrapy.core.engine] INFO: Closing spider (finished)
+2019-08-17 14:48:40 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 15952,
+ 'downloader/request_count': 34,
+ 'downloader/request_method_count/GET': 34,
+ 'downloader/response_bytes': 273451,
+ 'downloader/response_count': 34,
+ 'downloader/response_status_count/200': 17,
+ 'downloader/response_status_count/301': 17,
+ 'elapsed_time_seconds': 4.033069,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2019, 8, 17, 14, 48, 40, 267660),
+ 'log_count/DEBUG': 36,
+ 'log_count/INFO': 10,
+ 'memusage/max': 78364672,
+ 'memusage/startup': 78364672,
+ 'request_depth_max': 1,
+ 'response_received_count': 17,
+ 'scheduler/dequeued': 34,
+ 'scheduler/dequeued/memory': 34,
+ 'scheduler/enqueued': 34,
+ 'scheduler/enqueued/memory': 34,
+ 'start_time': datetime.datetime(2019, 8, 17, 14, 48, 36, 234591)}
+2019-08-17 14:48:40 [scrapy.core.engine] INFO: Spider closed (finished)
