@@ -7,31 +7,26 @@ from django.contrib import messages
 
 import requests
 
-from .forms import LoginForm
 from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
 from .models import FacebookProfile, Page
 
 @method_decorator(login_required, name='dispatch')
 class LoginView(View):
-    def get(self, request, *args, **kwargs):
-        login_form = LoginForm()
+    def get(self, request, jwt, *args, **kwargs):
+        FACEBOOK_LOGIN_URL = f"https://www.facebook.com/v{settings.FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={settings.FACEBOOK_APP_ID}&redirect_uri={settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}{jwt}&scope={','.join(settings.FACEBOOK_PERMISSIONS)}&response_type={settings.FACEBOOK_RESPONSE_TYPE}&state={settings.FACEBOOK_STATE}"
         context = {
-            'login_form': login_form
+            'facebook_login_url': FACEBOOK_LOGIN_URL,
         }
         return render(request, 'facebook_benchmark/login.html', context)
 
-    def post(self, request, *args, **kwargs):
-        url = settings.FACEBOOK_LOGIN_URL
-        return redirect(url)
-
 @method_decorator(login_required, name='dispatch')
 class LoginSuccessfulView(View):
-    def get(self, request):
+    def get(self, request, jwt, *args, **kwargs):
         url = settings.FACEBOOK_ACCESS_TOKEN_URL
         data = {
             'client_id': settings.FACEBOOK_APP_ID,
-            'redirect_uri': settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI,
+            'redirect_uri': settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI + jwt,
             'client_secret': settings.FACEBOOK_APP_SECRET,
             'code': request.GET['code'],
         }
@@ -64,14 +59,15 @@ class LoginSuccessfulView(View):
             page.access_token = response.get('access_token', '')
             page.save()
 
-        return redirect('/facebook_benchmark/home')
+        return redirect('facebook_benchmark:home', jwt=jwt)
 
 @method_decorator(login_required, name='dispatch')
 class HomeView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, jwt, *args, **kwargs):
         facebook_profile_id = request.session.get('facebook_profile_id', '')
         all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
         context = {
+            'jwt': jwt,
             'all_pages': all_pages,
         }
         return render(request, 'facebook_benchmark/home.html', context)

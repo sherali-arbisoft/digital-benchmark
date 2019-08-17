@@ -7,7 +7,8 @@ from django.utils.decorators import method_decorator
 @method_decorator(login_required, name='dispatch')
 class HomeView(View):
 
-    def get(self,request):
+    def get(self,request, jwt):
+        print(jwt)
         return render(request, "home.html", {})
 
 # @login_required

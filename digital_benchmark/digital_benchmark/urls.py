@@ -4,17 +4,14 @@ from django.conf import settings
 
 from . import views
 
-from accounts.views import LoginView,LogoutView,RegisterView
+from accounts.views import LoginView
 
+app_name = 'digital_benchmark'
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('facebook_benchmark/', include('facebook_benchmark.urls')),
+    path('facebook_benchmark/', include('facebook_benchmark.urls', namespace='facebook_benchmark')),
     path('instagram_benchmark/', include('instagram_benchmark.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('', views.HomeView.as_view()),
-    path('accounts/login/', LoginView.as_view()),
-    path('accounts/register/', RegisterView.as_view()),
-    path('accounts/logout/', LogoutView.as_view())
+    path('accounts/', include('accounts.urls', namespace='accounts')),
 ]
 
 if settings.DEBUG:

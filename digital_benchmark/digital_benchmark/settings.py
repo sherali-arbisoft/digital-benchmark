@@ -117,7 +117,7 @@ STATIC_URL = '/static/'
 FACEBOOK_GRAPH_API_VERSION = '3.1'
 FACEBOOK_APP_ID = '349831992602224'
 FACEBOOK_APP_SECRET = 'e3bfa0ed905199eecca00e74631280b7'
-FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI = 'http://localhost:8000/facebook_benchmark/login_successful'
+FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI = 'http://localhost:8000/facebook_benchmark/login_successful/'
 FACEBOOK_PERMISSIONS = [ 'manage_pages', 'pages_show_list', 'read_insights']
 FACEBOOK_RESPONSE_TYPE = 'code'
 FACEBOOK_STATE = '{"{st=state123abc,ds=123456789}"}'

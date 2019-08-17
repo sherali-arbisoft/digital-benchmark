@@ -20,7 +20,7 @@
     {% for page in all_pages %}
         <tr>
             <td>{{ page.name }}</td>
-            <td><a href="{% url 'load_page_data' page.id %}" class="btn btn-primary">Load Page Data</a></td>
+            <td><a href="{% url 'facebook_benchmark:load_page_data' page.id %}" class="btn btn-primary">Load Page Data</a></td>
         </tr>
     {% endfor %}
 </table>
