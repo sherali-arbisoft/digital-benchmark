@@ -5,25 +5,23 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from rest_framework import generics
+
 import requests
 
 from .forms import LoginForm
 from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
-from .models import FacebookProfile, Page
+from .models import FacebookProfile, Page, Post
+from .serializers import FacebookProfileSerializer, PageSerializer, PostSerializer
 
 @method_decorator(login_required, name='dispatch')
 class LoginView(View):
     def get(self, request, *args, **kwargs):
-        login_form = LoginForm()
         context = {
-            'login_form': login_form
+            'facebook_login_url': settings.FACEBOOK_LOGIN_URL,
         }
         return render(request, 'facebook_benchmark/login.html', context)
-
-    def post(self, request, *args, **kwargs):
-        url = settings.FACEBOOK_LOGIN_URL
-        return redirect(url)
 
 @method_decorator(login_required, name='dispatch')
 class LoginSuccessfulView(View):
@@ -98,3 +96,27 @@ class LoadPageDataView(View):
         messages.info(request, f"{sum([len(post.comment_set.all()) for post in all_posts ])} Comments Added.")
         messages.info(request, f"{sum([len(post.reactions.all()) for post in all_posts ])} Post Reactions Added.")
         return redirect('/facebook_benchmark/home')
+
+class FacebookProfileList(generics.ListAPIView):
+    serializer_class = FacebookProfileSerializer
+
+    def get_queryset(self):
+        return FacebookProfile.objects.filter(user=self.request.user)
+
+class PageList(generics.ListAPIView):
+    serializer_class = PageSerializer
+
+    def get_queryset(self):
+        facebook_profile = FacebookProfile.objects.get(user=self.request.user)
+        return Page.objects.filter(facebook_profile=facebook_profile)
+
+class PostList(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        page = Page.objects.get(id=self.kwargs.get('id', ''))
+        return Post.objects.filter(page=page)
+
+class PostDetail(generics.RetrieveAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
