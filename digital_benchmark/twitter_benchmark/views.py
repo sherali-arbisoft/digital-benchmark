@@ -4,6 +4,7 @@ from django.views import View, generic
 from requests_oauthlib import OAuth1Session
 from .models import AuthToken
 from .data_provider import DataProvider
+from .data_parser import TwitterDataParser
 
 
 class LoginView(generic.ListView):
@@ -30,8 +31,10 @@ class AuthView(View):
 class SuccessView(View):
     def get(self, request):
         obj = DataProvider(request.GET['oauth_verifier'], request.GET['oauth_token'])
-        data = obj.get_user_profile_data()
-        print(data)
+        # for testing
+        data = obj.get_other_tweet('tanweer34')
+        data = TwitterDataParser.parser_other_tweet(data=data)
+        print(type(data))
         return render(request, 'success/index.html')
 
 
