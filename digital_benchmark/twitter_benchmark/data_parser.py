@@ -1,10 +1,10 @@
-from .models import UserData,UserTweet,OtherTweet,UserComment
-import datetime
+from .models import UserData, UserTweet, OtherTweet, UserComment
 
 
 class TwitterDataParser:
 
-    def parser_user_data(self, data):
+    @staticmethod
+    def parser_user_data(data):
         user_data = UserData()
         user_data.user_id = data.get('id')
         user_data.user_name = data.get('name')
@@ -19,18 +19,23 @@ class TwitterDataParser:
         user_data.save()
         return user_data
 
-    def parser_user_tweet(self, data):
+    @staticmethod
+    def parser_user_tweet(data):
+        user_tweet = []
         for tweet_data in data:
             tweet = UserTweet()
-            print(tweet_data.get('text'))
             tweet.text = tweet_data.get('text', '')
             tweet.favorite_count = tweet_data.get('favorite_count')
             tweet.retweet_count = tweet_data.get('retweet_count')
             tweet.user_id = tweet_data.get('user').get('id')
             tweet.tweet_id = tweet_data.get('id')
+            user_tweet.append(tweet)
             tweet.save()
+        return user_tweet
 
-    def parser_other_tweets(self, data):
+    @staticmethod
+    def parser_other_tweet(data):
+        other_tweet_for_view = []
         screen_name = data['screen_name']
         other_tweets_list = data['tweets']
         for tweet in other_tweets_list:
@@ -41,9 +46,15 @@ class TwitterDataParser:
             other_tweet.retweet_count = tweet.get('retweet_count')
             other_tweet.user_id = tweet.get('user').get('id')
             other_tweet.tweet_id = tweet.get('id')
+            other_tweet_for_view.append(other_tweet)
             other_tweet.save()
+        return {'tweets': other_tweet_for_view,
+                'screen_name': screen_name
+                }
 
-    def parser_user_comment(self, data):
+    @staticmethod
+    def parser_user_comment(data):
+        user_comment_for_view = []
         for comment_data in data:
             user_comment = UserComment()
             user_comment.favorite_count = comment_data.get('favorite_count')
@@ -52,7 +63,9 @@ class TwitterDataParser:
             user_comment.tweet_id = comment_data.get('id')
             user_comment.retweet_count = comment_data.get('retweet_count')
             user_comment.user_id = comment_data.get('user').get('id')
+            user_comment_for_view.append(user_comment)
             user_comment.save()
+        return user_comment
 
 
 
