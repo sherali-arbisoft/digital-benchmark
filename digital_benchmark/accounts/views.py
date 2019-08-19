@@ -3,8 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 
-from . import json_web_token
-
 from django.contrib.auth import (
     authenticate,
     get_user_model,
@@ -59,64 +57,3 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/')
-
-class Signup(APIView):
-    def post(self, request, format=None):
-        user, created = User.objects.get_or_create(username=request.data.get('username', ''))
-        if not created:
-            response = {
-                'error_messages': ['Username Already Exists.',]
-            }
-        else:
-            user.set_password(request.data.get('password', ''))
-            user.save()
-            payload = {
-                'username': request.data.get('username', ''),
-            }
-            jwt = json_web_token.get_jwt(payload)
-            response = {
-                'success_messages': ['Account Successfully Created.',],
-                'jwt': jwt,
-            }
-        return Response(response)
-
-class Login(APIView):
-    def post(self, request, format=None):
-        user = authenticate(username=request.data.get('username', ''), password=request.data.get('password', ''))
-        if user is None:
-            response = {
-                'error_messages': [
-                    'Username/Password does not Match.',
-                ],
-            }
-        else:
-            payload = {
-                'username': user.username,
-            }
-            jwt = json_web_token.get_jwt(payload)
-            response = {
-                'success_messages': [
-                    'Login Successful.',
-                ],
-                'jwt': jwt,
-            }
-        return Response(response)
-
-class Home(APIView):
-    def get(self, request, format=None):
-        jwt = request.data.get('jwt', '')
-        if not json_web_token.verify_signature(jwt):
-            response = {
-                'error_messages': [
-                    'Invalid Signature.',
-                ],
-            }
-        else:
-            payload = json_web_token.get_payload(jwt)
-            user = User.objects.get(username=payload.get('username', ''))
-            response = {
-                'success_messages': [
-                    f'Welcome, {user.username}',
-                ],
-            }
-        return Response(response)
