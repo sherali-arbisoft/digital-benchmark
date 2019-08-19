@@ -13,15 +13,9 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PageSerializer(serializers.ModelSerializer):
-    ratings = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    ratings = RatingSerializer(many=True, read_only=True)
     class Meta:
         model = Page
-        fields = '__all__'
-
-class PostSerializer(serializers.ModelSerializer):
-    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    class Meta:
-        model = Post
         fields = '__all__'
 
 class PostReactionSerializer(serializers.ModelSerializer):
@@ -35,6 +29,14 @@ class CommentReactionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
+    reactions = CommentReactionSerializer(many=True, read_only=True)
     class Meta:
         model = Comment
+        fields = '__all__'
+
+class PostSerializer(serializers.ModelSerializer):
+    reactions = PostReactionSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
+    class Meta:
+        model = Post
         fields = '__all__'
