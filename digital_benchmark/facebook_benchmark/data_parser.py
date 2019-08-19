@@ -5,7 +5,7 @@ from datetime import datetime
 from .models import FacebookProfile, Page, Rating, Post, PostReaction, Comment, CommentReaction
 
 class FacebookUserDataParser:
-    def __init__(self, user_id, facebook_profile_id=0, *args, **kwargs):
+    def __init__(self, user_id, facebook_profile_id=None, *args, **kwargs):
         self.user_id = user_id
         self.facebook_profile_id = facebook_profile_id
 
