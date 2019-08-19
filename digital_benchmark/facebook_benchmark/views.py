@@ -126,7 +126,7 @@ class PostList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['message', 'story']
+    search_fields = ['message', 'story', 'comments__message', 'reactions__reaction_type', 'comments__reactions__reaction_type']
     
     def get_queryset(self):
         return Post.objects.filter(page__facebook_profile__user=self.request.user)
