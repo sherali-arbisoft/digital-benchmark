@@ -1,0 +1,686 @@
+2019-08-19 15:09:39 [scrapy.utils.log] INFO: Scrapy 1.7.3 started (bot: crawler_instagram)
+2019-08-19 15:09:39 [scrapy.utils.log] INFO: Versions: lxml 4.4.1.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 19.7.0, Python 3.6.8 (default, Jan 14 2019, 11:02:34) - [GCC 8.0.1 20180414 (experimental) [trunk revision 259383]], pyOpenSSL 19.0.0 (OpenSSL 1.1.1c  28 May 2019), cryptography 2.7, Platform Linux-4.15.0-58-generic-x86_64-with-Ubuntu-18.04-bionic
+2019-08-19 15:09:39 [scrapy.crawler] INFO: Overridden settings: {'BOT_NAME': 'crawler_instagram', 'LOG_FILE': 'logs/default/insta_crawler/5c35f4c4c29311e98c1a00224db05bc9.log', 'NEWSPIDER_MODULE': 'crawler_instagram.spiders', 'SPIDER_MODULES': ['crawler_instagram.spiders'], 'USER_AGENT': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}
+2019-08-19 15:09:39 [scrapy.extensions.telnet] INFO: Telnet Password: a596298b38bdbe29
+2019-08-19 15:09:39 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats']
+2019-08-19 15:09:39 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2019-08-19 15:09:39 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2019-08-19 15:09:39 [scrapy.middleware] INFO: Enabled item pipelines:
+['crawler_instagram.pipelines.InstagramPipeline']
+2019-08-19 15:09:39 [scrapy.core.engine] INFO: Spider opened
+2019-08-19 15:09:39 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2019-08-19 15:09:39 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2019-08-19 15:09:39 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/az_snaps1/> from <GET https://www.instagram.com/az_snaps1>
+2019-08-19 15:09:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/az_snaps1/> (referer: None)
+2019-08-19 15:09:40 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.instagram.com/az_snaps1/>
+{'_type': 'profile',
+ 'django_auth_user': '1',
+ 'follows_count': 77,
+ 'folowed_by_count': 29,
+ 'full_name': 'AZ Snaps',
+ 'insta_uid': '9246763228',
+ 'is_business': True,
+ 'media_count': 16,
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769',
+ 'username': 'az_snaps1'}
+2019-08-19 15:09:40 [urllib3.connectionpool] DEBUG: Starting new HTTPS connection (1): www.instagram.com:443
+2019-08-19 15:09:41 [urllib3.connectionpool] DEBUG: https://www.instagram.com:443 "GET /graphql/query/?query_id=17888483320059182&variables=%7B%22id%22:%229246763228%22,%22first%22:12,%22after%22:%22QVFBYUQyVFJpQkctaGZ2X09iUE9FbnVlbTdkc0M1endWTW9tQVJpX3JoYVdHdEw2ZUFnOVN0eGM3UzhWZ3B2dk9MS0ZSdldTbkF6RFdtLUZCTzdvVUE0TQ==%22%7D HTTP/1.1" 200 1760
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqUN3PlnHIg/> from <GET https://www.instagram.com/p/BqUN3PlnHIg>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/Bqzh1CdAbLf/> from <GET https://www.instagram.com/p/Bqzh1CdAbLf>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/Bqxl-3kgVtX/> from <GET https://www.instagram.com/p/Bqxl-3kgVtX>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqcVpI8nL8d/> from <GET https://www.instagram.com/p/BqcVpI8nL8d>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqxhL70gY8c/> from <GET https://www.instagram.com/p/BqxhL70gY8c>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqkxCgJAqO0/> from <GET https://www.instagram.com/p/BqkxCgJAqO0>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/Bqc6qxBnrGK/> from <GET https://www.instagram.com/p/Bqc6qxBnrGK>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqZ8U6EHI8E/> from <GET https://www.instagram.com/p/BqZ8U6EHI8E>
+2019-08-19 15:09:41 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BqXAiWrHVdu/> from <GET https://www.instagram.com/p/BqXAiWrHVdu>
+2019-08-19 15:09:42 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrUl7wag1vp/> from <GET https://www.instagram.com/p/BrUl7wag1vp>
+2019-08-19 15:09:42 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrVFpwtAyd7/> from <GET https://www.instagram.com/p/BrVFpwtAyd7>
+2019-08-19 15:09:42 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrUmQdZg0wD/> from <GET https://www.instagram.com/p/BrUmQdZg0wD>
+2019-08-19 15:09:42 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BrbFl0DACQD/> from <GET https://www.instagram.com/p/BrbFl0DACQD>
+2019-08-19 15:09:42 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BslkxPxAY1D/> from <GET https://www.instagram.com/p/BslkxPxAY1D>
+2019-08-19 15:09:42 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BvWjakQA8s0/> from <GET https://www.instagram.com/p/BvWjakQA8s0>
+2019-08-19 15:09:42 [scrapy.downloadermiddlewares.redirect] DEBUG: Redirecting (301) to <GET https://www.instagram.com/p/BvWkdSOAfzw/> from <GET https://www.instagram.com/p/BvWkdSOAfzw>
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqUN3PlnHIg/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.instagram.com/p/BqUN3PlnHIg/>
+{'_type': 'media',
+ 'comments_count': 0,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 7,
+ 'media_caption': '#village #fields #panjab #pakistan #mobilephotography '
+                  '#snaps #myphotos',
+ 'media_count': 16,
+ 'media_id': '1915216712452305440',
+ 'media_tags': '#village #fields #panjab #pakistan #mobilephotography #snaps '
+               '#myphotos',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/45718aa7f07a709cc808e93cb0b36353/5DD4B3A4/t51.2885-15/e35/45375769_919246311610999_4607981389298167787_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-18 09:00:45',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/Bqzh1CdAbLf/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqkxCgJAqO0/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqxhL70gY8c/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/Bqxl-3kgVtX/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqZ8U6EHI8E/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.instagram.com/p/Bqzh1CdAbLf/>
+{'_type': 'media',
+ 'comments_count': 0,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 8,
+ 'media_caption': '#sunset #skycolors #scenery #sceneryphotography #rawalpindi '
+                  '#panjab #pakistan #mobilephotography #myphotos '
+                  '#myphotograph #mobilephotography #snaps #nofilter',
+ 'media_count': 16,
+ 'media_id': '1924030246118601439',
+ 'media_tags': '#sunset #skycolors #scenery #sceneryphotography #rawalpindi '
+               '#panjab #pakistan #mobilephotography #myphotos #myphotograph '
+               '#mobilephotography #snaps #nofilter',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/dbb4bd1d3a14dcc3a97b5a0b1c1a94d5/5DD575C1/t51.2885-15/e35/47136975_217188295716426_8681441520474924713_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-30 12:51:40',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+2019-08-19 15:09:42 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.instagram.com/p/BqkxCgJAqO0/>
+{'_type': 'media',
+ 'comments_count': 1,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 7,
+ 'media_caption': '#mobilephotography #cityview #city #lahore #panjab '
+                  '#pakistan #bird #myphotos #myphotograph',
+ 'media_count': 16,
+ 'media_id': '1919875017395577780',
+ 'media_tags': '#mobilephotography #cityview #city #lahore #panjab #pakistan '
+               '#bird #myphotos #myphotograph',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/cf842b8f08764d064484a1f55b39a69e/5E0D47D3/t51.2885-15/e35/45548604_291676171554520_3374166160730897807_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-24 19:15:58',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '1572208026',
+ 'comment_id': '17911789876262269',
+ 'comment_text': 'This post and your feed are simply beuatiful tho 🙏🙌',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1919875017395577780',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 84, in process_item
+    (True,time_now,time_now,item.get('comment_id'),item.get('media_id'),item.get('comment_text'),item.get('comment_by')))
+psycopg2.errors.NumericValueOutOfRange: value "1919875017395577780" is out of range for type integer
+LINE 1: ...9T15:09:39.137149'::timestamp,'17911789876262269','191987501...
+                                                             ^
+
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqcVpI8nL8d/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BqXAiWrHVdu/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 0,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 10,
+ 'media_caption': '#mobilephotography #city #roads #sunset #colors #sky '
+                  '#skycolors #lahore #panjab #pakistan #myphotograph '
+                  '#myphotos #myphotography #snaps',
+ 'media_count': 16,
+ 'media_id': '1923464471544696604',
+ 'media_tags': '#mobilephotography #city #roads #sunset #colors #sky '
+               '#skycolors #lahore #panjab #pakistan #myphotograph #myphotos '
+               '#myphotography #snaps',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/bb64379891906fc19ba335c0cdb6f85c/5DDF7BF6/t51.2885-15/e35/46506790_2025973797459434_3674033898382393553_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-29 18:07:34',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 0,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 8,
+ 'media_caption': '#mobilephotography #flowers #nature #beauty #myphotos '
+                  '#myphotograph #snaps #myphotography #farinacci',
+ 'media_count': 16,
+ 'media_id': '1923485563860638551',
+ 'media_tags': '#mobilephotography #flowers #nature #beauty #myphotos '
+               '#myphotograph #snaps #myphotography #farinacci',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/5fbdf3c8649bc845c6838ca0680159ba/5DF8DEB0/t51.2885-15/e35/45751978_252993165378731_7918479694566940423_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-29 18:49:29',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 0,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 7,
+ 'media_caption': '#mobilephotography #panjab #pakistan #fields #wheat #nature '
+                  '#crops #myphotos #mobilephotography #snaps',
+ 'media_count': 16,
+ 'media_id': '1916828435949063940',
+ 'media_tags': '#mobilephotography #panjab #pakistan #fields #wheat #nature '
+               '#crops #myphotos #mobilephotography #snaps',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/ff27a1d8c24d990090843add6aabd7c8/5E0CF244/t51.2885-15/e35/44898239_713331325706034_5434446487691970859_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-20 14:22:57',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 1,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 16,
+ 'media_caption': '#mobilephotography #oldcity #lahore #pakistan #sunset  '
+                  '#sunlight #sunsetcolors #downtownla #myphotos '
+                  '#mobilephotography',
+ 'media_count': 16,
+ 'media_id': '1917502727435108125',
+ 'media_tags': '#mobilephotography #oldcity #lahore #pakistan #sunset  '
+               '#sunlight #sunsetcolors #downtownla #myphotos '
+               '#mobilephotography',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/dc7945aa3728dbd2f99e978234d12017/5E13ACDB/t51.2885-15/e35/44745909_314798052458995_7042753124804910072_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-21 12:42:39',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '7182508',
+ 'comment_id': '17960036764194556',
+ 'comment_text': '💯📷',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1917502727435108125',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 2,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 8,
+ 'media_caption': '#mobilephotography #flowers #nature #myphotos',
+ 'media_count': 16,
+ 'media_id': '1916002527277307758',
+ 'media_tags': '#mobilephotography #flowers #nature #myphotos',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/28d4a67f96998a415888785ed66078d9/5E133F3A/t51.2885-15/e35/44781096_2320125664695277_2546240270056462752_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-19 11:02:01',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '2309253004',
+ 'comment_id': '17928922093228685',
+ 'comment_text': 'Wow! Great! AZ',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1916002527277307758',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/Bqc6qxBnrGK/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrUl7wag1vp/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrVFpwtAyd7/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 2,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 12,
+ 'media_caption': '#mobilephotography #arialview #rawalpindi #city #cityview '
+                  '#panjab #pakistan #myphotos #mobilephotography #snaps',
+ 'media_count': 16,
+ 'media_id': '1917665566909182346',
+ 'media_tags': '#mobilephotography #arialview #rawalpindi #city #cityview '
+               '#panjab #pakistan #myphotos #mobilephotography #snaps',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/9124c49269efc1eaa9e321e798f2723d/5DD5341E/t51.2885-15/e35/44622161_2103695526361943_6505908280663648844_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-11-21 18:06:11',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '8932311675',
+ 'comment_id': '17966462392169849',
+ 'comment_text': 'Nice\n'
+                 '▃▄▅▆▇█ﷺﷺ█▇▆▅▄▃ الهم صل وسلم علی نبینامحمد\n'
+                 '▃▄▅▆▇█ﷺﷺ█▇▆▅▄▃ الهم صل وسلم علی نبینامحمد\n'
+                 '▃▄▅▆▇█ﷺﷺ█▇▆▅▄▃\n'
+                 '▁▁▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁▁▁🔸ﷺ⛥ ┼▃██▃┼┼┼▃██▃┼ ┼█████┼█████┼ ┼███████████┼ '
+                 '┼███████████┼ ┼┼█████████┼┼ ┼┼┼███████┼┼┼ ┼┼┼┼█████┼┼┼┼ '
+                 '┼┼┼┼┼███┼┼┼┼┼ ┼┼┼┼┼┼█┼┼┼┼┼┼\n'
+                 '▁▁▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁🔹ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▁▁▁▁▁▁▁▁▁🔸ﷺ⛥\n'
+                 '▃▄▅▆▇█ﷺﷺ█▇▆▅▄▃ الهم صل وسلم علی نبینامحمد\n'
+                 '▃▄▅▆▇█ﷺﷺ█▇▆▅▄▃ الهم صل وسلم علی نبینامحمد\n'
+                 '▃▄▅▆▇█ﷺﷺ█▇▆▅▄▃ الهم صل وسلم علی نبینامحمد\n'
+                 '▃▄▅▆▇█ﷺﷺ█▇▆▅▄▃',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1917665566909182346',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:42 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '1462735714',
+ 'comment_id': '17984776558087576',
+ 'comment_text': 'Great work, keep going! 👍🔥!!!!',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1917665566909182346',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BslkxPxAY1D/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 1,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 13,
+ 'media_caption': '#margla #trail3 #islamabad #capital #pakistan #photography '
+                  '#snaps #myphotos #mountains #hills #green #greenhills '
+                  '#greenery #mobilephotography',
+ 'media_count': 16,
+ 'media_id': '1933336974203247593',
+ 'media_tags': '#margla #trail3 #islamabad #capital #pakistan #photography '
+               '#snaps #myphotos #mountains #hills #green #greenhills '
+               '#greenery #mobilephotography',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/097a3476342816a9a1fc823f4ede6cf9/5DDDF59F/t51.2885-15/e35/46965487_350031665782163_1227325474474444015_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-12-13 09:02:28',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '515221234',
+ 'comment_id': '18002168302074835',
+ 'comment_text': 'Wow..Amazing Click!',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1933336974203247593',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 0,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 4,
+ 'media_caption': '#mobilephotography #city #roads #lahore #underpass #punjab '
+                  '#pakistan #myphotos #snaps #myphotography #nofilter '
+                  '#symmetry #centercomposition',
+ 'media_count': 16,
+ 'media_id': '1933476475051386747',
+ 'media_tags': '#mobilephotography #city #roads #lahore #underpass #punjab '
+               '#pakistan #myphotos #snaps #myphotography #nofilter #symmetry '
+               '#centercomposition',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/5b16c751be8cfcbd71287cdb1f2e3fb9/5DF8053F/t51.2885-15/e35/47124323_499970543866554_2691491450322220660_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-12-13 13:39:38',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrbFl0DACQD/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BvWjakQA8s0/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BrUmQdZg0wD/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 1,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 14,
+ 'media_caption': '#wazeerkhanmosque #walledcityoflahore #walledcity '
+                  '#oldlahore #dehligate #lahore #pakistan #myphotos '
+                  '#historyoflahore #history #culture #structure #ancient '
+                  '#architecture #myphotography #mobilephotography '
+                  '#photography @dawn_dot_com #dawndotcom',
+ 'media_count': 16,
+ 'media_id': '1956131327019420995',
+ 'media_tags': '#wazeerkhanmosque #walledcityoflahore #walledcity #oldlahore '
+               '#dehligate #lahore #pakistan #myphotos #historyoflahore '
+               '#history #culture #structure #ancient #architecture '
+               '#myphotography #mobilephotography #photography @dawn_dot_com '
+               '#dawndotcom',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/1b4c79772a178dafaa7f69f4d44cc8b7/5E13BA3D/t51.2885-15/e35/49682898_385721412196045_1674390265007380835_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2019-01-13 19:50:47',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '4836277167',
+ 'comment_id': '18021524698035678',
+ 'comment_text': 'Deserve this 👍👍',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1956131327019420995',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.instagram.com/p/BvWkdSOAfzw/> (referer: https://www.instagram.com/az_snaps1/)
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 5,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 14,
+ 'media_caption': '#roads #life #daysofourlives #lahore #punjab #pakistan '
+                  '#myphotos #mobilephotography #myphotography #snaps #sunsets '
+                  '#sunsetcolors #colors #sky #skycolors',
+ 'media_count': 16,
+ 'media_id': '1935165053623870467',
+ 'media_tags': '#roads #life #daysofourlives #lahore #punjab #pakistan '
+               '#myphotos #mobilephotography #myphotography #snaps #sunsets '
+               '#sunsetcolors #colors #sky #skycolors',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/1dc4cfd83b17ed4895227263de784eb5/5E118A49/t51.2885-15/e35/46894128_396466544425650_4025658625205154864_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-12-15 21:34:32',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '5581463231',
+ 'comment_id': '18003072715072947',
+ 'comment_text': 'nice @az_snaps1',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1935165053623870467',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '9051861894',
+ 'comment_id': '18010038919011030',
+ 'comment_text': 'nice @az_snaps1',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1935165053623870467',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 0,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 23,
+ 'media_caption': '#lahore #photography #mousqe #lahorefort #badshahimosque '
+                  '#sunset #histr #lahoreheritage #oldbuilding #mysnaps '
+                  '#myphotography #photography #mobilephotography #nofilter '
+                  '#azsnaps',
+ 'media_count': 16,
+ 'media_id': '2005946441297808180',
+ 'media_tags': '#lahore #photography #mousqe #lahorefort #badshahimosque '
+               '#sunset #histr #lahoreheritage #oldbuilding #mysnaps '
+               '#myphotography #photography #mobilephotography #nofilter '
+               '#azsnaps',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/42911657ce0e5aa698f26deda2464828/5DF33FB7/t51.2885-15/e35/54512828_2337931263141167_8665063436926084027_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2019-03-23 13:24:31',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 1,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 11,
+ 'media_caption': '#margla #trail3 #islamabad #capital #pakistan #photography '
+                  '#snaps #myphotos #mountains #hills #green #greenhills '
+                  '#greenary #mobilephotography',
+ 'media_count': 16,
+ 'media_id': '1933338396894383107',
+ 'media_tags': '#margla #trail3 #islamabad #capital #pakistan #photography '
+               '#snaps #myphotos #mountains #hills #green #greenhills '
+               '#greenary #mobilephotography',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/248aade6e450a888085fd6376dba9aea/5DE289CF/t51.2885-15/e35/47138373_763273100719648_7352400655894923189_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2018-12-13 09:05:18',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '515221234',
+ 'comment_id': '18007193122075543',
+ 'comment_text': 'Awesome shot!!',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '1933338396894383107',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'media',
+ 'comments_count': 1,
+ 'filter_used': 'unknown',
+ 'insta_uid': '9246763228',
+ 'likes_count': 15,
+ 'media_caption': '#lahoreheritage #lahore #badshahimosque #history '
+                  '#lahorefort #oldbuilding #traveling #la #pakistan '
+                  '#mobilephotography #azsnaps',
+ 'media_count': 16,
+ 'media_id': '2005951026141723888',
+ 'media_tags': '#lahoreheritage #lahore #badshahimosque #history #lahorefort '
+               '#oldbuilding #traveling #la #pakistan #mobilephotography '
+               '#azsnaps',
+ 'media_type': 'GraphImage',
+ 'media_url': 'https://instagram.flhe10-1.fna.fbcdn.net/vp/dca760a75e0fbdbc8d5bdb22f197a15c/5DEF1F63/t51.2885-15/e35/52954505_349154369071223_5394558165794553460_n.jpg?_nc_ht=instagram.flhe10-1.fna.fbcdn.net',
+ 'people_tagged': 0,
+ 'post_created_time': '2019-03-23 13:33:38',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.scraper] ERROR: Error processing {'_type': 'comment',
+ 'comment_by': '10462944364',
+ 'comment_id': '17882753146308990',
+ 'comment_text': 'Inbox me For instagram promotion (followers, likes, comments '
+                 'and VIDEO VIEWS also)',
+ 'insta_uid': '9246763228',
+ 'media_count': 16,
+ 'media_id': '2005951026141723888',
+ 'unique_id': '358bb307-7957-4019-a5ce-b8e050e8b769'}
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 40, in process_item
+    self.cursor.execute(existing_user_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.core.engine] INFO: Closing spider (finished)
+2019-08-19 15:09:43 [scrapy.core.engine] ERROR: Scraper close failure
+Traceback (most recent call last):
+  File "/home/abdul/.local/share/virtualenvs/digital-benchmark-wVWb8uTK/lib/python3.6/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "/home/abdul/Desktop/digital-benchmark/digital_benchmark/crawler_instagram/crawler_instagram/pipelines.py", line 24, in close_spider
+    self.cursor.execute(running_spider_query)
+psycopg2.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block
+
+2019-08-19 15:09:43 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 15952,
+ 'downloader/request_count': 34,
+ 'downloader/request_method_count/GET': 34,
+ 'downloader/response_bytes': 274196,
+ 'downloader/response_count': 34,
+ 'downloader/response_status_count/200': 17,
+ 'downloader/response_status_count/301': 17,
+ 'elapsed_time_seconds': 4.097648,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2019, 8, 19, 15, 9, 43, 242030),
+ 'item_scraped_count': 4,
+ 'log_count/DEBUG': 40,
+ 'log_count/ERROR': 25,
+ 'log_count/INFO': 10,
+ 'memusage/max': 79831040,
+ 'memusage/startup': 79831040,
+ 'request_depth_max': 1,
+ 'response_received_count': 17,
+ 'scheduler/dequeued': 34,
+ 'scheduler/dequeued/memory': 34,
+ 'scheduler/enqueued': 34,
+ 'scheduler/enqueued/memory': 34,
+ 'start_time': datetime.datetime(2019, 8, 19, 15, 9, 39, 144382)}
+2019-08-19 15:09:43 [scrapy.core.engine] INFO: Spider closed (finished)

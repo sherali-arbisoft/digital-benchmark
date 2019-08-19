@@ -38,7 +38,7 @@ NEXT_MEDIA_URL='https://www.instagram.com/graphql/query/?query_id=17888483320059
 #USER_AGENT = 'crawler_instagram (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-#ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -83,9 +83,9 @@ NEXT_MEDIA_URL='https://www.instagram.com/graphql/query/?query_id=17888483320059
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'crawler_instagram.pipelines.CrawlerInstagramPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'crawler_instagram.pipelines.InstagramPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

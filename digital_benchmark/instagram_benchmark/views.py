@@ -5,7 +5,7 @@ from django.views import View, generic
 import requests
 import json
 from urllib.request import urlopen
-from .models import InstagramProfile
+from .models import InstagramProfile,CrawlerStats
 from .data_parser import InstagramDataParser
 from .data_provider import InstagramDataProvider
 from django.conf import settings
@@ -97,13 +97,18 @@ class InstaConnectView(View):
  
 class InstaCrawlerView(View):
    def post(self,request):
+       app_user_id=request.user.id
        unique_id = str(uuid4())
        public_username="az_snaps1"
        settings = {
            'unique_id': unique_id, # unique ID to kep track of crawling request sent to scrapyd
            'USER_AGENT': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
        }
-       task = scrapyd.schedule('default', 'insta_crawler', settings=settings, username=public_username)
- 
+       task = scrapyd.schedule('default', 'insta_crawler', settings=settings, username=public_username,unique_id=unique_id,django_user_id=app_user_id)
+       crawler_stats=CrawlerStats()
+       crawler_stats.unique_id=unique_id
+       crawler_stats.task_id=task
+       crawler_stats.status="Started"
+       crawler_stats.save()
        messages.success(request,'Instagram crawler triggered from scrapy')
        return render(request,'auth.html',{'messages':messages.get_messages(request)})

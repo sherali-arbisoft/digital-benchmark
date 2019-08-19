@@ -58,4 +58,10 @@ class InstagramMediaComments(SoftDeleteMixin, CreateUpdateMixin):
     media=models.ForeignKey(InstagramUserMedia, on_delete=models.CASCADE)
     comment_text = models.TextField(blank=True)
     comment_by = models.TextField(blank=True)
-    
+
+class CrawlerStats(SoftDeleteMixin, CreateUpdateMixin):
+    task_id=models.CharField(max_length=255)
+    unique_id=models.CharField(max_length=255,primary_key=True)
+    status=models.CharField(max_length=255)
+    user_scrapped=models.CharField(max_length=255)
+    no_of_media_scrapped=models.IntegerField(default=0)
