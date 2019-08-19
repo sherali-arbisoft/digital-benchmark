@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 import requests
 
@@ -98,19 +99,27 @@ class LoadPageDataView(View):
         return redirect('/facebook_benchmark/home')
 
 class FacebookProfileList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = FacebookProfileSerializer
 
     def get_queryset(self):
         return FacebookProfile.objects.filter(user=self.request.user)
 
 class PageList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PageSerializer
 
     def get_queryset(self):
         facebook_profile = FacebookProfile.objects.get(user=self.request.user)
         return Page.objects.filter(facebook_profile=facebook_profile)
 
+class PageDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PageSerializer
+    queryset = Page.objects.all()
+
 class PostList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
     def get_queryset(self):
@@ -118,5 +127,6 @@ class PostList(generics.ListAPIView):
         return Post.objects.filter(page=page)
 
 class PostDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
