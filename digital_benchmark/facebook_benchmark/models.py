@@ -23,7 +23,7 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
     first_name = models.CharField(max_length=255, null=True, blank=False)
     last_name = models.CharField(max_length=255, null=True, blank=False)
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = 'Facebook Profile'
@@ -64,7 +64,7 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     unseen_message_count = models.IntegerField(null=True, blank=False)
     verification_status = models.CharField(max_length=255, null=True, blank=False)
 
-    facebook_profile = models.ForeignKey('facebook_benchmark.FacebookProfile', on_delete=models.CASCADE)
+    facebook_profile = models.ForeignKey('facebook_benchmark.FacebookProfile', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
@@ -84,7 +84,7 @@ class Rating(SoftDeleteMixin, CreateUpdateMixin):
     recommendation_type = models.CharField(max_length=8, choices=RecommendationChoice.get_recommendation_choices())
     review_text = models.TextField(null=True, blank=True)
 
-    page = models.ForeignKey('facebook_benchmark.Page', related_name='ratings', on_delete=models.CASCADE)
+    page = models.ForeignKey('facebook_benchmark.Page', related_name='ratings', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.review_text
@@ -159,7 +159,7 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     timeline_visibility = models.CharField(max_length=12, choices=TimelineVisibilityChoice.get_timeline_visibility_choices(), null=True, blank=False)
     updated_time = models.DateTimeField(null=True, blank=False)
 
-    page = models.ForeignKey('facebook_benchmark.Page', on_delete=models.CASCADE)
+    page = models.ForeignKey('facebook_benchmark.Page', on_delete=models.PROTECT)
     reactions = models.ManyToManyField('facebook_benchmark.PostReaction', blank=True)
 
     def __str__(self):
@@ -182,7 +182,7 @@ class Comment(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     message = models.TextField()
 
-    post = models.ForeignKey('facebook_benchmark.Post', related_name='comments', on_delete=models.CASCADE)
+    post = models.ForeignKey('facebook_benchmark.Post', related_name='comments', on_delete=models.PROTECT)
     reactions = models.ManyToManyField('facebook_benchmark.CommentReaction', blank=True)
 
     def __str__(self):
