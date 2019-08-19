@@ -64,7 +64,7 @@ class Page(SoftDeleteMixin, CreateUpdateMixin):
     unseen_message_count = models.IntegerField(null=True, blank=False)
     verification_status = models.CharField(max_length=255, null=True, blank=False)
 
-    facebook_profile = models.ForeignKey(FacebookProfile, on_delete=models.CASCADE)
+    facebook_profile = models.ForeignKey('facebook_benchmark.FacebookProfile', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -84,7 +84,7 @@ class Rating(SoftDeleteMixin, CreateUpdateMixin):
     recommendation_type = models.CharField(max_length=8, choices=RecommendationChoice.get_recommendation_choices())
     review_text = models.TextField(null=True, blank=True)
 
-    page = models.ForeignKey(Page, related_name='ratings', on_delete=models.CASCADE)
+    page = models.ForeignKey('facebook_benchmark.Page', related_name='ratings', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.review_text
@@ -159,8 +159,8 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     timeline_visibility = models.CharField(max_length=12, choices=TimelineVisibilityChoice.get_timeline_visibility_choices(), null=True, blank=False)
     updated_time = models.DateTimeField(null=True, blank=False)
 
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
-    reactions = models.ManyToManyField('PostReaction', blank=True)
+    page = models.ForeignKey('facebook_benchmark.Page', on_delete=models.CASCADE)
+    reactions = models.ManyToManyField('facebook_benchmark.PostReaction', blank=True)
 
     def __str__(self):
         return self.message or self.story or self.post_id
@@ -182,8 +182,8 @@ class Comment(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     message = models.TextField()
 
-    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
-    reactions = models.ManyToManyField('CommentReaction', blank=True)
+    post = models.ForeignKey('facebook_benchmark.Post', related_name='comments', on_delete=models.CASCADE)
+    reactions = models.ManyToManyField('facebook_benchmark.CommentReaction', blank=True)
 
     def __str__(self):
         return self.message
