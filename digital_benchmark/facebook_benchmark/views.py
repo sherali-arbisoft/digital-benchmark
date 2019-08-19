@@ -7,6 +7,7 @@ from django.contrib import messages
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
 
 import requests
 
@@ -110,6 +111,8 @@ class PageList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PageSerializer
     queryset = FacebookProfile.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def get_queryset(self):
         return Page.objects.filter(facebook_profile__user=self.request.user)
@@ -122,6 +125,8 @@ class PageDetail(generics.RetrieveAPIView):
 class PostList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['message', 'story']
     
     def get_queryset(self):
         return Post.objects.filter(page__facebook_profile__user=self.request.user)
