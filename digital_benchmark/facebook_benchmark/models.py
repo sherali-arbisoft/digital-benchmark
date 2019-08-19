@@ -84,7 +84,7 @@ class Rating(SoftDeleteMixin, CreateUpdateMixin):
     recommendation_type = models.CharField(max_length=8, choices=RecommendationChoice.get_recommendation_choices())
     review_text = models.TextField(null=True, blank=True)
 
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+    page = models.ForeignKey(Page, related_name='ratings', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.review_text
@@ -182,7 +182,7 @@ class Comment(SoftDeleteMixin, CreateUpdateMixin):
     from_id = models.CharField(max_length=255)
     message = models.TextField()
 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     reactions = models.ManyToManyField('CommentReaction', blank=True)
 
     def __str__(self):
