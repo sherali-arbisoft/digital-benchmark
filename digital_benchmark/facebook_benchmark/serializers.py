@@ -1,18 +1,40 @@
 from rest_framework import serializers
 
-from .models import FacebookProfile, Page, Post
+from .models import FacebookProfile, Page, Rating, Post, PostReaction, Comment, CommentReaction
 
 class FacebookProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = FacebookProfile
         fields = '__all__'
 
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = '__all__'
+
 class PageSerializer(serializers.ModelSerializer):
+    ratings = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = Page
         fields = '__all__'
 
 class PostSerializer(serializers.ModelSerializer):
+    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = Post
+        fields = '__all__'
+
+class PostReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostReaction
+        fields = '__all__'
+
+class CommentReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentReaction
+        fields = '__all__'
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
         fields = '__all__'
