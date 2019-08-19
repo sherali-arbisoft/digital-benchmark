@@ -1,8 +1,6 @@
 {% extends 'facebook_benchmark/base.html' %}
 {% block content %}
-<form action="/facebook_benchmark/login/" method="post">
-    {% csrf_token %}
-    {{ login_form }}
-    <input type="submit" class="btn btn-primary" value="Login with Facebook">
-</form>
+
+<a href="{{ facebook_login_url }}" class="btn btn-primary">Connect with Facebook</a>
+
 {% endblock %}

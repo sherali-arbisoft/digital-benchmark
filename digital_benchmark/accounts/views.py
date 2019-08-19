@@ -1,4 +1,7 @@
 from django.shortcuts import render, redirect
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.contrib.auth.models import User
 
 from django.contrib.auth import (
     authenticate,
@@ -10,9 +13,7 @@ from django.views import View, generic
 
 from .forms import UserLoginForm, UserRegisterForm
 
-
 class LoginView(View):
-
     def get(self, request):
         form = UserLoginForm()
         return render(request,'login.html',{'form':form})
@@ -30,10 +31,8 @@ class LoginView(View):
             return redirect('/')
             
         return render(request,'login.html',{'form':form})
-    
 
 class RegisterView(View):
-
     def get(self, request):
         form = UserRegisterForm()
         return render(request,'signup.html',{'form':form})
@@ -53,9 +52,6 @@ class RegisterView(View):
             return redirect('/')
 
         return render(request,'signup.html',{'form':form})
-
-    
-
 
 class LogoutView(View):
     def get(self, request):

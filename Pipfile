@@ -12,6 +12,8 @@ facebook-sdk = "*"
 django-debug-toolbar = "*"
 psycopg2 = "*"
 requests = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.6"
