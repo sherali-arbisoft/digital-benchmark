@@ -15,6 +15,7 @@ from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
 from .models import FacebookProfile, Page, Post
 from .serializers import FacebookProfileSerializer, PageSerializer, PostSerializer
+from .permissions import PageAccessPermission, PostAccessPermission
 
 @method_decorator(login_required, name='dispatch')
 class LoginView(View):
@@ -94,11 +95,11 @@ class LoadPageDataView(View):
         
         messages.success(request, 'Page Data Loaded Successfully.')
         messages.info(request, f"{len(all_posts)} Posts Added.")
-        messages.info(request, f"{sum([len(post.comment_set.all()) for post in all_posts ])} Comments Added.")
+        messages.info(request, f"{sum([len(post.comments.all()) for post in all_posts ])} Comments Added.")
         messages.info(request, f"{sum([len(post.reactions.all()) for post in all_posts ])} Post Reactions Added.")
         return redirect('/facebook_benchmark/home')
 
-class FacebookProfileList(generics.ListAPIView):
+class ProfileList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FacebookProfileSerializer
 
@@ -108,25 +109,24 @@ class FacebookProfileList(generics.ListAPIView):
 class PageList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PageSerializer
+    queryset = FacebookProfile.objects.all()
 
     def get_queryset(self):
-        facebook_profile = FacebookProfile.objects.get(user=self.request.user)
-        return Page.objects.filter(facebook_profile=facebook_profile)
+        return Page.objects.filter(facebook_profile__user=self.request.user)
 
 class PageDetail(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, PageAccessPermission]
     serializer_class = PageSerializer
     queryset = Page.objects.all()
 
 class PostList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-
+    
     def get_queryset(self):
-        page = Page.objects.get(id=self.kwargs.get('id', ''))
-        return Post.objects.filter(page=page)
+        return Post.objects.filter(page__facebook_profile__user=self.request.user)
 
 class PostDetail(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, PostAccessPermission]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
