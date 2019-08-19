@@ -179,7 +179,7 @@ class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
 class Comment(SoftDeleteMixin, CreateUpdateMixin):
     comment_id = models.CharField(max_length=255)
     created_time = models.DateTimeField()
-    from_id = models.CharField(max_length=255)
+    from_id = models.CharField(max_length=255, null=True, blank=True)
     message = models.TextField()
 
     post = models.ForeignKey('facebook_benchmark.Post', related_name='comments', on_delete=models.PROTECT)
