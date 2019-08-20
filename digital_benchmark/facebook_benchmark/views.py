@@ -8,6 +8,7 @@ from django.contrib import messages
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
+from rest_framework.response import Response
 
 import requests
 
@@ -135,7 +136,18 @@ class PostList(generics.ListAPIView):
     def get_queryset(self):
         return Post.objects.filter(page__facebook_profile__user=self.request.user)
 
-class PostDetail(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated, PostAccessPermission]
+class PostDetail(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
+
+    def list(self, request, pk=None, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+        queryset = Post.objects.filter(post_id=post.post_id, page__facebook_profile__user=self.request.user).order_by('-created_at')
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
