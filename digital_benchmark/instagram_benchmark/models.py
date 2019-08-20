@@ -29,6 +29,9 @@ class InstagramProfile(SoftDeleteMixin, CreateUpdateMixin):
 
     def __str__(self):
         return self.username
+    
+    # def get_user_with_uid(self, instagram_uid):
+    #     pass
 
 
 class InstagramMediaInsight(SoftDeleteMixin, CreateUpdateMixin):

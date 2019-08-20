@@ -4,8 +4,8 @@ import json
 import requests
 import datetime as dt
 from scrapy.utils.project import get_project_settings
-from crawler_instagram.items import InstagramProfileItem,InstagramMediaItem,InstagramCommentItem
 settings = get_project_settings()
+from crawler_instagram.items import InstagramProfileItem,InstagramMediaItem,InstagramCommentItem
 
 
 class InstagramSpider(scrapy.Spider):
@@ -45,17 +45,16 @@ class InstagramSpider(scrapy.Spider):
         media_array=user_data.get("edge_owner_to_timeline_media").get("edges")
         media_count=0
         has_next_media=user_data.get("edge_owner_to_timeline_media").get("page_info").get("has_next_page")
-        
+        insta_id=user_data.get("id")
         while True:
-            has_next_media=user_data.get("edge_owner_to_timeline_media").get("page_info").get("has_next_page")
             if has_next_media:
                 media_count=media_count+12
                 end_cursor=user_data.get("edge_owner_to_timeline_media").get("page_info").get("end_cursor")
-                user_data=self._get_next_media(user_data.get("id"),media_count,end_cursor)
+                user_data=self._get_next_media(insta_id,media_count,end_cursor)
                 media_array+=user_data.get("edge_owner_to_timeline_media").get("edges")
+                has_next_media=user_data.get("edge_owner_to_timeline_media").get("page_info").get("has_next_page")
             else:
                 break
-        
         for media in media_array:
             media=media["node"]
             url=settings.get('MEDIA_URL').format(media["shortcode"])

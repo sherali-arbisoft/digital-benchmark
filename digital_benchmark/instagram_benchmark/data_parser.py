@@ -7,9 +7,9 @@ from .data_provider import InstagramDataProvider
 class InstagramDataParser:
 
     def parse_profile_data(self, profile_response,app_user_id):
-        user=profile_response.get('user','Not fount')
+        user=profile_response.get('user')
         profile = InstagramProfile()
-        profile.insta_uid = user.get('id','Id not found!')
+        profile.insta_uid = user.get('id')
         profile.app_user_id = app_user_id
         profile.access_token = profile_response.get('access_token')
         profile.full_name = user.get('full_name')
@@ -17,6 +17,17 @@ class InstagramDataParser:
         profile.is_business = user.get('is_business')
         profile.save()
         return profile
+
+    def parse_profile_update(self,user_profile_data,current_profile):
+        current_profile.follows_count = user_profile_data.get('counts').get('follows',0)
+        current_profile.folowed_by_count = user_profile_data.get('counts').get('followed_by',0)
+        current_profile.media_count = user_profile_data.get('counts').get('media',0)
+        try:
+            current_profile.save()
+            return f"{current_profile.username} follows {current_profile.follows_count} people, followed by {current_profile.folowed_by_count}, has {current_profile.media_count} posts"
+        except Exception as e:
+            return False
+            raise e
     
     #send single media insight entry at a time so that we can save insight id in media table by returning saved insignt back to caller one by one
     def parse_media_insight_data(self, all_user_media,insta_user,access_token):
@@ -40,7 +51,7 @@ class InstagramDataParser:
             comments_count+=len(this_media_comments)
             for comment in this_media_comments:
                 comments_just_saved=self.parse_media_comments(comment,media_just_saved)
-        return ['{} posts fetched and added for Instagram user {}'.format(len(all_user_media),insta_user.username),'{} comments saved for user {}'.format(comments_count,insta_user.username)]
+        return [f"{len(all_user_media)} posts fetched and added for Instagram user {insta_user.username}",f"{comments_count} comments saved for user {insta_user.username}"]
 
     #send single media at a time with media insight id of media saved in previous step
     def parse_media_data(self, fetch_media_response, insta_user, media_insight):

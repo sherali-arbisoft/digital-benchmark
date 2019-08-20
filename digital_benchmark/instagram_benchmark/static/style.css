@@ -38,3 +38,8 @@ body{
 #submit{
     -webkit-text-fill-color: #000;
 }
+
+#usernameText{
+    color: blue; 
+    font-size:15px;
+}

@@ -138,6 +138,16 @@ PROFILE_URL="https://api.instagram.com/v1/users/self/?access_token={}"
 RECENT_MEDIA_URL="https://api.instagram.com/v1/users/self/media/recent/?count=10&access_token={}"
 COMMENTS_URL="https://api.instagram.com/v1/media/{}/comments?access_token={}"
 INSTA_CONNECT_URL="https://api.instagram.com/oauth/authorize/?client_id=4d8f538893ba481f88c0614865dc9310&redirect_uri=http://127.0.0.1:8000/instagram_benchmark/connection_success&response_type=code&scope=basic"
+CLIENT_ID='4d8f538893ba481f88c0614865dc9310'
+CLIENT_SECRET='8e2bba68038844ab8e240b7094db18f2'
+GRANT_TYPE='authorization_code'
+INSTA_REDIRECT_URL='http://127.0.0.1:8000/instagram_benchmark/connection_success'
+INSTA_FETCH_USER_URL='https://api.instagram.com/oauth/access_token'
+#insta django internal configs
+DJANGO_LOGIN_URL='http://127.0.0.1:8000/accounts/login/'
+#Scrapyd Configs
+SCRAPYD_SERVER_URL="http://127.0.0.1:6800/"
+SCRAPER_AGENT='Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
 # for django-debug-toolbar
 INTERNAL_IPS = [
     '127.0.0.1',

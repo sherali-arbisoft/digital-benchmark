@@ -31,9 +31,16 @@ BOT_NAME = 'crawler_instagram'
 SPIDER_MODULES = ['crawler_instagram.spiders']
 NEWSPIDER_MODULE = 'crawler_instagram.spiders'
 
-
+#URLs FOR SCRAPPER
 MEDIA_URL="https://www.instagram.com/p/{}"
 NEXT_MEDIA_URL='https://www.instagram.com/graphql/query/?query_id=17888483320059182&variables={{"id":"{}","first":{},"after":"{}"}}'
+
+#DB CONNECTION PARAMS
+HOSTNAME = 'localhost'
+USERNAME = 'postgres'
+PASSWORD = 'postgres'
+DB_NAME = 'benchmarkAppDB'
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'crawler_instagram (+http://www.yourdomain.com)'
 
