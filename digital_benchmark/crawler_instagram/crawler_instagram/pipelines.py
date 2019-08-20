@@ -42,38 +42,31 @@ class InstagramPipeline(object):
         insta_user_id=profile[0]
         if item.get('_type')=="profile":
             if profile:
-                print('-------------------------profile already exist-----------------------')
+                pass
             else:
-                print('-------------------------have to make new profile-----------------------')
-                print('----------------before scrapped profile save---------------------')
                 self.cursor.execute("insert into instagram_benchmark_instagramprofile(insta_uid,is_active,created_at,last_updated_at,app_user_id,access_token,full_name,username,follows_count,folowed_by_count,media_count,is_business) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
                 (item.get('insta_uid'),True,time_now,time_now,item.get('django_auth_user'),'n/a',item.get('full_name'),item.get('username'),item.get('follows_count'),item.get('folowed_by_count'),item.get('media_count'),item.get('is_business')))
                 try:
                     self.connection.commit()    
-                    print('----------------------after scrapped profile save--------------------------')
                 except Exception as e:
                     print('exception while saving scraped profile to postgres')
                     raise e
         
         elif item.get('_type')=="media":
             media_insight_id=0
-            print('----------------before scrapped media_insight save----------------------')
             self.cursor.execute("insert into instagram_benchmark_instagrammediainsight(insta_user_id,is_active,created_at,last_updated_at,likes_count,comments_count,media_tags,media_caption,media_type,people_tagged,filter_used,post_created_time) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;",
             (insta_user_id,True,time_now,time_now,item.get('likes_count'),item.get('comments_count'),item.get('media_tags'),item.get('media_caption'),item.get('media_type'),item.get('people_tagged'),item.get('filter_used'),item.get('post_created_time')))
             media_insight_id=self.cursor.fetchone()[0]
             try:
                 self.connection.commit()    
-                print('-----------after scrapped media_insight save-----------------')
             except Exception as e:
                print('exception while saving scraped media_insight to postgres')
                raise e
 
-            print('----------------before scrapped media save----------------------')
             self.cursor.execute("insert into instagram_benchmark_instagramusermedia(insta_user_id,is_active,created_at,last_updated_at,media_id,media_url,media_insight_id) values(%s,%s,%s,%s,%s,%s,%s);",
             (insta_user_id,True,time_now,time_now,item.get('media_id'),item.get('media_url'),media_insight_id))
             try:
                 self.connection.commit()    
-                print('-----------------after scrapped media save-----------------------')
             except Exception as e:
                print('exception while saving scraped media to postgres')
                raise e
@@ -84,12 +77,10 @@ class InstagramPipeline(object):
             self.cursor.execute(existing_media_query)
             media=self.cursor.fetchone()
             media_unique_id=media[0]
-            print('----------------before scrapped comment save----------------------')
             self.cursor.execute("insert into instagram_benchmark_instagrammediacomments(is_active,created_at,last_updated_at,comment_id,media_id,comment_text,comment_by) values(%s,%s,%s,%s,%s,%s,%s);",
             (True,time_now,time_now,item.get('comment_id'),media_unique_id,item.get('comment_text'),item.get('comment_by')))
             try:
                 self.connection.commit()    
-                print('-----------after scrapped comment save-----------------')
             except Exception as e:
                print('exception while saving scraped comment to postgres')
                raise e

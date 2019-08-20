@@ -11,8 +11,6 @@ from scrapy.item import Item, Field
 
 class InstagramProfileItem(Item):
     insta_uid=Field()
-    #app_user=Field()
-    #access_token=Field()
     full_name=Field()
     username=Field()
     follows_count=Field()
