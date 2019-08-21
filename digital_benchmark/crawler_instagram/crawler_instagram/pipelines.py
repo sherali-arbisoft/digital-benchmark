@@ -18,17 +18,17 @@ class InstagramPipeline(object):
         self.cursor = self.connection.cursor()
     
     def close_spider(self, spider):
-        self._update_current_spyder()
+        self._update_spider_db_record()
         self.cursor.close()
         self.connection.close()
 
 
     def process_item(self, item, spider):
-        self.unique_id_of_crawler_instance=item.get('unique_id')
+        self.crawler_instance_id=item.get('unique_id')
         self.insta_uid=item.get('insta_uid')
         self.media_count=item.get('media_count')
         insta_user_id=0
-        profile=self._user_exist(item.get('insta_uid'))
+        profile=self._get_user_from_db(item.get('insta_uid'))
         if profile:
             insta_user_id=profile[0]
         elif item.get('_type')=="profile":
@@ -40,7 +40,7 @@ class InstagramPipeline(object):
         return item
 
 
-    def _user_exist(self,insta_uid):
+    def _get_user_from_db(self,insta_uid):
         existing_user_query=f"select * from instagram_benchmark_instagramprofile where insta_uid='{insta_uid}'"
         self.cursor.execute(existing_user_query)
         profile=self.cursor.fetchone()
@@ -52,8 +52,8 @@ class InstagramPipeline(object):
         media=self.cursor.fetchone()
         return media
 
-    def _update_current_spyder(self):
-        running_spider_query=f"update instagram_benchmark_crawlerstats set status='Completed',user_scrapped='{self.insta_uid}',no_of_media_scrapped={self.media_count}  where unique_id='{self.unique_id_of_crawler_instance}';"
+    def _update_spider_db_record(self):
+        running_spider_query=f"update instagram_benchmark_crawlerstats set status='Completed',user_scrapped='{self.insta_uid}',no_of_media_scrapped={self.media_count}  where unique_id='{self.crawler_instance_id}';"
         self.cursor.execute(running_spider_query)
         try:
             self.connection.commit()
