@@ -1,26 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 import requests
 
-from .forms import LoginForm, LoadDataForm
+from .forms import LoginForm
 from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
-from .models import FacebookProfile, Page
+from .models import FacebookProfile, Page, Post
+from .serializers import FacebookProfileSerializer, PageSerializer, PostSerializer
 
+@method_decorator(login_required, name='dispatch')
 class LoginView(View):
     def get(self, request, *args, **kwargs):
-        login_form = LoginForm()
         context = {
-            'login_form': login_form
+            'facebook_login_url': settings.FACEBOOK_LOGIN_URL,
         }
         return render(request, 'facebook_benchmark/login.html', context)
-    
-    def post(self, request, *args, **kwargs):
-        url = settings.FACEBOOK_LOGIN_URL
-        return redirect(url)
 
+@method_decorator(login_required, name='dispatch')
 class LoginSuccessfulView(View):
     def get(self, request):
         url = settings.FACEBOOK_ACCESS_TOKEN_URL
@@ -35,7 +39,7 @@ class LoginSuccessfulView(View):
         facebook_user_data_provider = FacebookUserDataProvider(user_access_token=response.get('access_token', ''))
         profile_response = facebook_user_data_provider.get_profile()
 
-        facebook_user_data_parser = FacebookUserDataParser()
+        facebook_user_data_parser = FacebookUserDataParser(user_id=request.user.id)
         facebook_profile = facebook_user_data_parser.parse_profile(profile_response)
         
         facebook_profile.access_token = response.get('access_token', '')
@@ -61,6 +65,7 @@ class LoginSuccessfulView(View):
 
         return redirect('/facebook_benchmark/home')
 
+@method_decorator(login_required, name='dispatch')
 class HomeView(View):
     def get(self, request, *args, **kwargs):
         facebook_profile_id = request.session.get('facebook_profile_id', '')
@@ -69,30 +74,8 @@ class HomeView(View):
             'all_pages': all_pages,
         }
         return render(request, 'facebook_benchmark/home.html', context)
-    
-    def post(self, request, *args, **kwargs):
-        facebook_profile_id = request.session.get('facebook_profile_id', '')
 
-        pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
-
-        for page in pages:
-            facebook_page_data_provider = FacebookPageDataProvider(page_access_token=page.access_token)
-            facebook_page_data_parser = FacebookPageDataParser()
-            
-            page_details_response = facebook_page_data_provider.get_page_details()
-            page_insights_response = facebook_page_data_provider.get_page_insights()
-            
-            facebook_page_data_parser.parse_page_details_and_insights(facebook_profile_id, page, page_details_response, page_insights_response)
-            
-            posts_details_and_insights_response = facebook_page_data_provider.get_all_posts_details_and_insights()
-
-            facebook_page_data_parser.parse_all_posts_details_and_insights(page.id, posts_details_and_insights_response)
-
-        context = {
-            'success_message': 'Data Loaded Successfully.'
-        }
-        return render(request, 'facebook_benchmark/home.html', context)
-
+@method_decorator(login_required, name='dispatch')
 class LoadPageDataView(View):
     def get(self, request, page_id, *args, **kwargs):
         facebook_profile_id = request.session.get('facebook_profile_id', '')
@@ -109,9 +92,41 @@ class LoadPageDataView(View):
         all_posts_response = facebook_page_data_provider.get_all_posts()
         all_posts = facebook_page_data_parser.parse_all_posts(all_posts_response=all_posts_response)
         
-        all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
-        context = {
-            'success_message': 'Page Data Loaded Successfully.',
-            'all_pages': all_pages,
-        }
-        return render(request, 'facebook_benchmark/home.html', context)
+        messages.success(request, 'Page Data Loaded Successfully.')
+        messages.info(request, f"{len(all_posts)} Posts Added.")
+        messages.info(request, f"{sum([len(post.comment_set.all()) for post in all_posts ])} Comments Added.")
+        messages.info(request, f"{sum([len(post.reactions.all()) for post in all_posts ])} Post Reactions Added.")
+        return redirect('/facebook_benchmark/home')
+
+class FacebookProfileList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FacebookProfileSerializer
+
+    def get_queryset(self):
+        return FacebookProfile.objects.filter(user=self.request.user)
+
+class PageList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PageSerializer
+
+    def get_queryset(self):
+        facebook_profile = FacebookProfile.objects.get(user=self.request.user)
+        return Page.objects.filter(facebook_profile=facebook_profile)
+
+class PageDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PageSerializer
+    queryset = Page.objects.all()
+
+class PostList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        page = Page.objects.get(id=self.kwargs.get('id', ''))
+        return Post.objects.filter(page=page)
+
+class PostDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()

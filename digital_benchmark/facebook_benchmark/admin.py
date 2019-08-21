@@ -26,7 +26,7 @@ class RatingAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('message', 'story')
+    list_display = ('id', 'message', 'story')
     search_fields = ['message', 'story']
     date_hierarchy = 'created_time'
     empty_value_display = '--empty--'
