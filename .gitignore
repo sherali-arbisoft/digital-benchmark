@@ -1,4 +1,5 @@
 .vscode/
 *.pyc
 *.log
+*.pid
 local_settings.py
