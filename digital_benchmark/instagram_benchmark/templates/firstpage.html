@@ -2,11 +2,19 @@
 <link rel='stylesheet' type='text/css' href="{% static '/style.css' %}"/>
 
 <div id="loginDiv">
-    <form action="{% url 'instagram_benchmark:fetch_data' %}" method="get" id="instaBtn">
-            {% csrf_token %}
-            <label id="loginInstaLable" for="abc">Fetch Instagram Data</label>
-            <input id= "submit" type="submit" value="Fetch">
-    </form>
+    {% if insta_id %}
+        <form action="{% url 'instagram_benchmark:fetch_data' insta_id %}" method="get" id="instaBtn">
+                {% csrf_token %}
+                <label id="loginInstaLable" for="abc">Fetch Instagram Data</label>
+                <input id= "submit" type="submit" value="Fetch">
+        </form>
+    {% else %}
+        <form action="{% url 'instagram_benchmark:fetch_data' %}" method="get" id="instaBtn">
+                {% csrf_token %}
+                <label id="loginInstaLable" for="abc">Fetch Instagram Data</label>
+                <input id= "submit" type="submit" value="Fetch">
+        </form>
+    {% endif %}
     {% if messages %}
         {% for message in messages %}
             <p id="successText">{{message}}</p>

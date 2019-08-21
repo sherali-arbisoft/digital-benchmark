@@ -22,10 +22,16 @@ class InstagramProfile(SoftDeleteMixin, CreateUpdateMixin):
     access_token=models.CharField(max_length=255)
     full_name=models.CharField(max_length=255)
     username=models.CharField(max_length=255)
+    follows_count=models.IntegerField(default=0)
+    folowed_by_count=models.IntegerField(default=0)
+    media_count=models.IntegerField(default=0)
     is_business = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
+    
+    # def get_user_with_uid(self, instagram_uid):
+    #     pass
 
 
 class InstagramMediaInsight(SoftDeleteMixin, CreateUpdateMixin):
@@ -55,4 +61,10 @@ class InstagramMediaComments(SoftDeleteMixin, CreateUpdateMixin):
     media=models.ForeignKey(InstagramUserMedia, on_delete=models.CASCADE)
     comment_text = models.TextField(blank=True)
     comment_by = models.TextField(blank=True)
-    
+
+class CrawlerStats(SoftDeleteMixin, CreateUpdateMixin):
+    task_id=models.CharField(max_length=255)
+    unique_id=models.CharField(max_length=255,primary_key=True)
+    status=models.CharField(max_length=255)
+    user_scrapped=models.CharField(max_length=255)
+    no_of_media_scrapped=models.IntegerField(default=0)
