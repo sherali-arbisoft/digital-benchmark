@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import psycopg2
 import json
 import requests
 import datetime as dt
@@ -12,7 +13,7 @@ class InstagramSpider(scrapy.Spider):
     name = 'insta_crawler'
     def __init__(self, *args, **kwargs):
         self.username_to_crawl = kwargs.get('username')
-        self.unique_id_of_crawler_instance = kwargs.get('unique_id')
+        self.crawler_instance_id = kwargs.get('unique_id')
         self.django_user_id = kwargs.get('django_user_id')
         self.fetched_media_count=0
 
@@ -21,44 +22,47 @@ class InstagramSpider(scrapy.Spider):
         yield scrapy.Request(url=url, callback=self.parse_ig_user)
 
     def parse_ig_user(self, response):
-        media_array=[]
-        response_string=response.css('script::text').re(r'{"config".*')[0]
-        response_string=response_string[:-1]
-        json_response=json.loads(response_string)
-        user_data=json_response.get("entry_data").get("ProfilePage")[0].get("graphql").get("user")
+        if response.status == 404:
+            self._update_crawler_status(self.crawler_instance_id)
+        else:
+            media_array=[]
+            response_string=response.css('script::text').re(r'{"config".*')[0]
+            response_string=response_string[:-1]
+            json_response=json.loads(response_string)
+            user_data=json_response.get("entry_data").get("ProfilePage")[0].get("graphql").get("user")
 
-        self.fetched_media_count=user_data.get("edge_owner_to_timeline_media").get("count")
+            self.fetched_media_count=user_data.get("edge_owner_to_timeline_media").get("count")
 
-        profile_item=InstagramProfileItem()
-        profile_item["_type"]="profile"
-        profile_item["insta_uid"]=user_data.get("id")
-        profile_item["full_name"]=user_data.get("full_name")
-        profile_item["username"]=user_data.get("username")
-        profile_item["is_business"]=user_data.get("is_business_account")
-        profile_item["folowed_by_count"]=user_data.get("edge_followed_by").get('count')
-        profile_item["follows_count"]=user_data.get("edge_follow").get('count')
-        profile_item["media_count"]=self.fetched_media_count
-        profile_item["django_auth_user"]=self.django_user_id
-        profile_item["unique_id"]=self.unique_id_of_crawler_instance
-        yield profile_item
+            profile_item=InstagramProfileItem()
+            profile_item["_type"]="profile"
+            profile_item["insta_uid"]=user_data.get("id")
+            profile_item["full_name"]=user_data.get("full_name")
+            profile_item["username"]=user_data.get("username")
+            profile_item["is_business"]=user_data.get("is_business_account")
+            profile_item["folowed_by_count"]=user_data.get("edge_followed_by").get('count')
+            profile_item["follows_count"]=user_data.get("edge_follow").get('count')
+            profile_item["media_count"]=self.fetched_media_count
+            profile_item["django_auth_user"]=self.django_user_id
+            profile_item["unique_id"]=self.crawler_instance_id
+            yield profile_item
 
-        media_array=user_data.get("edge_owner_to_timeline_media").get("edges")
-        media_count=0
-        has_next_media=user_data.get("edge_owner_to_timeline_media").get("page_info").get("has_next_page")
-        insta_id=user_data.get("id")
-        while True:
-            if has_next_media:
-                media_count=media_count+12
-                end_cursor=user_data.get("edge_owner_to_timeline_media").get("page_info").get("end_cursor")
-                user_data=self._get_next_media(insta_id,media_count,end_cursor)
-                media_array+=user_data.get("edge_owner_to_timeline_media").get("edges")
-                has_next_media=user_data.get("edge_owner_to_timeline_media").get("page_info").get("has_next_page")
-            else:
-                break
-        for media in media_array:
-            media=media["node"]
-            url=settings.get('MEDIA_URL').format(media["shortcode"])
-            yield scrapy.Request(url=url, callback=self.parse_ig_media)
+            media_array=user_data.get("edge_owner_to_timeline_media").get("edges")
+            media_count=0
+            has_next_media=user_data.get("edge_owner_to_timeline_media").get("page_info").get("has_next_page")
+            insta_id=user_data.get("id")
+            while True:
+                if has_next_media:
+                    media_count=media_count+12
+                    end_cursor=user_data.get("edge_owner_to_timeline_media").get("page_info").get("end_cursor")
+                    user_data=self._get_next_media(insta_id,media_count,end_cursor)
+                    media_array+=user_data.get("edge_owner_to_timeline_media").get("edges")
+                    has_next_media=user_data.get("edge_owner_to_timeline_media").get("page_info").get("has_next_page")
+                else:
+                    break
+            for media in media_array:
+                media=media["node"]
+                url=settings.get('MEDIA_URL').format(media["shortcode"])
+                yield scrapy.Request(url=url, callback=self.parse_ig_media)
 
 
     def _get_next_media(self,user_id,first_media,end_cursor):
@@ -84,15 +88,19 @@ class InstagramSpider(scrapy.Spider):
             media_item["comments_count"]=0
         else:
             media_item["comments_count"] = fetched_media.get("edge_media_to_parent_comment").get("count",0)
-        media_item["media_tags"] = fetched_media.get("edge_media_to_caption").get("edges")[0].get("node").get("text")
-        media_item["media_caption"] = fetched_media.get("edge_media_to_caption").get("edges")[0].get("node").get("text")
+        if fetched_media.get("edge_media_to_caption").get("edges"):
+            media_item["media_tags"] = fetched_media.get("edge_media_to_caption").get("edges")[0].get("node").get("text")
+            media_item["media_caption"] = fetched_media.get("edge_media_to_caption").get("edges")[0].get("node").get("text")
+        else:
+            media_item["media_tags"] = ""
+            media_item["media_caption"] = ""
         media_item["media_type"] = fetched_media.get("__typename")
         media_item["people_tagged"] = len(fetched_media.get("edge_media_to_tagged_user").get("edges"))
         media_item["filter_used"] = "unknown"
         datetime_python=dt.datetime.fromtimestamp(int(fetched_media.get("taken_at_timestamp"))).strftime('%Y-%m-%d %H:%M:%S')
         media_item["post_created_time"] = datetime_python
         media_item["insta_uid"] = fetched_media.get("owner").get("id")
-        media_item["unique_id"]=self.unique_id_of_crawler_instance
+        media_item["unique_id"]=self.crawler_instance_id
         media_item["media_count"]=self.fetched_media_count
         yield media_item
 
@@ -112,6 +120,19 @@ class InstagramSpider(scrapy.Spider):
         comment_item["comment_by"]=comment.get('owner').get('id')
         comment_item["_type"]="comment"
         comment_item["insta_uid"] = insta_uid
-        comment_item["unique_id"]=self.unique_id_of_crawler_instance
+        comment_item["unique_id"]=self.crawler_instance_id
         comment_item["media_count"]=self.fetched_media_count
         return comment_item
+    
+    def _update_crawler_status(self,unique_id):
+        self.connection = psycopg2.connect(host=settings.get('HOSTNAME'), user=settings.get('USERNAME'), password=settings.get('PASSWORD'), dbname=settings.get('DB_NAME'))
+        self.cursor = self.connection.cursor()
+        running_spider_query=f"update instagram_benchmark_crawlerstats set status='Invalid_Profile' where unique_id='{unique_id}';"
+        self.cursor.execute(running_spider_query)
+        try:
+            self.connection.commit()
+        except Exception as e:
+            print('Exception while updating crawlerstats table')
+            raise e
+        self.cursor.close()
+        self.connection.close()
