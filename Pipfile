@@ -14,6 +14,9 @@ psycopg2 = "*"
 requests = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
+celery = "*"
+django-celery-results = "*"
+flower = "*"
 
 [requires]
 python_version = "3.6"
