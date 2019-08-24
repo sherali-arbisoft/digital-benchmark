@@ -1,21 +1,70 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
 
-# Create your models here.
 
-class InstagramUser(models.Model):
-    insta_uid=models.CharField(max_length=200)
-    access_token=models.CharField(max_length=200)
-    full_name=models.CharField(max_length=200)
-    username=models.CharField(max_length=200)
+class SoftDeleteMixin(models.Model):
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        abstract = True
+
+class CreateUpdateMixin(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated_at = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        abstract = True
+
+class InstagramProfile(SoftDeleteMixin, CreateUpdateMixin):
+    insta_uid=models.CharField(max_length=255)
+    app_user=models.ForeignKey(User, on_delete=models.CASCADE)
+    access_token=models.CharField(max_length=255)
+    full_name=models.CharField(max_length=255)
+    username=models.CharField(max_length=255)
+    follows_count=models.IntegerField(default=0)
+    folowed_by_count=models.IntegerField(default=0)
+    media_count=models.IntegerField(default=0)
     is_business = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.username
+    
+    # def get_user_with_uid(self, instagram_uid):
+    #     pass
 
-# {'access_token': '9246763228.4d8f538.aba23cc5b7be401b93243e34819de617',
-#  'user': 
-#  {'id': '9246763228',
-#   'username': 'az_snaps1',
-#    'profile_picture': 'https://scontent.cdninstagram.com/vp/67a6db7df8b4b5ac96c1f3c7829e1d8e/5DE3C093/t51.2885-19/s150x150/44656038_560998554345667_7634009540609966080_n.jpg?_nc_ht=scontent.cdninstagram.com', 
-#    'full_name': 'AZ Snaps', 
-#    'bio': 'Photos that I wanted to share.', 
-#    'website': '', 
-#    'is_business': True}} 
+
+class InstagramMediaInsight(SoftDeleteMixin, CreateUpdateMixin):
+    insta_user=models.ForeignKey(InstagramProfile, on_delete=models.CASCADE)
+    likes_count=models.IntegerField(default=0)
+    comments_count=models.IntegerField(default=0)
+    media_tags=models.TextField(blank=True)
+    media_caption = models.TextField(blank=True)
+    media_type=models.CharField(max_length=255)
+    people_tagged=models.CharField(max_length=255, blank=True)
+    filter_used=models.CharField(max_length=255, blank=True)
+    post_created_time=models.DateTimeField(default=timezone.now,blank=True)
+
+
+class InstagramUserMedia(SoftDeleteMixin, CreateUpdateMixin):
+    media_id=models.CharField(max_length=255)
+    insta_user=models.ForeignKey(InstagramProfile, on_delete=models.CASCADE)
+    media_insight=models.ForeignKey(InstagramMediaInsight, on_delete=models.CASCADE)
+    media_url=models.TextField(blank=True)
+
+    def __str__(self):
+        return self.media_url
+
+
+class InstagramMediaComments(SoftDeleteMixin, CreateUpdateMixin):
+    comment_id=models.CharField(max_length=255)
+    media=models.ForeignKey(InstagramUserMedia, on_delete=models.CASCADE)
+    comment_text = models.TextField(blank=True)
+    comment_by = models.TextField(blank=True)
+
+class CrawlerStats(SoftDeleteMixin, CreateUpdateMixin):
+    task_id=models.CharField(max_length=255)
+    unique_id=models.CharField(max_length=255,primary_key=True)
+    status=models.CharField(max_length=255)
+    user_scrapped=models.CharField(max_length=255)
+    no_of_media_scrapped=models.IntegerField(default=0)

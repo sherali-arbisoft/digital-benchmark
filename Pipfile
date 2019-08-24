@@ -4,12 +4,19 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+autopep8 = "*"
 
 [packages]
 django = "*"
 facebook-sdk = "*"
 django-debug-toolbar = "*"
 psycopg2 = "*"
+requests = "*"
+scrapy = "*"
+scrapyd = "*"
+python-scrapyd-api = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.6"

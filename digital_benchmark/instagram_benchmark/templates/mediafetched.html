@@ -1,0 +1,11 @@
+{% load static%}
+<link rel='stylesheet' type='text/css' href="{% static '/style.css' %}"/>
+
+<div id="loginDiv">
+    <p id="successText">{{message}}</p>
+    {% if messages %}
+        {% for message in messages %}
+            <p id="successText">{{message}}</p>
+        {% endfor %}
+    {% endif %}
+</div>
