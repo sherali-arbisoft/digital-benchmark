@@ -141,6 +141,6 @@ CONSUMER_SECRET = 'eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ'
 TWEETS_COUNT = 200
 
 try:
-    from .local_settings import *
+    from .local_setting import *
 except ImportError:
     pass
