@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'facebook_benchmark.apps.FacebookBenchmarkConfig', #register facebook_benchmark app
     'twitter_benchmark', #register twitter_benchmark app
+    'instagram_benchmark',
+    'facebook_benchmark', #register facebook_benchmark app
+    'debug_toolbar', # register django-debug-toolbar
 ]
 
 MIDDLEWARE = [
@@ -49,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', # for django-debug-toolbar
 ]
 
 ROOT_URLCONF = 'digital_benchmark.urls'
@@ -72,15 +75,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'digital_benchmark.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+try:
+    from .local_settings import *
+
+except ImportError:
+    pass
+
+
+
 
 
 # Password validation
@@ -122,12 +128,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # facebook_benchmark settings
-facebook_graph_api_version = '3.1'
-facebook_default_fields_for_page = 'id,displayed_message_response_time,engagement{count},fan_count,name,overall_star_rating,rating_count,talking_about_count,unread_message_count,unread_notif_count,unseen_message_count,verification_status'
-facebook_default_fields_for_feed = 'id,backdated_time,created_time,is_eligible_for_promotion,is_hidden,is_popular,is_published,message,message_tags,promotion_status,scheduled_publish_time,shares,story,story_tags,timeline_visibility,updated_time,comments,likes,reactions,to'
-fields = facebook_default_fields_for_post = 'id,backdated_time,created_time,is_eligible_for_promotion,is_hidden,is_popular,is_published,message,message_tags,promotion_status,scheduled_publish_time,shares,story,story_tags,timeline_visibility,updated_time,comments,likes,reactions,to'
-facebook_default_metrices_for_page_insights = 'page_impressions,page_engaged_users,page_consumptions,page_negative_feedback,page_fans_online,page_actions_post_reactions_total,page_fans,page_fan_removes,page_views_total,page_video_views,page_posts_impressions'
-facebook_default_metrices_for_post_insights = 'post_impressions,post_impressions_unique,post_impressions_fan,post_impressions_fan_unique,post_impressions_organic,post_impressions_organic_unique,post_impressions_viral,post_impressions_viral_unique,post_engaged_users,post_negative_feedback,post_negative_feedback_unique,post_engaged_fan,post_clicks,post_clicks_unique,post_reactions_by_type_total'
+FACEBOOK_GRAPH_API_VERSION = '3.1'
+FACEBOOK_DEFAULT_FIELDS_FOR_PAGE = ['displayed_message_response_time','engagement','fan_count','id','name','overall_star_rating','rating_count','talking_about_count','unread_message_count','unread_notif_count','unseen_message_count','verification_status']
+FACEBOOK_DEFAULT_FIELDS_FOR_FEED = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
+FACEBOOK_DEFAULT_FIELDS_FOR_POST = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
+FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS = ['page_consumptions','page_consumptions_unique','page_engaged_users','page_impressions','page_impressions_nonviral','page_impressions_nonviral_unique','page_impressions_organic','page_impressions_organic_unique','page_impressions_paid','page_impressions_paid_unique','page_impressions_unique','page_impressions_viral','page_impressions_viral_unique','page_negative_feedback','page_negative_feedback_unique','page_post_engagements','page_video_views','page_views_total']
+FACEBOOK_DEFAULT_DATE_PRESET_FOR_PAGE_INSIGHTS = 'today'
+FACEBOOK_DEFAULT_PERIOD_FOR_PAGE_INSIGHTS = 'days_28'
+FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_clicks','post_clicks_unique','post_engaged_fan','post_engaged_users','post_impressions','post_impressions_fan','post_impressions_fan_paid','post_impressions_fan_paid_unique','post_impressions_fan_unique','post_impressions_nonviral','post_impressions_nonviral_unique','post_impressions_organic','post_impressions_organic_unique','post_impressions_paid','post_impressions_paid_unique','post_impressions_unique','post_impressions_viral','post_impressions_viral_unique','post_negative_feedback','post_negative_feedback_unique']
 
 # twitter_benchmark setting
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
@@ -140,7 +148,12 @@ CONSUMER_KEY = 'LCE85J76ONueBmKn1SpVAjZ0F'
 CONSUMER_SECRET = 'eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ'
 TWEETS_COUNT = 200
 
+# for django-debug-toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 try:
-    from .local_setting import *
+  from .local_settings import *
 except ImportError:
-    pass
+  pass
