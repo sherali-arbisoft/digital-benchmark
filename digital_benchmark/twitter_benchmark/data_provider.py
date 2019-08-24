@@ -36,10 +36,10 @@ class DataProvider:
                         }
         first_response = self.oauth.get(settings.TWEETS_URL, params=first_params)
         tweets.append(first_response.json())
-        if total_tweets > 200:
+        if total_tweets > settings.TWEETS_COUNT:
             lowest_tweet_id = self._get_min_id(first_response.json())
-            n = total_tweets
-            while n > 0:
+            total_tweet_count = total_tweets
+            while total_tweet_count > 0:
                 params = {"trim_user": True,
                           "count": settings.TWEETS_COUNT,
                           "max_id": lowest_tweet_id,
@@ -47,7 +47,7 @@ class DataProvider:
                           }
                 response = self.oauth.get(settings.TWEETS_URL, params=params)
                 next_tweets = response.json()
-                n = n-5
+                total_tweet_count -= settings.TWEETS_COUNT
                 lowest_tweet_id = self._get_min_id(next_tweets)
                 tweets.append(next_tweets[1:])
         return tweets[0]
@@ -55,16 +55,17 @@ class DataProvider:
     def get_other_tweet(self, screen_name):
         tweets = []
         total_tweets = self.get_other_tweet_count(screen_name)
+        print(total_tweets)
         first_params = {"trim_user": True,
                         "count":  settings.TWEETS_COUNT,
                         "screen_name": screen_name
                        }
         first_response = self.oauth.get(settings.TWEETS_URL, params=first_params)
         tweets.append(first_response.json())
-        if total_tweets > 200:
+        if total_tweets > settings.TWEETS_COUNT:
             lowest_tweet_id = self._get_min_id(first_response.json())
-            n = total_tweets
-            while n > 0:
+            total_tweet_count = total_tweets
+            while total_tweet_count > 0:
                 params = {"trim_user": True,
                           "count": settings.TWEETS_COUNT,
                           "max_id": lowest_tweet_id,
@@ -72,7 +73,7 @@ class DataProvider:
                           }
                 response = self.oauth.get(settings.TWEETS_URL, params=params)
                 next_tweets = response.json()
-                n = n-5
+                total_tweet_count -= settings.TWEETS_COUNT
                 lowest_tweet_id = self._get_min_id(next_tweets)
                 tweets.append(next_tweets[1:])
         others_tweets = {'tweets': tweets[0],
@@ -95,7 +96,7 @@ class DataProvider:
                         }
         first_response = self.oauth.get(settings.COMMENT_URL, params=first_params)
         tweets.append(first_response.json())
-        if len(first_response.json()) > 200:
+        if len(first_response.json()) > settings.TWEETS_COUNT:
             lowest_tweet_id = self._get_min_id(first_response.json())
             is_has_comment = True
             while is_has_comment :
@@ -107,7 +108,7 @@ class DataProvider:
                 next_tweets = response.json()
                 lowest_tweet_id = self._get_min_id(next_tweets)
                 tweets.append(next_tweets[1:])
-                if len(next_tweets) < 200:
+                if len(next_tweets) < settings.TWEETS_COUNT:
                     is_has_comment = False
         return tweets[0]
 
