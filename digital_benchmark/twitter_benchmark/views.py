@@ -32,9 +32,9 @@ class SuccessView(View):
     def get(self, request):
         obj = DataProvider(request.GET['oauth_verifier'], request.GET['oauth_token'])
         # for testing
-        data = obj.get_other_tweet('tanweer34')
-        data = TwitterDataParser.parser_other_tweet(data=data)
-        print(type(data))
+        data = obj.get_other_tweet('ehmadzubair')
+        #data = TwitterDataParser.parser_other_tweet(data=data)
+        print(data)
         return render(request, 'success/index.html')
 
 
