@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'debug_toolbar', # register django-debug-toolbar
     'rest_framework', #register django rest framework
     'django_celery_results', #register django celery results
+    'silk', #register django-silk
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware', # for django-debug-toolbar
+    'silk.middleware.SilkyMiddleware', #for django-silk
 ]
 
 ROOT_URLCONF = 'digital_benchmark.urls'

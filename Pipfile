@@ -17,6 +17,7 @@ djangorestframework-simplejwt = "*"
 celery = "*"
 django-celery-results = "*"
 flower = "*"
+django-silk = "*"
 
 [requires]
 python_version = "3.6"

@@ -116,7 +116,6 @@ class FacebookProfileDetail(generics.RetrieveAPIView):
 class PageList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PageSerializer
-    queryset = FacebookProfile.objects.all()
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
     filter_backends = [filters.OrderingFilter]
