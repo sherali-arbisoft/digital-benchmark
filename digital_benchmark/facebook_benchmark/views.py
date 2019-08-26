@@ -101,17 +101,12 @@ class LoadPageDataView(View):
         messages.info(request, f"{sum([len(post.reactions.all()) for post in all_posts ])} Post Reactions Added.")
         return redirect('/facebook_benchmark/home')
 
-class FacebookProfileDetail(generics.RetrieveAPIView):
+class FacebookProfileDetail(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FacebookProfileSerializer
 
-    def retrieve(self, request, pk=None, *args, **kwargs):
-        queryset = FacebookProfile.objects.filter(user=self.request.user)
-        if queryset:
-            serializer = self.get_serializer(queryset[0])
-            return Response(serializer.data)
-        else:
-            return Response({'detail': 'Not found.'})
+    def get_queryset(self):
+        return FacebookProfile.objects.filter(user=self.request.user)
 
 class PageList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -149,37 +144,24 @@ class PagePostList(generics.ListAPIView):
     search_fields = ['message', 'story', 'comments__message', 'reactions__reaction_type', 'comments__reactions__reaction_type']
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['message', 'story']
-    
-    def list(self, request, page_id=None, *args, **kwargs):
-        queryset = Post.objects.filter(page_id=page_id, page__facebook_profile__user=self.request.user).order_by('-created_at')
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+
+    def get_queryset(self):
+        return Post.objects.filter(page_id=self.kwargs.get('page_id'), page__facebook_profile__user=self.request.user).order_by('-created_at')
 
 class PostRevisionsList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
-    def list(self, request, post_id=None, *args, **kwargs):
-        queryset = Post.objects.filter(post_id=post_id, page__facebook_profile__user=self.request.user).order_by('-created_at')
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        return Post.objects.filter(post_id=self.kwargs.get('post_id'), page__facebook_profile__user=self.request.user).order_by('-created_at')
 
-class PostLatestRevision(generics.RetrieveAPIView):
+class PostLatestRevision(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
-    def retrieve(self, request, post_id=None, *args, **kwargs):
-        queryset = Post.objects.filter(post_id=post_id, page__facebook_profile__user=self.request.user).order_by('-created_at')
-        if queryset:
-            serializer = self.get_serializer(queryset[0])
-            return Response(serializer.data)
-        else:
-            return Response({'detail': 'Not found.'})
+    def get_queryset(self):
+        try:
+            post = [Post.objects.filter(post_id=self.kwargs.get('post_id'), page__facebook_profile__user=self.request.user).latest('-created_at')]
+        except Post.DoesNotExist:
+            post = Post.objects.none()
+        return post
