@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'debug_toolbar', # register django-debug-toolbar
     'rest_framework', #register django rest framework
+    'django_celery_results', #register django celery results
 ]
 
 MIDDLEWARE = [
@@ -155,6 +156,9 @@ COMMENTS_URL="https://api.instagram.com/v1/media/{}/comments?access_token={}"
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
 
 try:
   from .local_settings import *
