@@ -1,82 +1,56 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Task
 
-import pickle
-
 from digital_benchmark.celery import app
 
-class FetchCommentReactionsTask(Task):
-    def run(self, page_data_provider, comment, *args, **kwargs):
-        self.page_data_provider = page_data_provider
-        self.comment = comment
-        return self.page_data_provider.get_post_reactions(self.comment.get('id'))
-    
-    def on_success(self, retval, task_id, args, kwargs):
-        if 'error' in retval:
-            print(retval.get('error').get('message'))
-        else:
-            reactions = retval
-            self.comment['reactions'] = reactions
-    
-    def on_failure(self, exc, task_id, args, kwargs, einfo):
-        print('Error in fetching post comment reactions')
-
-FetchCommentReactionsTask = app.register_task(FetchCommentReactionsTask())
+from .data_provider import FacebookPageDataProvider
+from .data_parser import FacebookPageDataParser
+from .models import Post
 
 class FetchPostCommentsTask(Task):
-    def run(self, page_data_provider, post, *args, **kwargs):
-        self.page_data_provider = page_data_provider
-        self.post = post
-        return self.page_data_provider.get_post_comments(self.post.get('id'))
+    def run(self, page_access_token, facebook_profile_id, page_id, post_id, *args, **kwargs):
+        self.facebook_profile_id = facebook_profile_id
+        self.page_id = page_id
+        self.page_access_token = page_access_token
+        self.post_id = post_id
+
+        page_data_provider = FacebookPageDataProvider(page_access_token=self.page_access_token)
+        post = Post.objects.get(pk=self.post_id)
+        return page_data_provider.get_post_comments(post.post_id)
     
     def on_success(self, retval, task_id, args, kwargs):
         if 'error' in retval:
             print(retval.get('error').get('message'))
         else:
-            comments = retval
-            self.post['comments'] = comments
-            for comment in comments:
-                fetch_comment_reactions_task = FetchCommentReactionsTask
-                fetch_comment_reactions_task.delay(self.page_data_provider, comment)
+            comments_response = retval
+            facebook_page_data_parser = FacebookPageDataParser(self.facebook_profile_id, self.page_id)
+            for comment_response in comments_response:
+                facebook_page_data_parser.parse_comment(self.post_id, comment_response)
     
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         print('Error in fetching post comments')
 
 FetchPostCommentsTask = app.register_task(FetchPostCommentsTask())
 
-class FetchPostReactionsTask(Task):
-    def run(self, page_data_provider, post, *args, **kwargs):
-        self.page_data_provider = page_data_provider
-        self.post = post
-        return self.page_data_provider.get_post_reactions(self.post.get('id'))
-    
-    def on_success(self, retval, task_id, args, kwargs):
-        if 'error' in retval:
-            print(retval.get('error').get('message'))
-        else:
-            reactions = retval
-            self.post['reactions'] = reactions
-
-    def on_failure(self, exc, task_id, args, kwargs, einfo):
-        print('Error in fetching post reactions')
-
-FetchPostReactionsTask = app.register_task(FetchPostReactionsTask())
-
 class FetchPostsTask(Task):
-    def run(self, page_data_provider, *args, **kwargs):
-        self.page_data_provider = pickle.loads(page_data_provider)
-        return self.page_data_provider.get_posts()
+    def run(self, page_access_token, facebook_profile_id, page_id, *args, **kwargs):
+        self.page_access_token = page_access_token
+        self.facebook_profile_id = facebook_profile_id
+        self.page_id = page_id
+
+        page_data_provider = FacebookPageDataProvider(page_access_token=self.page_access_token)
+        return page_data_provider.get_posts()
     
     def on_success(self, retval, task_id, args, kwargs):
         if 'error' in retval:
             print(retval.get('error').get('message'))
         else:
-            posts = retval
-            for post in posts:
-                fetch_post_reaction_task = FetchPostReactionsTask
-                fetch_post_reaction_task.delay(self.page_data_provider, post)
+            posts_response = retval
+            facebook_page_data_parser = FacebookPageDataParser(self.facebook_profile_id, self.page_id)
+            for post_response in posts_response:
+                post = facebook_page_data_parser.parse_post(post_response)
                 fetch_post_comments_task = FetchPostCommentsTask
-                fetch_post_comments_task.delay(self.page_data_provider, post)
+                fetch_post_comments_task.delay(self.page_access_token, self.facebook_profile_id, self.page_id, post.id)
     
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         print('Error in fetching posts')

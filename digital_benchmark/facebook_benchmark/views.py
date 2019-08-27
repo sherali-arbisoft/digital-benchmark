@@ -10,8 +10,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from rest_framework.response import Response
 
-import pickle
-
 import requests
 
 from .forms import LoginForm
@@ -84,12 +82,9 @@ class HomeView(View):
 @method_decorator(login_required, name='dispatch')
 class LoadPageDataView(View):
     def get(self, request, page_id, *args, **kwargs):
-        facebook_profile_id = request.session.get('facebook_profile_id', '')
         page = get_object_or_404(Page, pk=page_id)
-
-        facebook_page_data_provider = FacebookPageDataProvider(page_access_token=page.access_token)
         fetch_posts_task = FetchPostsTask
-        fetch_posts_task.delay(pickle.dumps(facebook_page_data_provider))
+        fetch_posts_task.delay(page.access_token, page.facebook_profile_id, page.id)
 
         return redirect('/facebook_benchmark/home')
 
@@ -122,7 +117,7 @@ class PostList(generics.ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(page__facebook_profile__user=self.request.user)
+        return Post.objects.filter(page__facebook_profile__user=self.request.user).prefecth_related('comments')
 
 class PostDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated, PostAccessPermission]
