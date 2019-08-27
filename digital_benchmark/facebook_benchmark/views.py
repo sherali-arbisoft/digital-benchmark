@@ -10,6 +10,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from rest_framework.response import Response
 
+import pickle
+
 import requests
 
 from .forms import LoginForm
@@ -18,6 +20,7 @@ from .data_parser import FacebookUserDataParser, FacebookPageDataParser
 from .models import FacebookProfile, Page, Post
 from .serializers import FacebookProfileSerializer, PageSerializer, PostSerializer
 from .permissions import PageAccessPermission, PostAccessPermission
+from .tasks import FetchPostsTask
 
 @method_decorator(login_required, name='dispatch')
 class LoginView(View):
@@ -83,22 +86,11 @@ class LoadPageDataView(View):
     def get(self, request, page_id, *args, **kwargs):
         facebook_profile_id = request.session.get('facebook_profile_id', '')
         page = get_object_or_404(Page, pk=page_id)
-        facebook_page_data_provider = FacebookPageDataProvider(page_access_token=page.access_token)
-        facebook_page_data_parser = FacebookPageDataParser(facebook_profile_id=facebook_profile_id, page_id=page_id)
-        
-        page_details_response = facebook_page_data_provider.get_page_details()
-        page_insights_response = facebook_page_data_provider.get_page_insights()
-        
-        facebook_page_data_parser.parse_page_details(page_details_response)
-        facebook_page_data_parser.parse_page_insights(page_insights_response)
 
-        all_posts_response = facebook_page_data_provider.get_all_posts()
-        all_posts = facebook_page_data_parser.parse_all_posts(all_posts_response=all_posts_response)
-        
-        messages.success(request, 'Page Data Loaded Successfully.')
-        messages.info(request, f"{len(all_posts)} Posts Added.")
-        messages.info(request, f"{sum([len(post.comments.all()) for post in all_posts ])} Comments Added.")
-        messages.info(request, f"{sum([len(post.reactions.all()) for post in all_posts ])} Post Reactions Added.")
+        facebook_page_data_provider = FacebookPageDataProvider(page_access_token=page.access_token)
+        fetch_posts_task = FetchPostsTask
+        fetch_posts_task.delay(pickle.dumps(facebook_page_data_provider))
+
         return redirect('/facebook_benchmark/home')
 
 class FacebookProfileDetail(generics.ListAPIView):
