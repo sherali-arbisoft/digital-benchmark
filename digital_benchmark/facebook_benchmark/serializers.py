@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import FacebookProfile, Page, Rating, Post, PostReaction, Comment, CommentReaction
+from .models import FacebookProfile, Page, Rating, Post, Comment
 
 class FacebookProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,24 +18,12 @@ class PageSerializer(serializers.ModelSerializer):
         model = Page
         fields = '__all__'
 
-class PostReactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostReaction
-        fields = '__all__'
-
-class CommentReactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CommentReaction
-        fields = '__all__'
-
 class CommentSerializer(serializers.ModelSerializer):
-    reactions = CommentReactionSerializer(many=True, read_only=True)
     class Meta:
         model = Comment
         fields = '__all__'
 
 class PostSerializer(serializers.ModelSerializer):
-    reactions = PostReactionSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     class Meta:
         model = Post
