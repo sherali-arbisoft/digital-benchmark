@@ -42,14 +42,8 @@ class FacebookPageDataProvider:
     def get_page_rating(self, *args, **kwargs):
         return self.get_connection_response(settings.FACEBOOK_OBJECT_SELF, settings.FACEBOOK_CONNECTION_RATINGS, ','.join(settings.FACEBOOK_PAGE_RATING_DEFAULT_FIELDS))
     
-    def get_post_reactions(self, post_id, *args, **kwargs):
-        return self.get_connection_response(post_id, settings.FACEBOOK_CONNECTION_REACTIONS, ','.join(settings.FACEBOOK_PAGE_POST_REACTIONS_DEFAULT_FIELDS))
-    
     def get_post_comments(self, post_id, *args, **kwargs):
         return self.get_connection_response(post_id, settings.FACEBOOK_CONNECTION_COMMENTS, ','.join(settings.FACEBOOK_PAGE_POST_COMMENTS_DEFAULT_FIELDS))
-
-    def get_post_comment_reactions(self, comment_id, *args, **kwargs):
-        return self.get_connection_response(comment_id, settings.FACEBOOK_CONNECTION_REACTIONS, ','.join(settings.FACEBOOK_PAGE_POST_COMMENT_REACTIONS_DEFAULT_FIELDS))
     
     def get_post(self, post_id, *args, **kwargs):
         return self.get_object_response(post_id, ','.join(settings.FACEBOOK_PAGE_POST_DEFAULT_FIELDS))
