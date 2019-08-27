@@ -116,7 +116,7 @@ class PostList(generics.ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(page__facebook_profile__user=self.request.user).prefecth_related('comments')
+        return Post.objects.filter(page__facebook_profile__user=self.request.user).prefetch_related('comments')
 
 class PostDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated, PostAccessPermission]
@@ -132,14 +132,14 @@ class PagePostList(generics.ListAPIView):
     ordering_fields = ['message', 'story']
 
     def get_queryset(self):
-        return Post.objects.filter(page_id=self.kwargs.get('page_id'), page__facebook_profile__user=self.request.user).order_by('-created_at')
+        return Post.objects.filter(page_id=self.kwargs.get('page_id'), page__facebook_profile__user=self.request.user).order_by('-created_at').prefetch_related('comments')
 
 class PostRevisionsList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(post_id=self.kwargs.get('post_id'), page__facebook_profile__user=self.request.user).order_by('-created_at')
+        return Post.objects.filter(post_id=self.kwargs.get('post_id'), page__facebook_profile__user=self.request.user).order_by('-created_at').prefetch_related('comments')
 
 class PostLatestRevision(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
