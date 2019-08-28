@@ -59,20 +59,19 @@ class FacebookPageDataParser:
         return page
 
     def parse_comment(self, post_id, comment_response):
-        comment = Comment()
-        comment.comment_id = comment_response.get('id')
-        comment.created_time = comment_response.get('created_time', None)
-        comment.from_id = comment_response.get('from', {}).get('id')
-        comment.message = comment_response.get('message')
-        comment.angry_total = comment_response.get('angry', {}).get('summary', {}).get('total_count', 0)
-        comment.haha_total = comment_response.get('haha', {}).get('summary', {}).get('total_count', 0)
-        comment.like_total = comment_response.get('like', {}).get('summary', {}).get('total_count', 0)
-        comment.love_total = comment_response.get('love', {}).get('summary', {}).get('total_count', 0)
-        comment.sad_total = comment_response.get('sad', {}).get('summary', {}).get('total_count', 0)
-        comment.wow_total = comment_response.get('wow', {}).get('summary', {}).get('total_count', 0)
-        comment.post_id = post_id
-        comment.save()
-        return comment
+        return Comment.objects.create(
+            comment_id=comment_response.get('id'),
+            created_time=comment_response.get('created_time', None),
+            from_id=comment_response.get('from', {}).get('id'),
+            message=comment_response.get('message'),
+            angry_total=comment_response.get('angry', {}).get('summary', {}).get('total_count', 0),
+            haha_total=comment_response.get('haha', {}).get('summary', {}).get('total_count', 0),
+            like_total=comment_response.get('like', {}).get('summary', {}).get('total_count', 0),
+            love_total=comment_response.get('love', {}).get('summary', {}).get('total_count', 0),
+            sad_total=comment_response.get('sad', {}).get('summary', {}).get('total_count', 0),
+            wow_total=comment_response.get('wow', {}).get('summary', {}).get('total_count', 0),
+            post_id=post_id,
+        )
 
     def parse_post(self, post_response):
         post = Post()
