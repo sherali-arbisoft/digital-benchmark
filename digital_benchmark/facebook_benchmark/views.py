@@ -74,7 +74,7 @@ class HomeView(View):
 
 @method_decorator(login_required, name='dispatch')
 class LoadPageDataView(View):
-    def get(self, request, page_id, *args, **kwargs):
+    def get(self, request, page_id):
         page = get_object_or_404(Page, facebook_profile=request.user.facebook_profile, pk=page_id)
         fetch_posts_task = FetchPostsTask
         fetch_posts_task.delay(page.access_token, page.facebook_profile_id, page.id)

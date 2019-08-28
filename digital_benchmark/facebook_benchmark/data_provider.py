@@ -4,7 +4,7 @@ from facebook import GraphAPI, GraphAPIError
 import requests
 
 class FacebookDataProvider:
-    def __init__(self, access_token, *args, **kwargs):
+    def __init__(self, access_token):
         self.access_token = access_token
         self.graph_api_client = GraphAPI(access_token=access_token, version=settings.FACEBOOK_GRAPH_API_VERSION)
     
@@ -22,36 +22,36 @@ class FacebookDataProvider:
             return e.result
 
 class FacebookUserDataProvider(FacebookDataProvider):
-    def __init__(self, user_access_token, *args, **kwargs):
+    def __init__(self, user_access_token):
         FacebookDataProvider.__init__(self, user_access_token)
     
-    def get_profile(self, *args, **kwargs):
+    def get_profile(self):
         profile_response = self._get_object_response(settings.FACEBOOK_OBJECT_SELF, ','.join(settings.FACEBOOK_PROFILE_DEFAULT_FIELDS))
         if 'error' in profile_response:
             raise Http404('Facebook User Profile not Found.')
         return profile_response
     
-    def get_accounts(self, *args, **kwargs):
+    def get_accounts(self):
         accounts_response = self._get_connection_response(settings.FACEBOOK_OBJECT_SELF, settings.FACEBOOK_CONNECTION_ACCOUNTS, ','.join(settings.FACEBOOK_ACCOUNTS_DEFAULT_FIELDS))
         if 'error' in accounts_response:
                 raise Http404('Facebook User Pages not Found.')
         return accounts_response
 
 class FacebookPageDataProvider(FacebookDataProvider):
-    def __init__(self, page_access_token, *args, **kwargs):
+    def __init__(self, page_access_token):
         FacebookDataProvider.__init__(self, page_access_token)
     
-    def get_page_rating(self, *args, **kwargs):
+    def get_page_rating(self):
         return self._get_connection_response(settings.FACEBOOK_OBJECT_SELF, settings.FACEBOOK_CONNECTION_RATINGS, ','.join(settings.FACEBOOK_PAGE_RATING_DEFAULT_FIELDS))
 
-    def get_page(self, *args, **kwargs):
+    def get_page(self):
         return self._get_object_response(settings.FACEBOOK_OBJECT_SELF, ','.join(settings.FACEBOOK_PAGE_DEFAULT_FIELDS))
     
-    def get_post_comments(self, post_id, *args, **kwargs):
+    def get_post_comments(self, post_id):
         return self._get_connection_response(post_id, settings.FACEBOOK_CONNECTION_COMMENTS, ','.join(settings.FACEBOOK_PAGE_POST_COMMENTS_DEFAULT_FIELDS))
     
-    def get_post(self, post_id, *args, **kwargs):
+    def get_post(self, post_id):
         return self._get_object_response(post_id, ','.join(settings.FACEBOOK_PAGE_POST_DEFAULT_FIELDS))
 
-    def get_posts(self, *args, **kwargs):
+    def get_posts(self):
         return self._get_connection_response(settings.FACEBOOK_OBJECT_SELF, settings.FACEBOOK_CONNECTION_POSTS, ','.join(settings.FACEBOOK_PAGE_POST_DEFAULT_FIELDS))

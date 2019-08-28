@@ -8,7 +8,7 @@ from .data_parser import FacebookPageDataParser
 from .models import Post
 
 class FetchPostCommentsTask(Task):
-    def run(self, page_access_token, facebook_profile_id, page_id, post_id, *args, **kwargs):
+    def run(self, page_access_token, facebook_profile_id, page_id, post_id):
         self.facebook_profile_id = facebook_profile_id
         self.page_id = page_id
         self.page_access_token = page_access_token
@@ -33,7 +33,7 @@ class FetchPostCommentsTask(Task):
 FetchPostCommentsTask = app.register_task(FetchPostCommentsTask())
 
 class FetchPostsTask(Task):
-    def run(self, page_access_token, facebook_profile_id, page_id, *args, **kwargs):
+    def run(self, page_access_token, facebook_profile_id, page_id):
         self.page_access_token = page_access_token
         self.facebook_profile_id = facebook_profile_id
         self.page_id = page_id

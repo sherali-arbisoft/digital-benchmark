@@ -5,11 +5,11 @@ from datetime import datetime
 from .models import FacebookProfile, Page, Rating, Post, Comment
 
 class FacebookUserDataParser:
-    def __init__(self, user_id, facebook_profile_id=None, *args, **kwargs):
+    def __init__(self, user_id, facebook_profile_id=None):
         self.user_id = user_id
         self.facebook_profile_id = facebook_profile_id
 
-    def parse_profile(self, profile_response, user_access_token, expires_at, *args, **kwargs):
+    def parse_profile(self, profile_response, user_access_token, expires_at):
         facebook_profile, created = FacebookProfile.objects.get_or_create(user_id=self.user_id, defaults={
             'access_token': user_access_token,
             'expires_at': expires_at,
@@ -22,7 +22,7 @@ class FacebookUserDataParser:
         return facebook_profile
 
 class FacebookPageDataParser:
-    def __init__(self, facebook_profile_id, page_id=None, *args, **kwargs):
+    def __init__(self, facebook_profile_id, page_id=None):
         self.facebook_profile_id = facebook_profile_id
         self.page_id = page_id
     
