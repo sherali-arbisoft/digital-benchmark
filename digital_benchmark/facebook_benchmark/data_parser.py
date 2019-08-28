@@ -9,13 +9,13 @@ class FacebookUserDataParser:
         self.user_id = user_id
         self.facebook_profile_id = facebook_profile_id
 
-    def parse_profile(self, profile_response, user_access_token_response, inspect_user_access_token_response, *args, **kwargs):
-        facebook_profile, created = FacebookProfile.objects.get_or_create(facebook_id=profile_response.get('id'), defaults={
-            'access_token': user_access_token_response.get('access_token'),
-            'expires_at': datetime.utcfromtimestamp(inspect_user_access_token_response.get('data', {}).get('data_access_expires_at')),
+    def parse_profile(self, profile_response, user_access_token, expires_at, *args, **kwargs):
+        facebook_profile, created = FacebookProfile.objects.get_or_create(user_id=self.user_id, defaults={
+            'access_token': user_access_token,
+            'expires_at': expires_at,
+            'facebook_id': profile_response.get('id'),
             'first_name': profile_response.get('first_name'),
             'last_name': profile_response.get('last_name'),
-            'user_id': self.user_id,
         })
         facebook_profile.save()
         self.facebook_profile_id = facebook_profile.id
@@ -24,7 +24,7 @@ class FacebookUserDataParser:
     def parse_pages(self, pages_response, *args, **kwargs):
         pages = []
         for page_response in pages_response:
-            page, created = Page.objects.get_or_create(page_id=page_response.get('id'), defaults={
+            page, created = Page.objects.get_or_create(page_id=page_response.get('id'), facebook_profile__user_id=self.user_id, defaults={
                 'facebook_profile_id': self.facebook_profile_id
             })
             page.access_token = page_response.get('access_token')
