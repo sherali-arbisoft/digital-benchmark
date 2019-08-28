@@ -30,10 +30,10 @@ class LoginView(View):
         try:
             facebook_profile = request.user.facebook_profile
             facebook_login = FacebookLogin()
-            inspect_access_token_response = facebook_login.inspect_access_token(facebook_profile.access_token)
-            if not facebook_login.is_access_token_valid(inspect_access_token_response):
+            inspect_user_access_token_response = facebook_login.inspect_access_token(facebook_profile.access_token)
+            if not facebook_login.is_access_token_valid(inspect_user_access_token_response):
                 raise Http404('Facebook User Access Token is not Valid.')
-            if facebook_login.rerequest(inspect_access_token_response):
+            if facebook_login.rerequest(inspect_user_access_token_response):
                 return redirect(settings.FACEBOOK_REREQUEST_SCOPE_URL)
             else:
                 return redirect('/facebook_benchmark/home')
@@ -49,58 +49,31 @@ class LoginSuccessfulView(View):
         code = request.GET.get('code')
         if not code:
             raise Http404('Facebook Login Code not Found.')
-        access_token_url_data = {
-            'client_id': settings.FACEBOOK_APP_ID,
-            'redirect_uri': settings.FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI,
-            'client_secret': settings.FACEBOOK_APP_SECRET,
-            'code': code,
-        }
-        user_access_token_response = requests.post(settings.FACEBOOK_ACCESS_TOKEN_URL, data=access_token_url_data).json()
-        inspect_token_url_data = {
-            'input_token': user_access_token_response.get('access_token'),
-            'access_token': settings.FACEBOOK_APP_TOKEN,
-        }
-        inspect_user_access_token_response = requests.get(settings.FACEBOOK_INSPECT_ACCESS_TOKEN_URL, params=inspect_token_url_data).json()
-        if not inspect_user_access_token_response.get('data', {}).get('is_valid'):
+        facebook_login = FacebookLogin()
+        user_access_token = facebook_login.get_access_token_from_code(code)
+        inspect_user_access_token_response = facebook_login.inspect_access_token(user_access_token)
+        if not facebook_login.is_access_token_valid(inspect_user_access_token_response):
             raise Http404('Facebook User Access Token is not Valid.')
-        rerequest = False
-        for scope in settings.FACEBOOK_SCOPE:
-            scopes = inspect_user_access_token_response.get('data', {}).get('scopes')
-            if scope not in scopes:
-                rerequest = True
-        if rerequest:
+        if facebook_login.rerequest(inspect_user_access_token_response):
             return redirect(settings.FACEBOOK_REREQUEST_SCOPE_URL)
-
-        facebook_user_data_provider = FacebookUserDataProvider(user_access_token=user_access_token_response.get('access_token'))
+        facebook_user_data_provider = FacebookUserDataProvider(user_access_token=user_access_token)
         profile_response = facebook_user_data_provider.get_profile()
         if 'error' in profile_response:
             raise Http404('Facebook User Profile not Found.')
         facebook_user_data_parser = FacebookUserDataParser(user_id=request.user.id)
-        facebook_profile = facebook_user_data_parser.parse_profile(profile_response, user_access_token_response, inspect_user_access_token_response)
+        facebook_profile = facebook_user_data_parser.parse_profile(profile_response, user_access_token, facebook_login.get_data_access_expires_at(inspect_user_access_token_response))
         
         pages_response = facebook_user_data_provider.get_pages()
         if 'error' in pages_response:
-            raise Http404('Facebook User Profile not Found.')
+            raise Http404('Facebook User Pages not Found.')
         pages = facebook_user_data_parser.parse_pages(pages_response)
-
         for page in pages:
-            url = settings.FACEBOOK_ACCESS_TOKEN_URL
-            data = {
-                'grant_type': settings.FACEBOOK_GRANT_TYPE,
-                'client_id': settings.FACEBOOK_APP_ID,
-                'client_secret': settings.FACEBOOK_APP_SECRET,
-                'fb_exchange_token': page.access_token,
-            }
-            response = requests.post(url, data=data).json()
-            inspect_token_url_data = {
-                'input_token': response.get('access_token'),
-                'access_token': settings.FACEBOOK_APP_TOKEN,
-            }
-            inspect_page_access_token_response = requests.get(settings.FACEBOOK_INSPECT_ACCESS_TOKEN_URL, params=inspect_token_url_data).json()
-            if not inspect_page_access_token_response.get('data', {}).get('is_valid'):
-                raise Http404('Facebook Page Access Token is not Valid.')
-            page.access_token = response.get('access_token')
-            page.expires_at = datetime.utcfromtimestamp(inspect_page_access_token_response.get('data', {}).get('data_access_expires_at'))
+            page_access_token = facebook_login.get_long_term_token(page.access_token)
+            inspect_page_access_token_response = facebook_login.inspect_access_token(page_access_token)
+            if not facebook_login.is_access_token_valid(inspect_page_access_token_response):
+                raise Http404('Facebook User Page Access Token is not Valid.')
+            page.access_token = page_access_token
+            page.expires_at = facebook_login.get_data_access_expires_at(inspect_page_access_token_response)
             page.save()
 
         return redirect('/facebook_benchmark/home')
