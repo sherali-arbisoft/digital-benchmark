@@ -17,6 +17,7 @@ scrapyd = "*"
 python-scrapyd-api = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.6"
