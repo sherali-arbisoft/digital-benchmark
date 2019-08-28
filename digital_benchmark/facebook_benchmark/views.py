@@ -78,12 +78,17 @@ class LoadPageDataView(View):
         FetchPostsTask.delay(page.access_token, page.facebook_profile_id, page.id)
         return redirect('/facebook_benchmark/home')
 
-class FacebookProfileDetail(generics.ListAPIView):
+class FacebookProfileDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FacebookProfileSerializer
 
-    def get_queryset(self):
-        return FacebookProfile.objects.filter(user=self.request.user)
+    def retrieve(self, request, pk=None):
+        try:
+            facebook_profile = request.user.facebook_profile
+            serializer = self.get_serializer(facebook_profile)
+            return Response(serializer.data)
+        except FacebookProfile.DoesNotExist:
+            return Response({'detail': 'Not found.'})
 
 class PageList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -131,13 +136,14 @@ class PostRevisionsList(generics.ListAPIView):
     def get_queryset(self):
         return Post.objects.filter(post_id=self.kwargs.get('post_id'), page__facebook_profile__user=self.request.user).order_by('-created_at').prefetch_related('comments')
 
-class PostLatestRevision(generics.ListAPIView):
+class PostLatestRevision(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-
-    def get_queryset(self):
+    
+    def retrieve(self, request, post_id=None):
         try:
-            post = [Post.objects.filter(post_id=self.kwargs.get('post_id'), page__facebook_profile__user=self.request.user).latest('-created_at')]
+            post = Post.objects.filter(post_id=post_id, page__facebook_profile__user=self.request.user).latest('-created_at')
+            serializer = self.get_serializer(post)
+            return Response(serializer.data)
         except Post.DoesNotExist:
-            post = Post.objects.none()
-        return post
+            return Response({'detail': 'Not found.'})
