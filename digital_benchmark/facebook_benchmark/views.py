@@ -22,25 +22,18 @@ from .models import FacebookProfile, Page, Post
 from .serializers import FacebookProfileSerializer, PageSerializer, PostSerializer
 from .permissions import PageAccessPermission, PostAccessPermission
 from .tasks import FetchPostsTask
+from .login import FacebookLogin
 
 @method_decorator(login_required, name='dispatch')
 class LoginView(View):
     def get(self, request, *args, **kwargs):
         try:
             facebook_profile = request.user.facebook_profile
-            inspect_user_access_token_url_data = {
-                'input_token': facebook_profile.access_token,
-                'access_token': settings.FACEBOOK_APP_TOKEN,
-            }
-            inspect_user_access_token_response = requests.get(settings.FACEBOOK_INSPECT_ACCESS_TOKEN_URL, params=inspect_user_access_token_url_data).json()
-            if not inspect_user_access_token_response.get('data', {}).get('is_valid'):
+            facebook_login = FacebookLogin()
+            inspect_access_token_response = facebook_login.inspect_access_token(facebook_profile.access_token)
+            if not facebook_login.is_access_token_valid(inspect_access_token_response):
                 raise Http404('Facebook User Access Token is not Valid.')
-            rerequest = False
-            for scope in settings.FACEBOOK_SCOPE:
-                scopes = inspect_user_access_token_response.get('data', {}).get('scopes')
-                if scope not in scopes:
-                    rerequest = True
-            if rerequest:
+            if facebook_login.rerequest(inspect_access_token_response):
                 return redirect(settings.FACEBOOK_REREQUEST_SCOPE_URL)
             else:
                 return redirect('/facebook_benchmark/home')
