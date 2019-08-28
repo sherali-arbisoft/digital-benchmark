@@ -13,9 +13,8 @@ from rest_framework.response import Response
 
 from datetime import datetime
 
-import requests 
+import requests
 
-from .forms import LoginForm
 from .data_provider import FacebookUserDataProvider, FacebookPageDataProvider
 from .data_parser import FacebookUserDataParser, FacebookPageDataParser
 from .models import FacebookProfile, Page, Post
