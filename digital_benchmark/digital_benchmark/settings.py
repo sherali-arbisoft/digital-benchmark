@@ -170,8 +170,6 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-CELERY_TASK_SERIALIZER = 'pickle'
-CELERY_ACCEPT_CONTENT = ['pickle']
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 
