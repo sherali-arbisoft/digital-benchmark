@@ -115,12 +115,15 @@ class LoginSuccessfulView(View):
 @method_decorator(login_required, name='dispatch')
 class HomeView(View):
     def get(self, request, *args, **kwargs):
-        facebook_profile_id = request.user.facebook_profile.id
-        all_pages = Page.objects.filter(facebook_profile_id=facebook_profile_id)
-        context = {
-            'all_pages': all_pages,
-        }
-        return render(request, 'facebook_benchmark/home.html', context)
+        try:
+            facebook_profile = request.user.facebook_profile
+            all_pages = Page.objects.filter(facebook_profile=facebook_profile)
+            context = {
+                'all_pages': all_pages,
+            }
+            return render(request, 'facebook_benchmark/home.html', context)
+        except FacebookProfile.DoesNotExist:
+            raise Http404("Facebook Profile does not Exist.")
 
 @method_decorator(login_required, name='dispatch')
 class LoadPageDataView(View):
