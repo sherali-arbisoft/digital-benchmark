@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import FacebookProfile, Page, Rating, Post, PostReaction, Comment, CommentReaction
+from .models import FacebookProfile, Page, Rating, Post, Comment
 
 @admin.register(FacebookProfile)
 class FacebookProfileAdmin(admin.ModelAdmin):
@@ -31,23 +31,9 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_time'
     empty_value_display = '--empty--'
 
-@admin.register(PostReaction)
-class PostReactionAdmin(admin.ModelAdmin):
-    list_display = ('from_id', 'get_reaction_type_display')
-    list_filter = ['reaction_type']
-    search_fields = ['from_id', 'reaction_type']
-    empty_value_display = '--empty--'
-
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('from_id', 'message')
     search_fields = ['from_id','message']
     date_hierarchy = 'created_time'
-    empty_value_display = '--empty--'
-
-@admin.register(CommentReaction)
-class CommentReactionAdmin(admin.ModelAdmin):
-    list_display = ('from_id', 'get_reaction_type_display')
-    list_filter = ['reaction_type']
-    search_fields = ['from_id', 'reaction_type']
     empty_value_display = '--empty--'

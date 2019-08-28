@@ -18,12 +18,12 @@ class CreateUpdateMixin(models.Model):
 
 class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
     access_token = models.TextField(null=True, blank=False)
-    expires_in = models.IntegerField(null=True, blank=False)
+    expires_at = models.DateTimeField(null=True, blank=False)
     facebook_id = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255, null=True, blank=False)
     last_name = models.CharField(max_length=255, null=True, blank=False)
 
-    user = models.OneToOneField(User, on_delete=models.PROTECT)
+    user = models.OneToOneField(User, related_name='facebook_profile', on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = 'Facebook Profile'
@@ -35,11 +35,13 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
 class Page(SoftDeleteMixin, CreateUpdateMixin):
     access_token = models.TextField(null=True, blank=False)
     displayed_message_response_time = models.CharField(max_length=255, null=True, blank=False)
-    num_engagements = models.IntegerField('total engagements', null=True, blank=False)
+    expires_at = models.DateTimeField(null=True, blank=False)
     fan_count = models.IntegerField(null=True, blank=False)
     name = models.CharField(max_length=255, null=True, blank=False)
+    num_engagements = models.IntegerField('total engagements', null=True, blank=False)
     overall_star_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=False)
     page_consumptions = models.IntegerField(null=True, blank=False)
+    page_consumptions_unique = models.IntegerField(null=True, blank=False)
     page_engaged_users = models.IntegerField(null=True, blank=False)
     page_id = models.CharField(max_length=255)
     page_impressions = models.IntegerField(null=True, blank=False)
@@ -89,30 +91,6 @@ class Rating(SoftDeleteMixin, CreateUpdateMixin):
     def __str__(self):
         return self.review_text
 
-class ReactionChoice(Enum):
-    ANGRY = 'ANGRY'
-    HAHA = 'HAHA'
-    LIKE = 'LIKE'
-    LOVE = 'LOVE'
-    NONE = 'NONE'
-    SAD = 'SAD'
-    WOW = 'WOW'
-
-    @classmethod
-    def get_reaction_choices(cls):
-        return [(reaction.value, reaction.value.title()) for reaction in ReactionChoice]
-
-class PostReaction(SoftDeleteMixin, CreateUpdateMixin):
-    from_id = models.CharField(max_length=255)
-    reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
-
-    class Meta:
-        verbose_name = 'Post Reaction'
-        verbose_name_plural = 'Post Reactions'
-
-    def __str__(self):
-        return self.reaction_type
-
 class TimelineVisibilityChoice(Enum):
     HIDDEN = 'HIDDEN'
     NORMAL = 'NORMAL'
@@ -152,6 +130,12 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     post_impressions_viral_unique = models.IntegerField(null=True, blank=False)
     post_negative_feedback = models.IntegerField(null=True, blank=False)
     post_negative_feedback_unique = models.IntegerField(null=True, blank=False)
+    post_reactions_anger_total = models.IntegerField(default=0, null=True, blank=False)
+    post_reactions_haha_total = models.IntegerField(default=0, null=True, blank=False)
+    post_reactions_like_total = models.IntegerField(default=0, null=True, blank=False)
+    post_reactions_love_total = models.IntegerField(default=0, null=True, blank=False)
+    post_reactions_sorry_total = models.IntegerField(default=0, null=True, blank=False)
+    post_reactions_wow_total = models.IntegerField(default=0, null=True, blank=False)
     promotion_status = models.CharField(max_length=255, null=True, blank=False)
     scheduled_publish_time = models.DateTimeField(null=True, blank=True)
     shares = models.IntegerField(null=True, blank=False)
@@ -160,30 +144,23 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     updated_time = models.DateTimeField(null=True, blank=False)
 
     page = models.ForeignKey('facebook_benchmark.Page', on_delete=models.PROTECT)
-    reactions = models.ManyToManyField('facebook_benchmark.PostReaction', blank=True)
 
     def __str__(self):
         return self.message or self.story or self.post_id
 
-class CommentReaction(SoftDeleteMixin, CreateUpdateMixin):
-    from_id = models.CharField(max_length=255)
-    reaction_type = models.CharField(max_length=5, choices=ReactionChoice.get_reaction_choices())
-
-    class Meta:
-        verbose_name = 'Comment Reaction'
-        verbose_name_plural = 'Comment Reactions'
-
-    def __str__(self):
-        return self.reaction_type
-
 class Comment(SoftDeleteMixin, CreateUpdateMixin):
     comment_id = models.CharField(max_length=255)
     created_time = models.DateTimeField()
-    from_id = models.CharField(max_length=255)
+    from_id = models.CharField(max_length=255, null=True, blank=True)
     message = models.TextField()
+    angry_total = models.IntegerField(default=0, null=True, blank=False)
+    haha_total = models.IntegerField(default=0, null=True, blank=False)
+    like_total = models.IntegerField(default=0, null=True, blank=False)
+    love_total = models.IntegerField(default=0, null=True, blank=False)
+    sad_total = models.IntegerField(default=0, null=True, blank=False)
+    wow_total = models.IntegerField(default=0, null=True, blank=False)
 
     post = models.ForeignKey('facebook_benchmark.Post', related_name='comments', on_delete=models.PROTECT)
-    reactions = models.ManyToManyField('facebook_benchmark.CommentReaction', blank=True)
 
     def __str__(self):
         return self.message
