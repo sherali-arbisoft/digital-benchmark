@@ -33,48 +33,41 @@ class FacebookUserDataParser:
         return pages
 
 class FacebookPageDataParser:
-    def __init__(self, facebook_profile_id, page_id, *args, **kwargs):
+    def __init__(self, facebook_profile_id, page_id=None, *args, **kwargs):
         self.facebook_profile_id = facebook_profile_id
         self.page_id = page_id
     
-    def _parse_ratings(self, ratings_response, *args, **kwargs):
-        for rating_response in ratings_response['data']:
-            rating = Rating()
-            rating.created_time = rating_response.get('created_time', None)
-            rating.rating = rating_response.get('rating', 0)
-            rating.recommendation_type = rating_response.get('recommendation_type', 'none').upper()
-            rating.review_text = rating_response.get('review_text')
-            rating.page_id = self.page_id
-            rating.save()
+    def parse_rating(self, rating_response, *args, **kwargs):
+        rating = Rating()
+        rating.created_time = rating_response.get('created_time', None)
+        rating.rating = rating_response.get('rating', 0)
+        rating.recommendation_type = rating_response.get('recommendation_type', 'none').upper()
+        rating.review_text = rating_response.get('review_text')
+        rating.page_id = self.page_id
+        rating.save()
 
-    def parse_page_details(self, page_details_response, *args, **kwargs):
-        page, created = Page.objects.get_or_create(id=self.page_id, defaults={
-            'facebook_profile_id': self.facebook_profile_id
-        })
-        page.displayed_message_response_time = page_details_response.get('displayed_message_response_time')
-        page.num_engagements = page_details_response.get('engagement', {}).get('count', 0)
-        page.fan_count = page_details_response.get('fan_count', 0)
-        page.name = page_details_response.get('name')
-        page.overall_star_rating = page_details_response.get('overall_star_rating', 0.0)
-        page.page_id = page_details_response.get('id')
-        page.rating_count = page_details_response.get('rating_count', 0)
-        page.talking_about_count = page_details_response.get('talking_about_count', 0)
-        page.unread_message_count = page_details_response.get('unread_message_count', 0)
-        page.unread_notif_count = page_details_response.get('unread_notif_count', 0)
-        page.unseen_message_count = page_details_response.get('unseen_message_count', 0)
-        page.verification_status = page_details_response.get('verification_status', 'not_verified')
-        page.save()
-        if 'ratings' in page_details_response:
-            self._parse_ratings(ratings_response=page_details_response.get('ratings'))
-        return page
-    
-    def parse_page_insights(self, page_insights_response, *args, **kwargs):
-        page, created = Page.objects.get_or_create(id=self.page_id, defaults={
-            'facebook_profile_id': self.facebook_profile_id
-        })
-        for item in page_insights_response['data']:
-            setattr(page, item['name'], item['values'][0]['value'])
-        page.save()
+    def parse_page(self, page_response, access_token, expires_at, *args, **kwargs):
+        defaults = {
+            'access_token': access_token,
+            'displayed_message_response_time': page_response.get('displayed_message_response_time'),
+            'expires_at': expires_at,
+            'fan_count': page_response.get('fan_count', 0),
+            'name': page_response.get('name'),
+            'num_engagements': page_response.get('engagement', {}).get('count', 0),
+            'overall_star_rating': page_response.get('overall_star_rating', 0),
+            'page_id': page_response.get('id'),
+            'rating_count': page_response.get('rating_count', 0),
+            'talking_about_count': page_response.get('talking_about_count', 0),
+            'unread_message_count': page_response.get('unread_message_count', 0),
+            'unread_notif_count': page_response.get('unread_notif_count', 0),
+            'unseen_message_count': page_response.get('unseen_message_count', 0),
+            'verification_status': page_response.get('verification_status', 'not_verified'),
+            'facebook_profile_id': self.facebook_profile_id,
+        }
+        for item in page_response.get('insights', {}).get('data'):
+            defaults[item['name']] = item['values'][0]['value']
+        page, created = Page.objects.get_or_create(id=self.page_id, defaults=defaults)
+        self.page_id = page.id
         return page
 
     def parse_comment(self, post_id, comment_response):
