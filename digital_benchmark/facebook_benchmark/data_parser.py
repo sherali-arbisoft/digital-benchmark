@@ -21,23 +21,12 @@ class FacebookUserDataParser:
         self.facebook_profile_id = facebook_profile.id
         return facebook_profile
 
-    def parse_pages(self, pages_response, *args, **kwargs):
-        pages = []
-        for page_response in pages_response:
-            page, created = Page.objects.get_or_create(page_id=page_response.get('id'), facebook_profile__user_id=self.user_id, defaults={
-                'facebook_profile_id': self.facebook_profile_id
-            })
-            page.access_token = page_response.get('access_token')
-            page.name = page_response.get('name')
-            pages.append(page)
-        return pages
-
 class FacebookPageDataParser:
     def __init__(self, facebook_profile_id, page_id=None, *args, **kwargs):
         self.facebook_profile_id = facebook_profile_id
         self.page_id = page_id
     
-    def parse_rating(self, rating_response, *args, **kwargs):
+    def parse_rating(self, rating_response):
         rating = Rating()
         rating.created_time = rating_response.get('created_time', None)
         rating.rating = rating_response.get('rating', 0)
@@ -46,7 +35,7 @@ class FacebookPageDataParser:
         rating.page_id = self.page_id
         rating.save()
 
-    def parse_page(self, page_response, access_token, expires_at, *args, **kwargs):
+    def parse_page(self, page_response, access_token, expires_at):
         defaults = {
             'access_token': access_token,
             'displayed_message_response_time': page_response.get('displayed_message_response_time'),
@@ -62,11 +51,10 @@ class FacebookPageDataParser:
             'unread_notif_count': page_response.get('unread_notif_count', 0),
             'unseen_message_count': page_response.get('unseen_message_count', 0),
             'verification_status': page_response.get('verification_status', 'not_verified'),
-            'facebook_profile_id': self.facebook_profile_id,
         }
         for item in page_response.get('insights', {}).get('data'):
             defaults[item['name']] = item['values'][0]['value']
-        page, created = Page.objects.get_or_create(id=self.page_id, defaults=defaults)
+        page, created = Page.objects.update_or_create(page_id=page_response.get('id'), facebook_profile_id=self.facebook_profile_id, defaults=defaults)
         self.page_id = page.id
         return page
 
@@ -86,7 +74,7 @@ class FacebookPageDataParser:
         comment.save()
         return comment
 
-    def parse_post(self, post_response, *args, **kwargs):
+    def parse_post(self, post_response):
         post = Post()
         post.backdated_time = post_response.get('backdated_time', None)
         post.created_time = post_response.get('created_time', None)
