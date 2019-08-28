@@ -14,9 +14,9 @@ class FetchPostCommentsTask(Task):
         self.page_access_token = page_access_token
         self.post_id = post_id
 
-        page_data_provider = FacebookPageDataProvider(page_access_token=self.page_access_token)
+        facebook_page_data_provider = FacebookPageDataProvider(page_access_token=self.page_access_token)
         post = Post.objects.get(pk=self.post_id)
-        return page_data_provider.get_post_comments(post.post_id)
+        return facebook_page_data_provider.get_post_comments(post.post_id)
     
     def on_success(self, retval, task_id, args, kwargs):
         if 'error' in retval:
@@ -38,8 +38,8 @@ class FetchPostsTask(Task):
         self.facebook_profile_id = facebook_profile_id
         self.page_id = page_id
 
-        page_data_provider = FacebookPageDataProvider(page_access_token=self.page_access_token)
-        return page_data_provider.get_posts()
+        facebook_page_data_provider = FacebookPageDataProvider(page_access_token=self.page_access_token)
+        return facebook_page_data_provider.get_posts()
     
     def on_success(self, retval, task_id, args, kwargs):
         if 'error' in retval:
