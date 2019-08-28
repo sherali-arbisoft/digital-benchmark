@@ -34,13 +34,14 @@ class FacebookProfile(SoftDeleteMixin, CreateUpdateMixin):
 
 class Page(SoftDeleteMixin, CreateUpdateMixin):
     access_token = models.TextField(null=True, blank=False)
-    expires_at = models.DateTimeField(null=True, blank=False)
     displayed_message_response_time = models.CharField(max_length=255, null=True, blank=False)
-    num_engagements = models.IntegerField('total engagements', null=True, blank=False)
+    expires_at = models.DateTimeField(null=True, blank=False)
     fan_count = models.IntegerField(null=True, blank=False)
     name = models.CharField(max_length=255, null=True, blank=False)
+    num_engagements = models.IntegerField('total engagements', null=True, blank=False)
     overall_star_rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=False)
     page_consumptions = models.IntegerField(null=True, blank=False)
+    page_consumptions_unique = models.IntegerField(null=True, blank=False)
     page_engaged_users = models.IntegerField(null=True, blank=False)
     page_id = models.CharField(max_length=255)
     page_impressions = models.IntegerField(null=True, blank=False)
