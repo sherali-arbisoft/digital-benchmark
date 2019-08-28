@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'twitter_benchmark', #register twitter_benchmark app
     'instagram_benchmark',
     'facebook_benchmark', # register facebook_benchmark app
     'accounts',
@@ -161,10 +162,35 @@ FACEBOOK_PAGE_POST_DEFAULT_FIELDS = ['backdated_time', 'created_time', 'id', 'is
 FACEBOOK_PAGE_POST_COMMENTS_DEFAULT_FIELDS = ['id', 'message', 'created_time', 'from{id}', 'reactions.type(ANGRY).limit(0).summary(total_count).as(angry),reactions.type(HAHA).limit(0).summary(total_count).as(haha),reactions.type(LIKE).limit(0).summary(total_count).as(like),reactions.type(LOVE).limit(0).summary(total_count).as(love),reactions.type(SAD).limit(0).summary(total_count).as(sad),reactions.type(WOW).limit(0).summary(total_count).as(wow)']
 
 
+
+# twitter_benchmark setting
+REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
+BASE_AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
+PROFILE_DATA_URL = 'https://api.twitter.com/1.1/account/verify_credentials.json'
+ACCESS_TOKEN_URL= 'https://api.twitter.com/oauth/access_token'
+TWEETS_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
+COMMENT_URL = 'https://api.twitter.com/1.1/statuses/mentions_timeline.json'
+CONSUMER_KEY = 'LCE85J76ONueBmKn1SpVAjZ0F'
+CONSUMER_SECRET = 'eo992TOAXA6n9KNrKy59Qkb8uKmTMRwE3XevUHeoFm3fXihbEJ'
+TWEETS_COUNT = 200
+
+
 # instagram settings and urls
 PROFILE_URL="https://api.instagram.com/v1/users/self/?access_token={}"
 RECENT_MEDIA_URL="https://api.instagram.com/v1/users/self/media/recent/?count=10&access_token={}"
 COMMENTS_URL="https://api.instagram.com/v1/media/{}/comments?access_token={}"
+INSTA_CONNECT_URL="https://api.instagram.com/oauth/authorize/?client_id=4d8f538893ba481f88c0614865dc9310&redirect_uri=http://127.0.0.1:8000/instagram_benchmark/connection_success&response_type=code&scope=basic"
+CLIENT_ID='4d8f538893ba481f88c0614865dc9310'
+CLIENT_SECRET='8e2bba68038844ab8e240b7094db18f2'
+GRANT_TYPE='authorization_code'
+INSTA_REDIRECT_URL='http://127.0.0.1:8000/instagram_benchmark/connection_success'
+INSTA_FETCH_USER_URL='https://api.instagram.com/oauth/access_token'
+#insta django internal configs
+DJANGO_LOGIN_URL='http://127.0.0.1:8000/accounts/login/'
+#Scrapyd Configs
+SCRAPYD_SERVER_URL="http://127.0.0.1:6800/"
+SCRAPER_AGENT='Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+
 # for django-debug-toolbar
 INTERNAL_IPS = [
     '127.0.0.1',

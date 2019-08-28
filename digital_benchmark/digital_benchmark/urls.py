@@ -15,6 +15,7 @@ from accounts.views import LoginView,LogoutView,RegisterView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('facebook_benchmark/', include('facebook_benchmark.urls')),
+    path('twitter_benchmark/', include('twitter_benchmark.urls')),
     path('instagram_benchmark/', include('instagram_benchmark.urls')),
     path('accounts/', include('accounts.urls')),
     path('', views.HomeView.as_view()),

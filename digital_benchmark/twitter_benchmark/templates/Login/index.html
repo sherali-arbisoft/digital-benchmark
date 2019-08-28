@@ -1,0 +1,5 @@
+
+<form action="{% url 'twitter_benchmark:auth' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="login">
+</form>
