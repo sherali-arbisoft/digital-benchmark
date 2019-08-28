@@ -1,8 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Task
+import logging
 
 from digital_benchmark.celery import app
-
 from .data_provider import FacebookPageDataProvider
 from .data_parser import FacebookPageDataParser
 from .models import Post
@@ -20,7 +20,8 @@ class FetchPostCommentsTask(Task):
     
     def on_success(self, retval, task_id, args, kwargs):
         if 'error' in retval:
-            print(retval.get('error').get('message'))
+            logger = logging.getLogger(__name__)
+            logger.error(retval.get('error').get('message'))
         else:
             comments_response = retval
             facebook_page_data_parser = FacebookPageDataParser(self.facebook_profile_id, self.page_id)
@@ -28,7 +29,8 @@ class FetchPostCommentsTask(Task):
                 facebook_page_data_parser.parse_comment(self.post_id, comment_response)
     
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        print('Error in fetching post comments')
+        logger = logging.getLogger(__name__)
+        logger.error('Error in fetching post comments')
 
 FetchPostCommentsTask = app.register_task(FetchPostCommentsTask())
 
@@ -43,7 +45,8 @@ class FetchPostsTask(Task):
     
     def on_success(self, retval, task_id, args, kwargs):
         if 'error' in retval:
-            print(retval.get('error').get('message'))
+            logger = logging.getLogger(__name__)
+            logger.error(retval.get('error').get('message'))
         else:
             posts_response = retval
             facebook_page_data_parser = FacebookPageDataParser(self.facebook_profile_id, self.page_id)
@@ -53,6 +56,7 @@ class FetchPostsTask(Task):
                 fetch_post_comments_task.delay(self.page_access_token, self.facebook_profile_id, self.page_id, post.id)
     
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        print('Error in fetching posts')
+        logger = logging.getLogger(__name__)
+        logger.error('Error in fetching posts')
 
 FetchPostsTask = app.register_task(FetchPostsTask())
