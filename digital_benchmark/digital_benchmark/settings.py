@@ -133,16 +133,20 @@ STATIC_URL = '/static/'
 FACEBOOK_GRAPH_API_VERSION = '3.1'
 FACEBOOK_APP_ID = '349831992602224'
 FACEBOOK_APP_SECRET = 'e3bfa0ed905199eecca00e74631280b7'
+FACEBOOK_APP_TOKEN = '349831992602224|uQIt8Jk7183kkz0-zT-jUf9uuAw'
 FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI = 'http://localhost:8000/facebook_benchmark/login_successful'
-FACEBOOK_PERMISSIONS = ['manage_pages', 'pages_show_list', 'read_insights']
+FACEBOOK_SCOPE = ['manage_pages', 'pages_show_list', 'read_insights']
 FACEBOOK_RESPONSE_TYPE = 'code'
 FACEBOOK_STATE = '{"{st=state123abc,ds=123456789}"}'
-FACEBOOK_LOGIN_URL = f"https://www.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={FACEBOOK_APP_ID}&redirect_uri={FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}&scope={','.join(FACEBOOK_PERMISSIONS)}&response_type={FACEBOOK_RESPONSE_TYPE}&state={FACEBOOK_STATE}"
+FACEBOOK_LOGIN_URL = f"https://www.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={FACEBOOK_APP_ID}&redirect_uri={FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}&scope={','.join(FACEBOOK_SCOPE)}&response_type={FACEBOOK_RESPONSE_TYPE}&state={FACEBOOK_STATE}"
 FACEBOOK_ACCESS_TOKEN_URL = f"https://graph.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/oauth/access_token"
-FACEBOOK_DEFAULT_FIELDS_FOR_PROFILE = ['first_name', 'id', 'last_name']
-FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS = ['access_token', 'id', 'name']
+FACEBOOK_INSPECT_ACCESS_TOKEN_URL = f'https://graph.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/debug_token'
+FACEBOOK_REREQUEST_SCOPE_URL = f"https://www.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={FACEBOOK_APP_ID}&redirect_uri={FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}&auth_type=rerequest&scope={','.join(FACEBOOK_SCOPE)}"
+FACEBOOK_PROFILE_DEFAULT_FIELDS = ['first_name', 'id', 'last_name']
+FACEBOOK_ACCOUNTS_DEFAULT_FIELDS = ['access_token', 'id', 'name']
 FACEBOOK_GRANT_TYPE = 'fb_exchange_token'
 FACEBOOK_OBJECT_SELF = 'me'
+FACEBOOK_CONNECTION_ACCOUNTS = 'accounts'
 FACEBOOK_CONNECTION_RATINGS = 'ratings'
 FACEBOOK_CONNECTION_POSTS = 'posts'
 FACEBOOK_CONNECTION_REACTIONS = 'reactions'
