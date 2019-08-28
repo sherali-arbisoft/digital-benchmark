@@ -1,7 +1,7 @@
+from django.conf import settings
+from django.http import Http404
 from facebook import GraphAPI, GraphAPIError
 import requests
-
-from django.conf import settings
 
 class FacebookDataProvider:
     def __init__(self, access_token, *args, **kwargs):
@@ -21,16 +21,21 @@ class FacebookDataProvider:
         except GraphAPIError as e:
             return e.result
 
-
 class FacebookUserDataProvider(FacebookDataProvider):
     def __init__(self, user_access_token, *args, **kwargs):
         FacebookDataProvider.__init__(self, user_access_token)
     
     def get_profile(self, *args, **kwargs):
-        return self._get_object_response(settings.FACEBOOK_OBJECT_SELF, ','.join(settings.FACEBOOK_PROFILE_DEFAULT_FIELDS))
+        profile_response = self._get_object_response(settings.FACEBOOK_OBJECT_SELF, ','.join(settings.FACEBOOK_PROFILE_DEFAULT_FIELDS))
+        if 'error' in profile_response:
+            raise Http404('Facebook User Profile not Found.')
+        return profile_response
     
-    def get_pages(self, *args, **kwargs):
-        return self._get_connection_response(settings.FACEBOOK_OBJECT_SELF, settings.FACEBOOK_CONNECTION_ACCOUNTS, ','.join(settings.FACEBOOK_ACCOUNTS_DEFAULT_FIELDS))
+    def get_accounts(self, *args, **kwargs):
+        accounts_response = self._get_connection_response(settings.FACEBOOK_OBJECT_SELF, settings.FACEBOOK_CONNECTION_ACCOUNTS, ','.join(settings.FACEBOOK_ACCOUNTS_DEFAULT_FIELDS))
+        if 'error' in accounts_response:
+                raise Http404('Facebook User Pages not Found.')
+        return accounts_response
 
 class FacebookPageDataProvider(FacebookDataProvider):
     def __init__(self, page_access_token, *args, **kwargs):
