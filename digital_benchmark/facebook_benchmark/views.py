@@ -22,21 +22,14 @@ from .models import FacebookProfile, Page, Post
 from .serializers import FacebookProfileSerializer, PageSerializer, PostSerializer
 from .permissions import PageAccessPermission, PostAccessPermission
 from .tasks import FetchPostsTask
-from .login import FacebookLogin
+from .utils import FacebookLoginUtils
 
 @method_decorator(login_required, name='dispatch')
 class LoginView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         try:
-            facebook_profile = request.user.facebook_profile
-            facebook_login = FacebookLogin()
-            inspect_user_access_token_response = facebook_login.inspect_access_token(facebook_profile.access_token)
-            if not facebook_login.is_access_token_valid(inspect_user_access_token_response):
-                raise Http404('Facebook User Access Token is not Valid.')
-            if facebook_login.rerequest(inspect_user_access_token_response):
-                return redirect(settings.FACEBOOK_REREQUEST_SCOPE_URL)
-            else:
-                return redirect('/facebook_benchmark/home')
+            FacebookLoginUtils.inspect_access_token(request.user.facebook_profile.access_token)
+            return redirect('/facebook_benchmark/home')
         except FacebookProfile.DoesNotExist:
             context = {
                 'facebook_login_url': settings.FACEBOOK_LOGIN_URL,
@@ -49,47 +42,35 @@ class LoginSuccessfulView(View):
         code = request.GET.get('code')
         if not code:
             raise Http404('Facebook Login Code not Found.')
-        facebook_login = FacebookLogin()
-        user_access_token = facebook_login.get_access_token_from_code(code)
-        inspect_user_access_token_response = facebook_login.inspect_access_token(user_access_token)
-        if not facebook_login.is_access_token_valid(inspect_user_access_token_response):
-            raise Http404('Facebook User Access Token is not Valid.')
-        if facebook_login.rerequest(inspect_user_access_token_response):
-            return redirect(settings.FACEBOOK_REREQUEST_SCOPE_URL)
+        user_access_token = FacebookLoginUtils.get_access_token(code)
+        FacebookLoginUtils.inspect_access_token(user_access_token)
         facebook_user_data_provider = FacebookUserDataProvider(user_access_token=user_access_token)
         profile_response = facebook_user_data_provider.get_profile()
-        if 'error' in profile_response:
-            raise Http404('Facebook User Profile not Found.')
         facebook_user_data_parser = FacebookUserDataParser(user_id=request.user.id)
-        facebook_profile = facebook_user_data_parser.parse_profile(profile_response, user_access_token, facebook_login.get_data_access_expires_at(inspect_user_access_token_response))
-        
-        pages_response = facebook_user_data_provider.get_pages()
-        if 'error' in pages_response:
-            raise Http404('Facebook User Pages not Found.')
-        pages = facebook_user_data_parser.parse_pages(pages_response)
-        for page in pages:
-            page_access_token = facebook_login.get_long_term_token(page.access_token)
-            inspect_page_access_token_response = facebook_login.inspect_access_token(page_access_token)
-            if not facebook_login.is_access_token_valid(inspect_page_access_token_response):
-                raise Http404('Facebook User Page Access Token is not Valid.')
-            page.access_token = page_access_token
-            page.expires_at = facebook_login.get_data_access_expires_at(inspect_page_access_token_response)
-            page.save()
-
+        facebook_profile = facebook_user_data_parser.parse_profile(profile_response, user_access_token, FacebookLoginUtils.get_data_access_expires_at(user_access_token))
         return redirect('/facebook_benchmark/home')
 
 @method_decorator(login_required, name='dispatch')
 class HomeView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         try:
             facebook_profile = request.user.facebook_profile
-            all_pages = Page.objects.filter(facebook_profile=facebook_profile)
+            facebook_user_data_provider = FacebookUserDataProvider(facebook_profile.access_token)
+            accounts_response = facebook_user_data_provider.get_accounts()
+            for account_response in accounts_response:
+                page_access_token = FacebookLoginUtils.get_long_term_token(account_response.get('access_token'))
+                FacebookLoginUtils.inspect_access_token(page_access_token)
+                facebook_page_data_provider = FacebookPageDataProvider(page_access_token)
+                page_response = facebook_page_data_provider.get_page()
+                facebook_page_data_parser = FacebookPageDataParser(facebook_profile_id=facebook_profile.id)
+                page = facebook_page_data_parser.parse_page(page_response, page_access_token, FacebookLoginUtils.get_data_access_expires_at(page_access_token))
+            pages = Page.objects.filter(facebook_profile=facebook_profile)
             context = {
-                'all_pages': all_pages,
+                'pages': pages,
             }
             return render(request, 'facebook_benchmark/home.html', context)
         except FacebookProfile.DoesNotExist:
-            raise Http404("Facebook Profile does not Exist.")
+            return redirect('/facebook_benchmark/login')
 
 @method_decorator(login_required, name='dispatch')
 class LoadPageDataView(View):
