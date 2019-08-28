@@ -75,8 +75,7 @@ class HomeView(View):
 class LoadPageDataView(View):
     def get(self, request, page_id):
         page = get_object_or_404(Page, facebook_profile=request.user.facebook_profile, pk=page_id)
-        fetch_posts_task = FetchPostsTask
-        fetch_posts_task.delay(page.access_token, page.facebook_profile_id, page.id)
+        FetchPostsTask.delay(page.access_token, page.facebook_profile_id, page.id)
         return redirect('/facebook_benchmark/home')
 
 class FacebookProfileDetail(generics.ListAPIView):
