@@ -78,7 +78,7 @@ class UserTweet(Tweet):
 
 
 class UserComment(Tweet):
-    status_id = models.IntegerField()  # tweet id which has this comment
+    status = models.ForeignKey(UserTweet, related_name='comments', on_delete=models.CASCADE)  # tweet id which has this comment
 
     def __str__(self):
         return self.text
