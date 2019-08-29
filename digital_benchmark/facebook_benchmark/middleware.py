@@ -7,7 +7,7 @@ class Redirect(Exception):
 def redirect(url):
     raise Redirect(url)
 
-class RedirectMiddleware(object):
+class RedirectMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 

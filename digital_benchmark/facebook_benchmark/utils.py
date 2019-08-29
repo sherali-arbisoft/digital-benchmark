@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import Http404
+from django.utils.timezone import make_aware
 import requests
 from datetime import datetime
 
@@ -23,7 +24,7 @@ class FacebookLoginUtils:
     @staticmethod
     def get_data_access_expires_at(access_token):
         access_token_inspection_response = FacebookLoginUtils.get_access_token_inspection(access_token)
-        return datetime.utcfromtimestamp(access_token_inspection_response.get('data', {}).get('data_access_expires_at', 0))
+        return make_aware(datetime.utcfromtimestamp(access_token_inspection_response.get('data', {}).get('data_access_expires_at', 0)))
 
     @staticmethod
     def get_scopes(access_token_inspection_response):
