@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.http import Http404
-from django.shortcuts import redirect
 import requests
 from datetime import datetime
+
+from .middleware import redirect
 
 class FacebookLoginUtils:
     @staticmethod

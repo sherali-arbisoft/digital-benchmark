@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware', # for django-debug-toolbar
     'silk.middleware.SilkyMiddleware', #for django-silk
+    'facebook_benchmark.middleware.RedirectMiddleware', #to redirect from outside of the view
 ]
 
 ROOT_URLCONF = 'digital_benchmark.urls'
