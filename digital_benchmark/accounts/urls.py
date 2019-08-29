@@ -15,7 +15,7 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view()),
     #api endpoints for frontend
     path('signup/', views.Signup.as_view(), name='register_django_user'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
