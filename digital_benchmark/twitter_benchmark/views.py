@@ -39,18 +39,18 @@ class SuccessView(View):
         # for testing
         #ehmadzubair
         data = obj.get_other_tweet('ehmadzubair')
-        data = TwitterDataParser.parser_other_tweet(data)
+        data = TwitterDataParser.parse_other_tweet(data)
         #print(data)
         return render(request, 'success/index.html')
 
 
 class UserDataList(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = UserDataSerializer
+    queryset = UserData.objects.all()
 
-    def retrieve(self, request, pk=None):
-        queryset = UserData.objects.filter(app_user=self.request.user)
-        serializer = UserDataSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_object(self):
+        return self.queryset.get(app_user=self.request.user)
 
 
 class UserTweetList(generics.ListAPIView):
@@ -79,11 +79,12 @@ class UserTweetByIdList(generics.ListAPIView):
 
 class UserLatestTweet(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = UserTweetSerializer
 
-    def retrieve(self, request, id):
+    def get(self, request, id):
         try:
             queryset = UserTweet.objects.filter(tweet_id=id).latest('created_at')
-            serializer = UserTweetSerializer(queryset)
+            serializer = self.get_serializer(queryset)
             return Response(serializer.data)
         except UserData.DoesNotExist:
             return Response({'detail': 'Not found.'})
@@ -99,11 +100,12 @@ class OtherTweetByIdList(generics.ListAPIView):
 
 class OtherLatestTweet(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = OtherTweetSerializer
 
-    def retrieve(self, request, id):
+    def get(self, request, id):
         try:
             queryset = OtherTweet.objects.filter(tweet_id=id).latest('created_at')
-            serializer = OtherTweetSerializer(queryset)
+            serializer = self.get_serializer(queryset)
             return Response(serializer.data)
         except OtherTweet.DoesNotExist:
             return Response({'detail': 'Not found.'})
