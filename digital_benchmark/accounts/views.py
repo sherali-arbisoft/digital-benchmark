@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from .serializers import UserSerializer
 
 from django.contrib.auth import (
     authenticate,
@@ -62,30 +64,5 @@ class LogoutView(View):
         return redirect('/')
 
 
-class Signup(APIView):
-    def post(self, request, format=None):
-        try:
-            user = User.objects.get(username=request.data.get('username', ''))
-            response = {
-                'error_messages': ['Username Already Exists.', ]
-            }
-        except User.DoesNotExist:
-            try:
-                user = User.objects.get(email=request.data.get('email', ''))
-                response = {
-                    'error_messages': ['Email Already Exists.', ]
-                }
-            except User.DoesNotExist:
-                user, created = User.objects.get_or_create(email=request.data.get(
-                    'email', ''), username=request.data.get('username', ''))
-                if not created:
-                    response = {
-                        'error_messages': ['User not created.', ]
-                    }
-                else:
-                    user.set_password(request.data.get('password', ''))
-                    user.save()
-                    response = {
-                        'success_messages': ['Account Successfully Created.', ]
-                    }
-        return Response(response)
+class RegisterUserView(generics.CreateAPIView):
+    serializer_class = UserSerializer

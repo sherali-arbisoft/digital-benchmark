@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'instagram_benchmark',
-    'facebook_benchmark', # register facebook_benchmark app
+    'facebook_benchmark',  # register facebook_benchmark app
     'accounts',
-    'debug_toolbar', # register django-debug-toolbar
-    'rest_framework', #register django rest framework
+    'debug_toolbar',  # register django-debug-toolbar
+    'rest_framework',  # register django rest framework
     'corsheaders',
 ]
 
@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', # for django-debug-toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # for django-debug-toolbar
 ]
 
 ROOT_URLCONF = 'digital_benchmark.urls'
@@ -136,43 +136,48 @@ FACEBOOK_GRAPH_API_VERSION = '3.1'
 FACEBOOK_APP_ID = '349831992602224'
 FACEBOOK_APP_SECRET = 'e3bfa0ed905199eecca00e74631280b7'
 FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI = 'http://localhost:8000/facebook_benchmark/login_successful'
-FACEBOOK_PERMISSIONS = [ 'manage_pages', 'pages_show_list', 'read_insights']
+FACEBOOK_PERMISSIONS = ['manage_pages', 'pages_show_list', 'read_insights']
 FACEBOOK_RESPONSE_TYPE = 'code'
 FACEBOOK_STATE = '{"{st=state123abc,ds=123456789}"}'
 FACEBOOK_LOGIN_URL = f"https://www.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={FACEBOOK_APP_ID}&redirect_uri={FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}&scope={','.join(FACEBOOK_PERMISSIONS)}&response_type={FACEBOOK_RESPONSE_TYPE}&state={FACEBOOK_STATE}"
 FACEBOOK_ACCESS_TOKEN_URL = f"https://graph.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/oauth/access_token"
 FACEBOOK_DEFAULT_FIELDS_FOR_PROFILE = ['first_name', 'id', 'last_name']
-FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS = [ 'access_token', 'id', 'name' ]
+FACEBOOK_DEFAULT_FIELDS_FOR_ACCOUNTS = ['access_token', 'id', 'name']
 FACEBOOK_GRANT_TYPE = 'fb_exchange_token'
-FACEBOOK_DEFAULT_FIELDS_FOR_PAGE = ['displayed_message_response_time','engagement','fan_count','id','name','overall_star_rating', 'ratings{created_time,review_text,rating,recommendation_type}', 'rating_count','talking_about_count','unread_message_count','unread_notif_count','unseen_message_count','verification_status']
-FACEBOOK_DEFAULT_FIELDS_FOR_FEED = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
-FACEBOOK_DEFAULT_FIELDS_FOR_POST = ['backdated_time','comments{id,message,created_time,from{id},reactions{id,type}}','created_time','id','is_eligible_for_promotion','is_expired','is_hidden','is_instagram_eligible','is_popular','is_published','message','promotion_status','reactions{id,type}','scheduled_publish_time','shares','story','timeline_visibility','updated_time']
-FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS = ['page_consumptions','page_consumptions_unique','page_engaged_users','page_impressions','page_impressions_nonviral','page_impressions_nonviral_unique','page_impressions_organic','page_impressions_organic_unique','page_impressions_paid','page_impressions_paid_unique','page_impressions_unique','page_impressions_viral','page_impressions_viral_unique','page_negative_feedback','page_negative_feedback_unique','page_post_engagements','page_video_views','page_views_total']
+FACEBOOK_DEFAULT_FIELDS_FOR_PAGE = ['displayed_message_response_time', 'engagement', 'fan_count', 'id', 'name', 'overall_star_rating',
+                                    'ratings{created_time,review_text,rating,recommendation_type}', 'rating_count', 'talking_about_count', 'unread_message_count', 'unread_notif_count', 'unseen_message_count', 'verification_status']
+FACEBOOK_DEFAULT_FIELDS_FOR_FEED = ['backdated_time', 'comments{id,message,created_time,from{id},reactions{id,type}}', 'created_time', 'id', 'is_eligible_for_promotion', 'is_expired', 'is_hidden',
+                                    'is_instagram_eligible', 'is_popular', 'is_published', 'message', 'promotion_status', 'reactions{id,type}', 'scheduled_publish_time', 'shares', 'story', 'timeline_visibility', 'updated_time']
+FACEBOOK_DEFAULT_FIELDS_FOR_POST = ['backdated_time', 'comments{id,message,created_time,from{id},reactions{id,type}}', 'created_time', 'id', 'is_eligible_for_promotion', 'is_expired', 'is_hidden',
+                                    'is_instagram_eligible', 'is_popular', 'is_published', 'message', 'promotion_status', 'reactions{id,type}', 'scheduled_publish_time', 'shares', 'story', 'timeline_visibility', 'updated_time']
+FACEBOOK_DEFAULT_METRICES_FOR_PAGE_INSIGHTS = ['page_consumptions', 'page_consumptions_unique', 'page_engaged_users', 'page_impressions', 'page_impressions_nonviral', 'page_impressions_nonviral_unique', 'page_impressions_organic', 'page_impressions_organic_unique',
+                                               'page_impressions_paid', 'page_impressions_paid_unique', 'page_impressions_unique', 'page_impressions_viral', 'page_impressions_viral_unique', 'page_negative_feedback', 'page_negative_feedback_unique', 'page_post_engagements', 'page_video_views', 'page_views_total']
 FACEBOOK_DEFAULT_DATE_PRESET_FOR_PAGE_INSIGHTS = 'today'
 FACEBOOK_DEFAULT_PERIOD_FOR_PAGE_INSIGHTS = 'days_28'
-FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_clicks','post_clicks_unique','post_engaged_fan','post_engaged_users','post_impressions','post_impressions_fan','post_impressions_fan_paid','post_impressions_fan_paid_unique','post_impressions_fan_unique','post_impressions_nonviral','post_impressions_nonviral_unique','post_impressions_organic','post_impressions_organic_unique','post_impressions_paid','post_impressions_paid_unique','post_impressions_unique','post_impressions_viral','post_impressions_viral_unique','post_negative_feedback','post_negative_feedback_unique']
+FACEBOOK_DEFAULT_METRICES_FOR_POST_INSIGHTS = ['post_clicks', 'post_clicks_unique', 'post_engaged_fan', 'post_engaged_users', 'post_impressions', 'post_impressions_fan', 'post_impressions_fan_paid', 'post_impressions_fan_paid_unique', 'post_impressions_fan_unique', 'post_impressions_nonviral',
+                                               'post_impressions_nonviral_unique', 'post_impressions_organic', 'post_impressions_organic_unique', 'post_impressions_paid', 'post_impressions_paid_unique', 'post_impressions_unique', 'post_impressions_viral', 'post_impressions_viral_unique', 'post_negative_feedback', 'post_negative_feedback_unique']
 
 # instagram settings and urls
-PROFILE_URL="https://api.instagram.com/v1/users/self/?access_token={}"
-RECENT_MEDIA_URL="https://api.instagram.com/v1/users/self/media/recent/?count=10&access_token={}"
-COMMENTS_URL="https://api.instagram.com/v1/media/{}/comments?access_token={}"
-INSTA_CONNECT_URL="https://api.instagram.com/oauth/authorize/?client_id=4d8f538893ba481f88c0614865dc9310&redirect_uri=http://127.0.0.1:8000/instagram_benchmark/connection_success&response_type=code&scope=basic"
-CLIENT_ID='4d8f538893ba481f88c0614865dc9310'
-CLIENT_SECRET='8e2bba68038844ab8e240b7094db18f2'
-GRANT_TYPE='authorization_code'
-INSTA_REDIRECT_URL='http://127.0.0.1:8000/instagram_benchmark/connection_success'
-INSTA_FETCH_USER_URL='https://api.instagram.com/oauth/access_token'
-#insta django internal configs
-DJANGO_LOGIN_URL='http://127.0.0.1:8000/accounts/login/'
-#Scrapyd Configs
-SCRAPYD_SERVER_URL="http://127.0.0.1:6800/"
-SCRAPER_AGENT='Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+PROFILE_URL = "https://api.instagram.com/v1/users/self/?access_token={}"
+RECENT_MEDIA_URL = "https://api.instagram.com/v1/users/self/media/recent/?count=10&access_token={}"
+COMMENTS_URL = "https://api.instagram.com/v1/media/{}/comments?access_token={}"
+INSTA_CONNECT_URL = "https://api.instagram.com/oauth/authorize/?client_id=4d8f538893ba481f88c0614865dc9310&redirect_uri=http://127.0.0.1:8000/instagram_benchmark/connection_success&response_type=code&scope=basic"
+CLIENT_ID = '4d8f538893ba481f88c0614865dc9310'
+CLIENT_SECRET = '8e2bba68038844ab8e240b7094db18f2'
+GRANT_TYPE = 'authorization_code'
+INSTA_REDIRECT_URL = 'http://127.0.0.1:8000/instagram_benchmark/connection_success'
+INSTA_FETCH_USER_URL = 'https://api.instagram.com/oauth/access_token'
+# insta django internal configs
+DJANGO_LOGIN_URL = 'http://127.0.0.1:8000/accounts/login/'
+# Scrapyd Configs
+SCRAPYD_SERVER_URL = "http://127.0.0.1:6800/"
+SCRAPER_AGENT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
 # for django-debug-toolbar
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
 try:
-  from .local_settings import *
+    from .local_settings import *
 except ImportError:
-  pass
+    pass
