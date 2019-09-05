@@ -47,10 +47,11 @@ class SuccessView(View):
 class UserDataList(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserDataSerializer
-    queryset = UserData.objects.all()
 
-    def get_object(self):
-        return self.queryset.get(app_user=self.request.user)
+    def retrieve(self, request, pk=None):
+        queryset = UserData.objects.filter(app_user=self.request.user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class UserTweetList(generics.ListAPIView):
@@ -81,7 +82,7 @@ class UserLatestTweet(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserTweetSerializer
 
-    def get(self, request, id):
+    def retrieve(self, request, id):
         try:
             queryset = UserTweet.objects.filter(tweet_id=id).latest('created_at')
             serializer = self.get_serializer(queryset)
@@ -102,7 +103,7 @@ class OtherLatestTweet(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = OtherTweetSerializer
 
-    def get(self, request, id):
+    def retrieve(self, request, id):
         try:
             queryset = OtherTweet.objects.filter(tweet_id=id).latest('created_at')
             serializer = self.get_serializer(queryset)
