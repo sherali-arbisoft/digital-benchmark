@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from .serializers import UserSerializer
 
 from django.contrib.auth import (
     authenticate,
@@ -13,11 +15,12 @@ from django.views import View, generic
 
 from .forms import UserLoginForm, UserRegisterForm
 
+
 class LoginView(View):
     def get(self, request):
         form = UserLoginForm()
-        return render(request,'login.html',{'form':form})
-    
+        return render(request, 'login.html', {'form': form})
+
     def post(self, request):
         next = request.GET.get('next')
         form = UserLoginForm(request.POST or None)
@@ -29,13 +32,14 @@ class LoginView(View):
             if next:
                 return redirect(next)
             return redirect('/')
-            
-        return render(request,'login.html',{'form':form})
+
+        return render(request, 'login.html', {'form': form})
+
 
 class RegisterView(View):
     def get(self, request):
         form = UserRegisterForm()
-        return render(request,'signup.html',{'form':form})
+        return render(request, 'signup.html', {'form': form})
 
     def post(self, request):
         next = request.GET.get('next')
@@ -51,9 +55,14 @@ class RegisterView(View):
                 return redirect(next)
             return redirect('/')
 
-        return render(request,'signup.html',{'form':form})
+        return render(request, 'signup.html', {'form': form})
+
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/')
+
+
+class RegisterUserView(generics.CreateAPIView):
+    serializer_class = UserSerializer

@@ -1,4 +1,4 @@
-from .serializers import ProfileSerializer, MediaSerializer, CommentsSerializer
+from .serializers import InstagramProfileSerializer, InstagramUserMediaSerializer, InstagramMediaCommentsSerializer
 from rest_framework import generics, filters
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -18,12 +18,11 @@ from django.contrib import messages
 
 from scrapyd_api import ScrapydAPI
 from uuid import uuid4
-# connect scrapyd service
 scrapyd = ScrapydAPI(settings.SCRAPYD_SERVER_URL)
 
 
 class InstagramProfileList(generics.ListAPIView):
-    serializer_class = ProfileSerializer
+    serializer_class = InstagramProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -32,36 +31,39 @@ class InstagramProfileList(generics.ListAPIView):
 
 
 class InstagramMediaList(generics.ListAPIView):
-    serializer_class = MediaSerializer
+    serializer_class = InstagramUserMediaSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         profile = InstagramProfile.objects.filter(app_user=user)
-        query_set = InstagramUserMedia.objects.select_related('media_insight').prefetch_related('comments').filter(insta_user=profile[0])
+        query_set = InstagramUserMedia.objects.select_related(
+            'media_insight').prefetch_related('comments').filter(insta_user=profile[0])
         return query_set
 
 
 class InstagramMediaRevisionList(generics.ListAPIView):
-    serializer_class = MediaSerializer
+    serializer_class = InstagramUserMediaSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         media_id = self.kwargs.get('media_id')
         user = self.request.user
         profile = InstagramProfile.objects.filter(app_user=user)
-        query_set= InstagramUserMedia.objects.select_related('media_insight').prefetch_related('comments').filter(insta_user=profile[0], media_id=media_id)
+        query_set = InstagramUserMedia.objects.select_related('media_insight').prefetch_related(
+            'comments').filter(insta_user=profile[0], media_id=media_id)
         return query_set
 
 
 class MediaRevisionDetail(generics.RetrieveAPIView):
-    serializer_class = MediaSerializer
+    serializer_class = InstagramUserMediaSerializer
     permission_classes = [IsAuthenticated]
-    queryset = InstagramUserMedia.objects.select_related('media_insight').prefetch_related('comments').all()
+    queryset = InstagramUserMedia.objects.select_related(
+        'media_insight').prefetch_related('comments').all()
 
 
 class MediaRevisionComments(generics.ListAPIView):
-    serializer_class = CommentsSerializer
+    serializer_class = InstagramMediaCommentsSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -105,14 +107,14 @@ class ConnectionSuccessView(View):
         except InstagramProfile.DoesNotExist:
             app_user_id = request.user.id
             instagram_parser = InstagramDataParser()
-            this_user = instagram_parser.parse_profile_data(
+            this_user = instagram_parser.parse_save_profile_data(
                 userdata, app_user_id)
             messages.success(request, 'Instagram account {} connected successfully'.format(
                 this_user.username))
         return render(request, 'firstpage.html', {'messages': messages.get_messages(request), 'insta_id': userdata['user']['id']})
 
 
-class FetchDataView(View):
+class FetchUserDataView(View):
     def get(self, request, insta_id=None):
         try:
             current_user = InstagramProfile.objects.get(

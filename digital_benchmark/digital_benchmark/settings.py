@@ -42,10 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'twitter_benchmark', #register twitter_benchmark app
     'instagram_benchmark',
-    'facebook_benchmark', # register facebook_benchmark app
+    'facebook_benchmark',  # register facebook_benchmark app
     'accounts',
-    'debug_toolbar', # register django-debug-toolbar
-    'rest_framework', #register django rest framework
+    'debug_toolbar',  # register django-debug-toolbar
+    'rest_framework',  # register django rest framework
     'corsheaders',
     'django_celery_results', #register django celery results
     'silk', #register django-silk
@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware', # for django-debug-toolbar
     'silk.middleware.SilkyMiddleware', #for django-silk
     'facebook_benchmark.middleware.RedirectMiddleware', #to redirect from outside of the view
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # for django-debug-toolbar
 ]
 
 ROOT_URLCONF = 'digital_benchmark.urls'
@@ -109,7 +110,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 15,
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
 }
 
 SIMPLE_JWT = {
@@ -142,6 +144,7 @@ FACEBOOK_APP_SECRET = 'e3bfa0ed905199eecca00e74631280b7'
 FACEBOOK_APP_TOKEN = '349831992602224|uQIt8Jk7183kkz0-zT-jUf9uuAw'
 FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI = 'http://localhost:8000/facebook_benchmark/login_successful'
 FACEBOOK_SCOPE = ['manage_pages', 'pages_show_list', 'read_insights']
+FACEBOOK_PERMISSIONS = ['manage_pages', 'pages_show_list', 'read_insights']
 FACEBOOK_RESPONSE_TYPE = 'code'
 FACEBOOK_STATE = '{"{st=state123abc,ds=123456789}"}'
 FACEBOOK_LOGIN_URL = f"https://www.facebook.com/v{FACEBOOK_GRAPH_API_VERSION}/dialog/oauth?client_id={FACEBOOK_APP_ID}&redirect_uri={FACEBOOK_LOGIN_SUCCESSFUL_REDIRECT_URI}&scope={','.join(FACEBOOK_SCOPE)}&response_type={FACEBOOK_RESPONSE_TYPE}&state={FACEBOOK_STATE}"
@@ -205,6 +208,6 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 
 try:
-  from .local_settings import *
+    from .local_settings import *
 except ImportError:
-  pass
+    pass
