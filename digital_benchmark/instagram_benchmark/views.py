@@ -18,7 +18,6 @@ from django.contrib import messages
 
 from scrapyd_api import ScrapydAPI
 from uuid import uuid4
-# connect scrapyd service
 scrapyd = ScrapydAPI(settings.SCRAPYD_SERVER_URL)
 
 
