@@ -18,6 +18,10 @@ python-scrapyd-api = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 django-cors-headers = "*"
+celery = "*"
+django-celery-results = "*"
+flower = "*"
+django-silk = "*"
 
 [requires]
 python_version = "3.6"

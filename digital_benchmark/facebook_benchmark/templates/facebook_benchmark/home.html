@@ -17,7 +17,7 @@
         <th>Name</th>
         <th>Actions</th>
     </tr>
-    {% for page in all_pages %}
+    {% for page in pages %}
         <tr>
             <td>{{ page.name }}</td>
             <td><a href="{% url 'load_page_data' page.id %}" class="btn btn-primary">Load Page Data</a></td>
