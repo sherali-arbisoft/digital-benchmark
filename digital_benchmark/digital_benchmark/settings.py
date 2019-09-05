@@ -26,6 +26,8 @@ SECRET_KEY = '3-1jc^c3n(fw5sctlo*19&vh$-d6h7-45co-4_%totri3h9=^4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 ALLOWED_HOSTS = []
 
 
@@ -44,11 +46,13 @@ INSTALLED_APPS = [
     'accounts',
     'debug_toolbar', # register django-debug-toolbar
     'rest_framework', #register django rest framework
+    'corsheaders',
     'django_celery_results', #register django celery results
     'silk', #register django-silk
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
