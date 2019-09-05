@@ -32,6 +32,25 @@ class InstagramDataParser:
         except Exception as e:
             return False
             raise e
+    
+    def save_profile_data(self, user_profile_data,app_user_id,access_token):
+        profile = InstagramProfile()
+        profile.insta_uid=user_profile_data.get('id')
+        profile.app_user_id = app_user_id
+        profile.access_token = access_token
+        profile.full_name = user_profile_data.get('full_name')
+        profile.username = user_profile_data.get('username')
+        profile.is_business = user_profile_data.get('is_business')
+        profile.follows_count = user_profile_data.get(
+            'counts').get('follows', 0)
+        profile.folowed_by_count = user_profile_data.get(
+            'counts').get('followed_by', 0)
+        profile.media_count = user_profile_data.get(
+            'counts').get('media', 0)
+        try:
+            profile.save()
+        except Exception as e:
+            raise e
 
     # send single media insight entry at a time so that we can save insight id in media table by returning saved insignt back to caller one by one
     def parse_media_insight_data(self, all_user_media, insta_user, access_token):

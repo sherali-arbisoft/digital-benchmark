@@ -15,6 +15,7 @@ from .data_parser import InstagramDataParser
 from .data_provider import InstagramDataProvider
 from django.conf import settings
 from django.contrib import messages
+from rest_framework.views import APIView
 
 from scrapyd_api import ScrapydAPI
 from uuid import uuid4
@@ -83,6 +84,40 @@ class AuthView(generic.ListView):
 
     def get_queryset(self):
         return
+
+
+class InstagramUserDataLoad(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        access_token = request.data.get('access_token')
+        user_id = request.user.id
+        self._load_data(access_token, user_id)
+        return Response({"Success":"User data fetched and saved successfully"})
+
+    def _load_data(self, access_token, user_id):
+        self._load_profile(access_token, user_id)
+
+    def _load_profile(self, access_token, user_id):
+        dataProvider = InstagramDataProvider(access_token)
+        instagram_parser = InstagramDataParser()
+        user_profile_data = dataProvider.get_user_profile().get('data')
+        current_profile = InstagramProfile.objects.filter(
+            insta_uid=user_profile_data.get('id'), app_user_id=user_id).first()
+        if current_profile:
+            current_profile.access_token = access_token
+            current_profile.save()
+        else:
+            new_profile = instagram_parser.save_profile_data(
+                user_profile_data, user_id, access_token)
+            current_profile = new_profile
+        self._load_media(dataProvider, instagram_parser,
+                         current_profile, access_token)
+
+    def _load_media(self, dataProvider, instagram_parser, current_user, access_token):
+        all_user_media = dataProvider.get_user_media()
+        data_save_message = instagram_parser.parse_media_insight_data(
+            all_user_media, current_user, access_token)
 
 
 class ConnectionSuccessView(View):
