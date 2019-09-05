@@ -14,7 +14,7 @@ import os
 import sys
 import django
 
-# DJANGO INTEGRATION
+# DJANGO INTEGRATION START
 
 sys.path.append(os.path.dirname(os.path.abspath('.')))
 
@@ -23,13 +23,17 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'digital_benchmark.settings'
 # This is required only if Django Version > 1.8
 django.setup()
 
-# DJANGO INTEGRATION
+# DJANGO INTEGRATION END
 
 
 BOT_NAME = 'crawler_instagram'
 
 SPIDER_MODULES = ['crawler_instagram.spiders']
 NEWSPIDER_MODULE = 'crawler_instagram.spiders'
+
+#TO HANDLE ERRORS RESPONSE IN SCRAPPER
+HTTPERROR_ALLOWED_CODES = [404]
+
 
 #URLs FOR SCRAPPER
 MEDIA_URL="https://www.instagram.com/p/{}"

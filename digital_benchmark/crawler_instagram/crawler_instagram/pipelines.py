@@ -18,7 +18,8 @@ class InstagramPipeline(object):
         self.cursor = self.connection.cursor()
     
     def close_spider(self, spider):
-        self._update_spider_db_record()
+        if hasattr(self,'insta_uid') and hasattr(self,'media_count') and hasattr(self,'crawler_instance_id'):
+            self._update_spider_db_record()
         self.cursor.close()
         self.connection.close()
 
