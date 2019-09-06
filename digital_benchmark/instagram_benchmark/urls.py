@@ -13,9 +13,10 @@ urlpatterns = [
   path('connect', views.InstaConnectView.as_view(), name='connect'),
   path('crawl', views.InstaCrawlerView.as_view(), name='crawl'),
  
-  path('profile',views.InstagramProfileList.as_view(),name="profile_detail"),
-  path('media',views.InstagramMediaList.as_view(),name="all_media"),
-  path('media/revisions/<int:media_id>',views.InstagramMediaRevisionList.as_view(),name="media_revisions"),
-  path('media/revision/<int:pk>',views.MediaRevisionDetail.as_view(),name="revision_by_id"),
-  path('media/comments/<int:revision_id>',views.MediaRevisionComments.as_view(),name="comments_by_media_id"),
+  path('profile',views.InstagramProfileList.as_view(),name='profile_detail'),
+  path('media',views.InstagramMediaList.as_view(),name='all_media'),
+  path('media/revisions/<int:media_id>',views.InstagramMediaRevisionList.as_view(),name='media_revisions'),
+  path('media/revision/<int:pk>',views.MediaRevisionDetail.as_view(),name='revision_by_id'),
+  path('media/comments/<int:revision_id>',views.MediaRevisionComments.as_view(),name='comments_by_media_id'),
+  path('profile/load',views.InstagramUserDataLoad.as_view(),name='create_profile'),
 ]
