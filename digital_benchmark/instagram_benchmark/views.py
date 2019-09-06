@@ -36,10 +36,8 @@ class InstagramMediaList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        profile = InstagramProfile.objects.filter(app_user=user)
         query_set = InstagramUserMedia.objects.select_related(
-            'media_insight').prefetch_related('comments').filter(insta_user=profile[0])
+            'media_insight').prefetch_related('comments').filter(insta_user__app_user=self.request.user)
         return query_set
 
 
@@ -48,19 +46,23 @@ class InstagramMediaRevisionList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        media_id = self.kwargs.get('media_id')
-        user = self.request.user
-        profile = InstagramProfile.objects.filter(app_user=user)
         query_set = InstagramUserMedia.objects.select_related('media_insight').prefetch_related(
-            'comments').filter(insta_user=profile[0], media_id=media_id)
+            'comments').filter(insta_user__app_user=self.request.user, media_id=self.kwargs.get('media_id'))
         return query_set
 
 
 class MediaRevisionDetail(generics.RetrieveAPIView):
     serializer_class = InstagramUserMediaSerializer
     permission_classes = [IsAuthenticated]
-    queryset = InstagramUserMedia.objects.select_related(
-        'media_insight').prefetch_related('comments').all()
+
+    def retrieve(self, request, pk=None):
+        try:
+            media = InstagramUserMedia.objects.select_related(
+        'media_insight').prefetch_related('comments').filter(pk=pk, insta_user__app_user=self.request.user).latest('-created_at')
+            serializer = self.get_serializer(media)
+            return Response(serializer.data)
+        except InstagramUserMedia.DoesNotExist:
+            return Response({'result': 'Revision Not found'})
 
 
 class MediaRevisionComments(generics.ListAPIView):
@@ -68,11 +70,9 @@ class MediaRevisionComments(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        profile = InstagramProfile.objects.filter(app_user=user)
         revision_id = self.kwargs.get('revision_id')
         media = InstagramUserMedia.objects.filter(
-            insta_user=profile[0], id=revision_id)
+            insta_user__app_user=self.request.user, id=revision_id)
         if media:
             return media[0].comments.all()
         return media
@@ -119,6 +119,36 @@ class InstagramUserDataLoad(APIView):
         all_user_media = dataProvider.get_user_media()
         instagram_parser.save_media_insight_data(
             all_user_media, current_user, access_token)
+
+class StartCrawlerView(APIView):
+   permission_classes = [IsAuthenticated]
+ 
+   def post(self, request):
+       app_user_id = request.user.id
+       unique_id = str(uuid4())
+       public_username = request.data.get('username')
+       setting = {
+           'unique_id': unique_id,
+           'USER_AGENT': settings.SCRAPER_AGENT
+       }
+       crawler_triggered = self._trigger_crawler(
+           setting, public_username, unique_id, app_user_id)
+       if crawler_triggered:
+           return Response({"Success": "Instagram crawler triggered from scrapy"})
+       return Response({"Error": "Error in triggering crawler"})
+ 
+   def _trigger_crawler(self, settings, public_username, unique_id, app_user_id):
+       task = scrapyd.schedule('default', 'insta_crawler', settings=settings,
+                               username=public_username, unique_id=unique_id, django_user_id=app_user_id)
+       crawler_stats = CrawlerStats()
+       crawler_stats.unique_id = unique_id
+       crawler_stats.task_id = task
+       crawler_stats.status = "Started"
+       try:
+           crawler_stats.save()
+           return True
+       except:
+           return False
 
 
 class ConnectionSuccessView(View):
