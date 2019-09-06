@@ -93,10 +93,13 @@ class InstagramUserDataLoad(APIView):
         access_token = request.data.get('access_token')
         user_id = request.user.id
         self._load_data(access_token, user_id)
-        return Response({"Success":"User data fetched and saved successfully"})
+        return Response({"Success": "User data fetched and saved successfully"})
 
     def _load_data(self, access_token, user_id):
-        self._load_profile(access_token, user_id)
+        dataProvider, instagram_parser, current_profile = self._load_profile(
+            access_token, user_id)
+        self._load_media(dataProvider, instagram_parser,
+                         current_profile, access_token)
 
     def _load_profile(self, access_token, user_id):
         dataProvider = InstagramDataProvider(access_token)
@@ -111,12 +114,11 @@ class InstagramUserDataLoad(APIView):
             new_profile = instagram_parser.save_profile_data(
                 user_profile_data, user_id, access_token)
             current_profile = new_profile
-        self._load_media(dataProvider, instagram_parser,
-                         current_profile, access_token)
+        return dataProvider, instagram_parser, current_profile
 
     def _load_media(self, dataProvider, instagram_parser, current_user, access_token):
         all_user_media = dataProvider.get_user_media()
-        data_save_message = instagram_parser.parse_media_insight_data(
+        instagram_parser.save_media_insight_data(
             all_user_media, current_user, access_token)
 
 
@@ -162,14 +164,14 @@ class FetchUserDataView(View):
             # fetch profile
             user_profile_data = dataProvider.get_user_profile().get('data')
             current_profile = InstagramProfile.objects.get(insta_uid=insta_uid)
-            message = instagram_parser.parse_profile_update(
+            message = instagram_parser.save_profile_update(
                 user_profile_data, current_profile)
             if message:
                 messages.success(request, message)
             # fetch media
             all_user_media = dataProvider.get_user_media()
             # parse media insight and data
-            data_save_message = instagram_parser.parse_media_insight_data(
+            data_save_message = instagram_parser.save_media_insight_data(
                 all_user_media, current_user, access_token)
             for message in data_save_message:
                 messages.success(request, message)
