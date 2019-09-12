@@ -7,7 +7,7 @@
 from scrapy.utils.project import get_project_settings
 import psycopg2
 import datetime
-time_now = datetime.datetime.utcnow()
+time_now = datetime.datetime.now()
 settings = get_project_settings()
 
 
@@ -34,7 +34,7 @@ class InstagramPipeline(object):
         self.insta_uid = item.get('insta_uid')
         self.media_count = item.get('media_count')
         insta_user_id = 0
-        profile = self._get_user_from_db(item.get('insta_uid'))
+        profile = self._get_user_from_db(item.get('insta_uid'),item.get('django_auth_user'))
         if profile:
             insta_user_id = profile[0]
         elif item.get('_type') == "profile":
@@ -45,8 +45,8 @@ class InstagramPipeline(object):
             self._parse_comment(item)
         return item
 
-    def _get_user_from_db(self, insta_uid):
-        existing_user_query = f"select * from instagram_benchmark_instagramprofile where insta_uid='{insta_uid}'"
+    def _get_user_from_db(self, insta_uid, app_user_id):
+        existing_user_query = f"select * from instagram_benchmark_instagramprofile where insta_uid='{insta_uid}' and app_user_id='{app_user_id}'"
         self.cursor.execute(existing_user_query)
         profile = self.cursor.fetchone()
         return profile

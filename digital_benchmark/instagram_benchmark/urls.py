@@ -19,4 +19,5 @@ urlpatterns = [
   path('media/revision/<int:pk>',views.MediaRevisionDetail.as_view(),name='revision_by_id'),
   path('media/comments/<int:revision_id>',views.MediaRevisionComments.as_view(),name='comments_by_media_id'),
   path('profile/load',views.InstagramUserDataLoad.as_view(),name='create_profile'),
+  path('profile/crawl',views.StartCrawlerView.as_view(),name='crawl_profile'),
 ]

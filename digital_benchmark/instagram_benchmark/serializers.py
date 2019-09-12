@@ -27,7 +27,7 @@ class InstagramUserMediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InstagramUserMedia
-        fields = ['id', 'created_at', 'media_url',
+        fields = ['id', 'created_at','insta_user_id', 'media_url',
                   'media_id', 'media_insights', 'comments']
 
     def get_media_insights(self, instagramMedia):

@@ -17,7 +17,7 @@ class CreateUpdateMixin(models.Model):
     """ 
       This is a class for all database records to auto add creation and updation time.
     """
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
     last_updated_at = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
