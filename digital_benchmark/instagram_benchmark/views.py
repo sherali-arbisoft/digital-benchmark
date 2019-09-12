@@ -16,6 +16,7 @@ from .data_provider import InstagramDataProvider
 from django.conf import settings
 from django.contrib import messages
 from rest_framework.views import APIView
+from django.utils import timezone
 
 from scrapyd_api import ScrapydAPI
 from uuid import uuid4
@@ -36,8 +37,9 @@ class InstagramMediaList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        
         query_set = InstagramUserMedia.objects.select_related(
-            'media_insight').prefetch_related('comments').filter(insta_user__app_user=self.request.user)
+            'media_insight').prefetch_related('comments').filter(insta_user__app_user=self.request.user).order_by('-created_at')
         return query_set
 
 
@@ -135,16 +137,16 @@ class StartCrawlerView(APIView):
            setting, public_username, unique_id, app_user_id)
        if crawler_triggered:
            return Response({"Success": "Instagram crawler triggered from scrapy"})
-       return Response({"Error": "Error in triggering crawler"})
+       return Response({"Error": "Error in triggering crawler, scrapyd server is down"})
  
    def _trigger_crawler(self, settings, public_username, unique_id, app_user_id):
-       task = scrapyd.schedule('default', 'insta_crawler', settings=settings,
-                               username=public_username, unique_id=unique_id, django_user_id=app_user_id)
-       crawler_stats = CrawlerStats()
-       crawler_stats.unique_id = unique_id
-       crawler_stats.task_id = task
-       crawler_stats.status = "Started"
        try:
+           task = scrapyd.schedule('default', 'insta_crawler', settings=settings,
+                               username=public_username, unique_id=unique_id, django_user_id=app_user_id)
+           crawler_stats = CrawlerStats()
+           crawler_stats.unique_id = unique_id
+           crawler_stats.task_id = task
+           crawler_stats.status = "Started"
            crawler_stats.save()
            return True
        except:

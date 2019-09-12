@@ -37,6 +37,7 @@ class InstagramMediaItem(Item):
     insta_uid=Field()
     unique_id=Field()
     media_count=Field()
+    django_auth_user=Field()
 
 class InstagramCommentItem(Item):
     comment_id=Field()
@@ -47,3 +48,4 @@ class InstagramCommentItem(Item):
     unique_id=Field()
     media_count=Field()
     _type=Field()
+    django_auth_user=Field()
