@@ -60,7 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', # for django-debug-toolbar
     'silk.middleware.SilkyMiddleware', #for django-silk
     'facebook_benchmark.middleware.RedirectMiddleware', #to redirect from outside of the view
     'debug_toolbar.middleware.DebugToolbarMiddleware',  # for django-debug-toolbar
