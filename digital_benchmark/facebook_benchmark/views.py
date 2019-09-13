@@ -4,12 +4,13 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, JsonResponse
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from datetime import datetime
 
@@ -77,6 +78,16 @@ class LoadPageDataView(View):
         page = get_object_or_404(Page, facebook_profile=request.user.facebook_profile, pk=page_id)
         FetchPostsTask.delay(page.access_token, page.facebook_profile_id, page.id)
         return redirect('/facebook_benchmark/home')
+
+class FetchFacebookProfile(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, user_access_token):
+        user_access_token = FacebookLoginUtils.get_long_term_token(user_access_token)
+        facebook_user_data_provider = FacebookUserDataProvider(user_access_token=user_access_token)
+        profile_response = facebook_user_data_provider.get_profile()
+        facebook_user_data_parser = FacebookUserDataParser(user_id=request.user.id)
+        facebook_profile = facebook_user_data_parser.parse_profile(profile_response, user_access_token, FacebookLoginUtils.get_data_access_expires_at(user_access_token))
+        return JsonResponse(FacebookProfileSerializer(facebook_profile).data)
 
 class FacebookProfileDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
