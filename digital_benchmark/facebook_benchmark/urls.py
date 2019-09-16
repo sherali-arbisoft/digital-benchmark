@@ -7,6 +7,7 @@ urlpatterns = [
     path('login_successful/', views.LoginSuccessfulView.as_view(), name='login_successful'),
     path('home/', views.HomeView.as_view(), name='home'),
     path('load_page_data/<int:page_id>/', views.LoadPageDataView.as_view(), name='load_page_data'),
+    path('check_is_connected/', views.IsConnected.as_view(), name='check_is_connected'),
     path('fetch_facebook_profile/<str:user_access_token>/', views.FetchFacebookProfile.as_view(), name='fetch_facebook_profile'),
     path('facebook_profile/', views.FacebookProfileDetail.as_view(), name='facebook_profile_detail'),
     path('pages/', views.PageList.as_view(), name='pages'),

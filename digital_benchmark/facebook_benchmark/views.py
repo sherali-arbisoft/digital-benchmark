@@ -79,8 +79,22 @@ class LoadPageDataView(View):
         FetchPostsTask.delay(page.access_token, page.facebook_profile_id, page.id)
         return redirect('/facebook_benchmark/home')
 
+class IsConnected(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            facebook_profile = request.user.facebook_profile
+            if FacebookLoginUtils.is_access_token_valid(facebook_profile.access_token):
+                return Response({'messageType': "success", 'message': 'Connected with Facebook.'})
+            else:
+                return Response({'messageType': "failure", 'message': 'Unable to connect with Facebook.'})
+        except FacebookProfile.DoesNotExist:
+            return Response({'messageType': "info", 'message': 'Not connected with Facebook.'})
+
 class FetchFacebookProfile(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, user_access_token):
         user_access_token = FacebookLoginUtils.get_long_term_token(user_access_token)
         facebook_user_data_provider = FacebookUserDataProvider(user_access_token=user_access_token)
