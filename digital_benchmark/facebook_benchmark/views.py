@@ -118,6 +118,9 @@ class LoadFacebookPages(APIView):
                 page_response = facebook_page_data_provider.get_page()
                 facebook_page_data_parser = FacebookPageDataParser(facebook_profile_id=facebook_profile.id)
                 page = facebook_page_data_parser.parse_page(page_response, page_access_token, FacebookLoginUtils.get_data_access_expires_at(page_access_token))
+                ratings_response = facebook_page_data_provider.get_page_rating()
+                for rating_response in ratings_response:
+                    rating = facebook_page_data_parser.parse_rating(rating_response)
             return Response({'messageType': 'success', 'message': 'Facebook pages loaded.'})
         except FacebookProfile.DoesNotExist:
             return Response({'messageType': 'info', 'message': 'Not connected with Facebook.'})
