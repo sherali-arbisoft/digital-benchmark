@@ -118,9 +118,8 @@ class FacebookProfileDetail(generics.RetrieveAPIView):
 class PageList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PageSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
-    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['name']
 
     def get_queryset(self):
@@ -146,9 +145,8 @@ class PostDetail(generics.RetrieveAPIView):
 class PagePostList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message', 'story', 'comments__message', 'reactions__reaction_type', 'comments__reactions__reaction_type']
-    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['message', 'story']
 
     def get_queryset(self):
