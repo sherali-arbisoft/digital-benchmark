@@ -103,6 +103,36 @@ class FetchFacebookProfile(APIView):
         facebook_profile = facebook_user_data_parser.parse_profile(profile_response, user_access_token, FacebookLoginUtils.get_data_access_expires_at(user_access_token))
         return JsonResponse(FacebookProfileSerializer(facebook_profile).data)
 
+class LoadFacebookPages(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            facebook_profile = request.user.facebook_profile
+            facebook_user_data_provider = FacebookUserDataProvider(facebook_profile.access_token)
+            accounts_response = facebook_user_data_provider.get_accounts()
+            for account_response in accounts_response:
+                page_access_token = FacebookLoginUtils.get_long_term_token(account_response.get('access_token'))
+                FacebookLoginUtils.inspect_access_token(page_access_token)
+                facebook_page_data_provider = FacebookPageDataProvider(page_access_token)
+                page_response = facebook_page_data_provider.get_page()
+                facebook_page_data_parser = FacebookPageDataParser(facebook_profile_id=facebook_profile.id)
+                page = facebook_page_data_parser.parse_page(page_response, page_access_token, FacebookLoginUtils.get_data_access_expires_at(page_access_token))
+            return Response({'messageType': 'success', 'message': 'Facebook pages loaded.'})
+        except FacebookProfile.DoesNotExist:
+            return Response({'messageType': 'info', 'message': 'Not connected with Facebook.'})
+
+class LoadFacebookPageData(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, page_id):
+        try:
+            page = Page.objects.get(pk=page_id, facebook_profile__user=request.user)
+            FetchPostsTask.delay(page.access_token, page.facebook_profile_id, page.id)
+            return Response({'messageType': 'success', 'message': 'Data loading started, please wait.'})
+        except Page.DoesNotExist:
+            return Response({'messageType': 'error', 'message': 'Page not found.'})
+
 class FacebookProfileDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FacebookProfileSerializer

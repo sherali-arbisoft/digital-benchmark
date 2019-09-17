@@ -89,7 +89,7 @@ class FacebookPageDataParser:
         post.scheduled_publish_time = post_response.get('scheduled_publish_time', None)
         post.shares = post_response.get('shares', {}).get('count', 0)
         post.story = post_response.get('story', None)
-        post.timeline_visibility = post_response.get('timeline_visibility', 'NORMAL').upper()
+        post.timeline_visibility = post_response.get('timeline_visibility', 'NORMAL').replace('_', ' ').upper()
         post.updated_time = post_response.get('updated_time', None)
         for item in post_response.get('insights', {}).get('data'):
             setattr(post, item['name'], item['values'][0]['value'])

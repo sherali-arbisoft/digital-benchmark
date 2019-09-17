@@ -95,6 +95,7 @@ class TimelineVisibilityChoice(Enum):
     HIDDEN = 'HIDDEN'
     NORMAL = 'NORMAL'
     FORCED_ALLOW = 'FORCED_ALLOW'
+    NO_TIMELINE_UNIT_FOR_THIS_POST = "NO_TIMELINE_UNIT_FOR_THIS_POST"
 
     @classmethod
     def get_timeline_visibility_choices(cls):
@@ -140,7 +141,7 @@ class Post(SoftDeleteMixin, CreateUpdateMixin):
     scheduled_publish_time = models.DateTimeField(null=True, blank=True)
     shares = models.IntegerField(null=True, blank=False)
     story = models.TextField(null=True, blank=True)
-    timeline_visibility = models.CharField(max_length=12, choices=TimelineVisibilityChoice.get_timeline_visibility_choices(), null=True, blank=False)
+    timeline_visibility = models.CharField(max_length=30, choices=TimelineVisibilityChoice.get_timeline_visibility_choices(), null=True, blank=False)
     updated_time = models.DateTimeField(null=True, blank=False)
 
     page = models.ForeignKey('facebook_benchmark.Page', on_delete=models.PROTECT)
