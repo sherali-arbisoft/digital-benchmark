@@ -19,5 +19,7 @@ urlpatterns = [
   path('media/revision/<int:pk>',views.MediaRevisionDetail.as_view(),name='revision_by_id'),
   path('media/comments/<int:revision_id>',views.MediaRevisionComments.as_view(),name='comments_by_media_id'),
   path('profile/load',views.InstagramUserDataLoad.as_view(),name='create_profile'),
-  path('profile/crawl',views.StartCrawlerView.as_view(),name='crawl_profile'),
+  path('profile/crawl',views.StartInstagramCrawlerView.as_view(),name='crawl_instagram_profile'),
+  path('profile/crawl/status/<str:crawler_id>',views.CrawlerStatusCheck.as_view(),name='check_crawler_status'),
+  path('profile/crawl/zip/<str:crawler_id>',views.DownloadCrawledImages.as_view(),name='crawled_profile_zip'),
 ]

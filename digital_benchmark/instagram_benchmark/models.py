@@ -57,6 +57,7 @@ class InstagramUserMedia(SoftDeleteMixin, CreateUpdateMixin):
     media_insight = models.ForeignKey(
         InstagramMediaInsight, related_name='urls', on_delete=models.CASCADE)
     media_url = models.TextField(default="")
+    crawler_id = models.TextField(default="")
 
     def __str__(self):
         return self.media_url

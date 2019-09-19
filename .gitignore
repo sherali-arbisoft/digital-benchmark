@@ -3,3 +3,4 @@
 *.log
 *.pid
 local_settings.py
+/digital_benchmark/media/

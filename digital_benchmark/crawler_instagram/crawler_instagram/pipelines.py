@@ -6,8 +6,8 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 from scrapy.utils.project import get_project_settings
 import psycopg2
-import datetime
-time_now = datetime.datetime.now()
+from django.utils import timezone
+time_now = timezone.now()
 settings = get_project_settings()
 
 
@@ -86,8 +86,8 @@ class InstagramPipeline(object):
             print('exception while saving scraped media_insight to postgres')
             raise e
 
-        self.cursor.execute("insert into instagram_benchmark_instagramusermedia(insta_user_id,is_active,created_at,last_updated_at,media_id,media_url,media_insight_id) values(%s,%s,%s,%s,%s,%s,%s);",
-                            (insta_user_id, True, time_now, time_now, item.get('media_id'), item.get('media_url'), media_insight_id))
+        self.cursor.execute("insert into instagram_benchmark_instagramusermedia(insta_user_id,is_active,created_at,last_updated_at,media_id,media_url,media_insight_id,crawler_id) values(%s,%s,%s,%s,%s,%s,%s,%s);",
+                            (insta_user_id, True, time_now, time_now, item.get('media_id'), item.get('media_url'), media_insight_id, self.crawler_id))
         try:
             self.connection.commit()
         except Exception as e:

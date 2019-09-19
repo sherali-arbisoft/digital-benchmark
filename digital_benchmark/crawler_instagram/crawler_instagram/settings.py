@@ -43,7 +43,7 @@ NEXT_MEDIA_URL='https://www.instagram.com/graphql/query/?query_id=17888483320059
 HOSTNAME = 'localhost'
 USERNAME = 'postgres'
 PASSWORD = 'postgres'
-DB_NAME = 'benchmarkAppDB'
+DB_NAME = 'benchmarkDB'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'crawler_instagram (+http://www.yourdomain.com)'

@@ -22,6 +22,8 @@ celery = "*"
 django-celery-results = "*"
 flower = "*"
 django-silk = "*"
+requests-oauthlib = "*"
+stringio = "*"
 
 [requires]
 python_version = "3.6"
