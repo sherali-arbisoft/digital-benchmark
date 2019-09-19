@@ -4,3 +4,6 @@
 *.pid
 local_settings.py
 /digital_benchmark/media/
+/digital_benchmark/instagram_benchmark/migrations/
+/digital_benchmark/facebook_benchmark/migrations/
+/digital_benchmark/twitter_benchmark/migrations/
