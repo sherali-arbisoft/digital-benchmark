@@ -7,6 +7,14 @@ from uuid import uuid4
 
 
 class Command(BaseCommand):
+    """ 
+     This class represents a management command to crawl instagram public user media and return path of media zip file
+
+     Parameters: 
+     insta_username (str): Instagram public user to carwl media
+     username (str): Valid django auth username register against this app
+    """
+
     help = 'Crawl an Instagram user'
 
     def __init__(self):
