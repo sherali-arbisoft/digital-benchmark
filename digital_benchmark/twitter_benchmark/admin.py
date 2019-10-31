@@ -35,8 +35,8 @@ class UserTweetAdmin(admin.ModelAdmin):
 
 @admin.register(UserComment)
 class UserTweetAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'tweet_id', 'text', 'favorite_count', 'retweet_count', 'status_id')
-    list_filter = ['status_id']
+    list_display = ('user_id', 'tweet_id', 'text', 'favorite_count', 'retweet_count', 'user_tweet_id')
+    list_filter = ['user_tweet_id']
     search_fields = ['text']
     date_hierarchy = 'created_at'
     empty_value_display = '--empty--'
