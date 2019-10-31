@@ -1,0 +1,23 @@
+{% load static%}
+<link rel='stylesheet' type='text/css' href="{% static '/style.css' %}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+ 
+<div id="loginDiv">
+   <form action="{% url 'instagram_benchmark:connect' %}" method="post" id="instaBtn">
+       {% csrf_token %}
+       <label id="loginInstaLable" for="abc">Connect Instagram</label>
+       <input id="submit" type="submit" value="Connect">
+   </form>
+   <form action="{% url 'instagram_benchmark:crawl' %}" method="post" id="instaBtn">
+       {% csrf_token %}
+        Public Username Instagram: <input type="text" name="username" id="usernameText" style="background-color:#000"><br>
+       <label id="loginInstaLable" for="abc">Crawl Instagram</label>
+       <input id="submit" type="submit" value="Crawl">
+   </form>
+   {% if messages %}
+   {% for message in messages %}
+   <p id="successText">{{message}}</p>
+   {% endfor %}
+   {% endif %}
+</div>

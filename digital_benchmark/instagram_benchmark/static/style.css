@@ -1,0 +1,45 @@
+
+body{
+    background: #fff
+}
+
+#loginDiv{
+    position: absolute;
+    top: 10%;
+    left: 40%;
+    height: 500px;
+    width: 450px;
+    background-color: #444857
+}
+
+#instaBtn{
+    background-color: dodgerblue;
+    font-size:22px;
+    border-color: dodgerblue;
+    -webkit-text-fill-color: #fff;
+    padding:10px;
+    margin-top: 80px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+#successText{
+    font-size:20px;
+    -webkit-text-fill-color: #fff;
+    margin-top: 80px;
+    margin-left: 50px;
+}
+
+#loginInstaLable{
+    font-size:18px;
+    -webkit-text-fill-color: #fff;
+}
+
+#submit{
+    -webkit-text-fill-color: #000;
+}
+
+#usernameText{
+    color: blue; 
+    font-size:15px;
+}
