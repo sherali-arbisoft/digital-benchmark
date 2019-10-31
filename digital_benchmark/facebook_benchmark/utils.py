@@ -34,6 +34,11 @@ class FacebookLoginUtils:
     def access_token_validation(inspect_access_token_response):
         if not inspect_access_token_response.get('data', {}).get('is_valid', False):
             raise Http404("Access Token is not Valid.")
+    
+    @staticmethod
+    def is_access_token_valid(access_token):
+        access_token_inspection_response = FacebookLoginUtils.get_access_token_inspection(access_token)
+        return access_token_inspection_response.get('data', {}).get('is_valid', False)
 
     @staticmethod
     def rerequest(access_token_inspection_response):

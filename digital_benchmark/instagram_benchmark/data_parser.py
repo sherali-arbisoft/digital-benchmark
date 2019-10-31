@@ -48,6 +48,7 @@ class InstagramDataParser:
         profile.media_count = user_profile_data.get(
             'counts').get('media', 0)
         profile.save()
+        return profile
 
     def save_media_insight_data(self, all_user_media, insta_user, access_token):
         comments_count = 0

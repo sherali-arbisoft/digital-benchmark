@@ -118,6 +118,7 @@ class InstagramSpider(scrapy.Spider):
         media_item["insta_uid"] = fetched_media.get("owner").get("id")
         media_item["unique_id"] = self.crawler_id
         media_item["media_count"] = self.fetched_media_count
+        media_item["django_auth_user"] = self.django_user_id
         yield media_item
 
         if fetched_media.get("edge_media_to_parent_comment", "Not Found") != "Not Found":
@@ -140,6 +141,7 @@ class InstagramSpider(scrapy.Spider):
         comment_item["insta_uid"] = insta_uid
         comment_item["unique_id"] = self.crawler_id
         comment_item["media_count"] = self.fetched_media_count
+        comment_item["django_auth_user"] = self.django_user_id
         return comment_item
 
     def _update_crawler_status(self, unique_id):
