@@ -4,12 +4,13 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, JsonResponse
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from datetime import datetime
 
@@ -78,6 +79,63 @@ class LoadPageDataView(View):
         FetchPostsTask.delay(page.access_token, page.facebook_profile_id, page.id)
         return redirect('/facebook_benchmark/home')
 
+class IsConnected(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            facebook_profile = request.user.facebook_profile
+            if FacebookLoginUtils.is_access_token_valid(facebook_profile.access_token):
+                return Response({'messageType': "success", 'message': 'Connected with Facebook.'})
+            else:
+                return Response({'messageType': "failure", 'message': 'Unable to connect with Facebook.'})
+        except FacebookProfile.DoesNotExist:
+            return Response({'messageType': "info", 'message': 'Not connected with Facebook.'})
+
+class FetchFacebookProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_access_token):
+        user_access_token = FacebookLoginUtils.get_long_term_token(user_access_token)
+        facebook_user_data_provider = FacebookUserDataProvider(user_access_token=user_access_token)
+        profile_response = facebook_user_data_provider.get_profile()
+        facebook_user_data_parser = FacebookUserDataParser(user_id=request.user.id)
+        facebook_profile = facebook_user_data_parser.parse_profile(profile_response, user_access_token, FacebookLoginUtils.get_data_access_expires_at(user_access_token))
+        return JsonResponse(FacebookProfileSerializer(facebook_profile).data)
+
+class LoadFacebookPages(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            facebook_profile = request.user.facebook_profile
+            facebook_user_data_provider = FacebookUserDataProvider(facebook_profile.access_token)
+            accounts_response = facebook_user_data_provider.get_accounts()
+            for account_response in accounts_response:
+                page_access_token = FacebookLoginUtils.get_long_term_token(account_response.get('access_token'))
+                FacebookLoginUtils.inspect_access_token(page_access_token)
+                facebook_page_data_provider = FacebookPageDataProvider(page_access_token)
+                page_response = facebook_page_data_provider.get_page()
+                facebook_page_data_parser = FacebookPageDataParser(facebook_profile_id=facebook_profile.id)
+                page = facebook_page_data_parser.parse_page(page_response, page_access_token, FacebookLoginUtils.get_data_access_expires_at(page_access_token))
+                ratings_response = facebook_page_data_provider.get_page_rating()
+                for rating_response in ratings_response:
+                    rating = facebook_page_data_parser.parse_rating(rating_response)
+            return Response({'messageType': 'success', 'message': 'Facebook pages loaded.'})
+        except FacebookProfile.DoesNotExist:
+            return Response({'messageType': 'info', 'message': 'Not connected with Facebook.'})
+
+class LoadFacebookPageData(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, page_id):
+        try:
+            page = Page.objects.get(pk=page_id, facebook_profile__user=request.user)
+            FetchPostsTask.delay(page.access_token, page.facebook_profile_id, page.id)
+            return Response({'messageType': 'success', 'message': 'Data loading started, please wait.'})
+        except Page.DoesNotExist:
+            return Response({'messageType': 'error', 'message': 'Page not found.'})
+
 class FacebookProfileDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FacebookProfileSerializer
@@ -93,9 +151,8 @@ class FacebookProfileDetail(generics.RetrieveAPIView):
 class PageList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PageSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
-    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['name']
 
     def get_queryset(self):
@@ -121,9 +178,8 @@ class PostDetail(generics.RetrieveAPIView):
 class PagePostList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message', 'story', 'comments__message', 'reactions__reaction_type', 'comments__reactions__reaction_type']
-    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['message', 'story']
 
     def get_queryset(self):

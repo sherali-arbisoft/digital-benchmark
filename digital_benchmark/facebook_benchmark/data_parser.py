@@ -27,13 +27,13 @@ class FacebookPageDataParser:
         self.page_id = page_id
     
     def parse_rating(self, rating_response):
-        rating = Rating()
-        rating.created_time = rating_response.get('created_time', None)
-        rating.rating = rating_response.get('rating', 0)
-        rating.recommendation_type = rating_response.get('recommendation_type', 'none').upper()
-        rating.review_text = rating_response.get('review_text')
-        rating.page_id = self.page_id
-        rating.save()
+        return Rating.objects.create(
+            created_time=rating_response.get('created_time', None),
+            rating=rating_response.get('rating', 0),
+            recommendation_type=rating_response.get('recommendation_type', 'none').upper(),
+            review_text=rating_response.get('review_text'),
+            page_id=self.page_id,
+        )
 
     def parse_page(self, page_response, access_token, expires_at):
         defaults = {
@@ -89,7 +89,7 @@ class FacebookPageDataParser:
         post.scheduled_publish_time = post_response.get('scheduled_publish_time', None)
         post.shares = post_response.get('shares', {}).get('count', 0)
         post.story = post_response.get('story', None)
-        post.timeline_visibility = post_response.get('timeline_visibility', 'NORMAL').upper()
+        post.timeline_visibility = post_response.get('timeline_visibility', 'NORMAL').replace('_', ' ').upper()
         post.updated_time = post_response.get('updated_time', None)
         for item in post_response.get('insights', {}).get('data'):
             setattr(post, item['name'], item['values'][0]['value'])
