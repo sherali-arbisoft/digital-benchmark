@@ -1,4 +1,5 @@
-from .serializers import InstagramProfileSerializer, InstagramUserMediaSerializer, InstagramMediaCommentsSerializer
+import os
+from .serializers import InstagramProfileSerializer, InstagramUserMediaSerializer, InstagramMediaCommentsSerializer, CrawlerStatsSerializer
 from rest_framework import generics, filters
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -10,13 +11,16 @@ from django.views import View, generic
 import requests
 import json
 from urllib.request import urlopen
-from .models import InstagramProfile, CrawlerStats, InstagramMediaInsight, InstagramUserMedia, InstagramMediaComments
+from .models import InstagramProfile, CrawlerStats, InstagramMediaInsight, InstagramUserMedia, InstagramMediaComments, CrawlerStats
 from .data_parser import InstagramDataParser
 from .data_provider import InstagramDataProvider
 from django.conf import settings
 from django.contrib import messages
 from rest_framework.views import APIView
 from django.utils import timezone
+from zipfile import ZipFile
+from wsgiref.util import FileWrapper
+import mimetypes
 
 from scrapyd_api import ScrapydAPI
 from uuid import uuid4
@@ -33,11 +37,13 @@ class InstagramProfileList(generics.ListAPIView):
 
 
 class InstagramMediaList(generics.ListAPIView):
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['media_insight__media_tags', 'media_insight__media_caption', 'media_insight__media_type', 'media_insight__filter_used',
+                     'media_insight__comments_count', 'media_insight__likes_count', 'comments__comment_by', 'comments__comment_text']
     serializer_class = InstagramUserMediaSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        
         query_set = InstagramUserMedia.objects.select_related(
             'media_insight').prefetch_related('comments').filter(insta_user__app_user=self.request.user).order_by('-created_at')
         return query_set
@@ -60,7 +66,7 @@ class MediaRevisionDetail(generics.RetrieveAPIView):
     def retrieve(self, request, pk=None):
         try:
             media = InstagramUserMedia.objects.select_related(
-        'media_insight').prefetch_related('comments').filter(pk=pk, insta_user__app_user=self.request.user).latest('-created_at')
+                'media_insight').prefetch_related('comments').filter(pk=pk, insta_user__app_user=self.request.user).latest('-created_at')
             serializer = self.get_serializer(media)
             return Response(serializer.data)
         except InstagramUserMedia.DoesNotExist:
@@ -122,35 +128,94 @@ class InstagramUserDataLoad(APIView):
         instagram_parser.save_media_insight_data(
             all_user_media, current_user, access_token)
 
-class StartCrawlerView(APIView):
-   permission_classes = [IsAuthenticated]
- 
-   def post(self, request):
-       app_user_id = request.user.id
-       unique_id = str(uuid4())
-       public_username = request.data.get('username')
-       setting = {
-           'unique_id': unique_id,
-           'USER_AGENT': settings.SCRAPER_AGENT
-       }
-       crawler_triggered = self._trigger_crawler(
-           setting, public_username, unique_id, app_user_id)
-       if crawler_triggered:
-           return Response({"Success": "Instagram crawler triggered from scrapy"})
-       return Response({"Error": "Error in triggering crawler, scrapyd server is down"})
- 
-   def _trigger_crawler(self, settings, public_username, unique_id, app_user_id):
-       try:
-           task = scrapyd.schedule('default', 'insta_crawler', settings=settings,
-                               username=public_username, unique_id=unique_id, django_user_id=app_user_id)
-           crawler_stats = CrawlerStats()
-           crawler_stats.unique_id = unique_id
-           crawler_stats.task_id = task
-           crawler_stats.status = "Started"
-           crawler_stats.save()
-           return True
-       except:
-           return False
+
+class StartInstagramCrawlerView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        app_user_id = request.user.id
+        unique_id = str(uuid4())
+        public_username = request.data.get('username')
+        crawler_triggered = self._trigger_crawler(
+            public_username, unique_id, app_user_id)
+        if crawler_triggered:
+            return Response({"Success": "Instagram crawler triggered from scrapy", 'CrawlerID': unique_id})
+        return Response({"Error": "Error in triggering crawler, scrapyd server is down"})
+
+    def _trigger_crawler(self, public_username, unique_id, app_user_id):
+        setting = {
+            'unique_id': unique_id,
+            'USER_AGENT': settings.SCRAPER_AGENT
+        }
+        try:
+            task = scrapyd.schedule('default', 'insta_crawler', settings=setting,
+                                    username=public_username, unique_id=unique_id, django_user_id=app_user_id)
+            crawler_stats = CrawlerStats()
+            crawler_stats.unique_id = unique_id
+            crawler_stats.task_id = task
+            crawler_stats.status = "Started"
+            crawler_stats.save()
+            return True
+        except:
+            return False
+
+
+class CrawlerStatusCheck(generics.RetrieveAPIView):
+    serializer_class = CrawlerStatsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def retrieve(self, request, crawler_id=None):
+        try:
+            crawler_status = CrawlerStats.objects.get(unique_id=crawler_id)
+            serializer = self.get_serializer(crawler_status)
+            return Response(serializer.data)
+        except CrawlerStats.DoesNotExist:
+            return Response({'result': 'No crawler with this id'})
+
+
+class DownloadCrawledImages(APIView):
+
+    def get(self, request, crawler_id):
+        zip_file_path = self.zip_images(crawler_id)
+        if zip_file_path:
+            wrapper = FileWrapper(open(zip_file_path, 'rb'))
+            response = HttpResponse(wrapper, content_type='application/zip')
+            response['Content-Disposition'] = 'attachment; filename=crawledMedia.zip'
+            return response
+        return Response({'error': 'could not save zip'})
+
+    def zip_images(self, crawler_id, folder_name=None):
+        media = InstagramUserMedia.objects.filter(crawler_id=crawler_id)
+        if not folder_name:
+            folder_name = crawler_id
+        zip_file_dir = f"{settings.MEDIA_ROOT}/{str(folder_name)}"
+
+        if(_create_directory(zip_file_dir)):
+            zip_file_path = f"{zip_file_dir}/crawledMedia.zip"
+
+            with ZipFile(zip_file_path, 'w') as zip:
+                count = 0
+                for image in media:
+                    count += 1
+                    image_url = image.media_url
+                    r = requests.get(image_url, allow_redirects=True)
+                    zip.writestr(f"image{count}.jpeg", r.content)
+                zip.close()
+            return zip_file_path
+        return False
+
+
+def _create_directory(path):
+    if os.path.exists(path):
+        return True
+    try:
+        os.mkdir(path)
+    except OSError:
+        print("Creation of the directory %s failed" % path)
+        return False
+    else:
+        print("Successfully created the directory %s " % path)
+        return True
 
 
 class ConnectionSuccessView(View):
@@ -234,11 +299,7 @@ class InstaCrawlerView(View):
         app_user_id = request.user.id
         unique_id = str(uuid4())
         public_username = request.POST['username']
-        setting = {
-            'unique_id': unique_id,
-            'USER_AGENT': settings.SCRAPER_AGENT
-        }
-        crawler_triggered = self._trigger_crawler(
+        crawler_triggered = self.trigger_crawler(
             setting, public_username, unique_id, app_user_id)
         if crawler_triggered:
             messages.success(
@@ -246,15 +307,16 @@ class InstaCrawlerView(View):
             return render(request, 'auth.html', {'messages': messages.get_messages(request)})
         return render(request, 'auth.html', {'messages': "Error in triggering crawler"})
 
-    def _trigger_crawler(self, settings, public_username, unique_id, app_user_id):
-        task = scrapyd.schedule('default', 'insta_crawler', settings=settings,
+    def trigger_crawler(self, public_username, unique_id, app_user_id):
+        setting = {
+            'unique_id': unique_id,
+            'USER_AGENT': settings.SCRAPER_AGENT
+        }
+        task = scrapyd.schedule('default', 'insta_crawler', settings=setting,
                                 username=public_username, unique_id=unique_id, django_user_id=app_user_id)
         crawler_stats = CrawlerStats()
         crawler_stats.unique_id = unique_id
         crawler_stats.task_id = task
         crawler_stats.status = "Started"
-        try:
-            crawler_stats.save()
-            return True
-        except:
-            return False
+        crawler_stats.save()
+        return True

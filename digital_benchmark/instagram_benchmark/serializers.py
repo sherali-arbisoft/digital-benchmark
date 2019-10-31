@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import InstagramProfile, InstagramUserMedia, InstagramMediaInsight, InstagramMediaComments
+from .models import InstagramProfile, InstagramUserMedia, InstagramMediaInsight, InstagramMediaComments, CrawlerStats
 
 
 class InstagramProfileSerializer(serializers.ModelSerializer):
@@ -34,3 +34,8 @@ class InstagramUserMediaSerializer(serializers.ModelSerializer):
         insights = InstagramMediaInsight.objects.filter(
             id=instagramMedia.media_insight_id)
         return InstagramMediaInsightSerializer(insights, many=True).data
+
+class CrawlerStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CrawlerStats
+        fields = ['status']
